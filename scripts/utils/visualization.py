@@ -72,16 +72,17 @@ def _uid2colors(uids, id2color=None, experimental_deltas=(60, 60, 60), experimen
   Returns:
     uid2colors: a dict mapping each uid to three colors:
       a class color, an instance color, and a part color.
+      Use uid2colors[uid][0] for a semantic-level coloring,
+      uid2colors[uid][1] for semantic-instance-level coloring,
+      uid2colors[uid][2] for semantic-instance-part-level coloring.
       Colors for some uids may be the same depending on the existence or not of
       instances or parts annotations.
       uid2colors[uid][0] is just copied from id2color[uid],
       uid2colors[uid][1] is a random shade of uid2colors[uid][0],
-      uid2colors[uid][2] is a mixture of uid2colors[uid][1] and the parula colormap
-      Use uid2colors[uid][0] for a semantic-level coloring,
-      uid2colors[uid][1] for semantic-instance-level coloring,
-      uid2colors[uid][2] for semantic-instance-part-level coloring.
-
+      uid2colors[uid][2] is a mixture of uid2colors[uid][1] and the parula colormap.
   """
+  # TODO(panos): the void part-level class (pid=0) must be colored with icolor
+  #   and not parula6[0]
   # TODO: move all checks to the first API-visible function
   if not isinstance(id2color, dict) or id2color is None:
     raise NotImplementedError('id2color must be a dict for now.')
@@ -91,7 +92,7 @@ def _uid2colors(uids, id2color=None, experimental_deltas=(60, 60, 60), experimen
     raise ValueError(f'There are uids that are not in the correct range\n{np.unique(uids)}.')
 
   N_MAX_COLORABLE_PARTS = 6
-  # mixed parula so visualization is better
+  # parula colormap from Matlab
   parula6 = [
     #   (0, 0, 0),
       (61, 38, 168), (27, 170, 222), (71, 203, 134),
@@ -104,25 +105,25 @@ def _uid2colors(uids, id2color=None, experimental_deltas=(60, 60, 60), experimen
 
   # generate the uid to colors mappings
   uid_2_colors = dict()
-  def _add_mapping(uid, cc, ic, pc):
-    uid_2_colors[uid] = list(map(np.uint8, [cc, ic, pc]))
+  def _add_mapping(uid, sc, ic, pc):
+    uid_2_colors[uid] = list(map(np.uint8, [sc, ic, pc]))
 
   for uid in np.unique(uids):
     sid, iid, pid = decode_uids(uid)
 
     # only semantic labels
     if uid <= 99:
-      ccolor = id2color[uid]
-      _add_mapping(uid, ccolor, ccolor, ccolor)
+      scolor = id2color[uid]
+      _add_mapping(uid, scolor, scolor, scolor)
       continue
 
     # from this point onward we have at least semantic labels
-    ccolor = id2color[sid]
+    scolor = id2color[sid]
     icolor = sid2shades[sid][iid]
 
     # only semantic and instance labels
     if uid <= 99_999:
-      _add_mapping(uid, ccolor, icolor, icolor)
+      _add_mapping(uid, scolor, icolor, icolor)
       continue
 
     # from this point onward we have at least semantic and instance labels
@@ -134,7 +135,7 @@ def _uid2colors(uids, id2color=None, experimental_deltas=(60, 60, 60), experimen
             f'Up to 6 parts are supported for coloring. Found uid={uid}, pid={pid}.')
       pcolor = (experimental_alpha * np.array(icolor) +
                 (1-experimental_alpha) * np.array(parula6[pid]))
-      _add_mapping(uid, ccolor, icolor, pcolor)
+      _add_mapping(uid, scolor, icolor, pcolor)
       continue
 
   return uid_2_colors
