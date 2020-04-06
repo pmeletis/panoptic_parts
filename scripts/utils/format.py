@@ -8,7 +8,7 @@ import tensorflow as tf
 # Arguments and functions defined with the preffix experimental_ may be changed
 # and are not backward-compatible.
 
-# PUBLIC_API = [decode_uids, experimental_encode_ids]
+# PUBLIC_API = [decode_uids, encode_ids]
 
 def decode_uids(uids,
                 experimental_return_sids_iids=False,
@@ -82,14 +82,14 @@ def decode_uids(uids,
 
   return returns
 
-def experimental_encode_ids(sids, iids, pids):
+def encode_ids(sids, iids, pids):
   """
   Given semantic ids (sids), instance ids (iids), and part ids (pids)
   this function encodes them element-wise to uids
   according to the hierarchical format described in README.
 
   This function is the opposite of decode_uids, i.e.,
-  uids = experimental_encode_ids(decode_uids(uids)).
+  uids = encode_ids(decode_uids(uids)).
 
   Note: this function is still not fully tested.
 
@@ -126,4 +126,3 @@ def experimental_encode_ids(sids, iids, pids):
   uids = where(pids < 0, sids_iids, sids_iids * 10**2 + pids)
 
   return uids
-encode_ids = experimental_encode_ids
