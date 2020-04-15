@@ -6,6 +6,8 @@ import random
 import numpy as np
 from PIL import Image
 
+from utils.format import decode_uids
+
 # Functions that start with underscore (_) should be considered as internal.
 # All other functions belong to the public API.
 # Arguments and functions defined with the preffix experimental_ may be changed
@@ -80,3 +82,20 @@ def safe_write(path, image):
   os.makedirs(op.dirname(path), exist_ok=True)
   Image.fromarray(image).save(path)
   return False
+
+def uids_lids2uids_cids(uids_with_lids, lids2cids):
+  """
+  Convert uids with semantic classes encoded as lids to uids with cids.
+  This function is useful in the Cityscapes context, or other datasets
+  where the lids and cids separation is used.
+  """
+  uids = uids_with_lids
+  sids, _, _ = decode_uids(uids)
+  uids_with_cids = np.where(
+      uids <= 99,
+      lids2cids[sids],
+      np.where(uids <= 99_999,
+               lids2cids[sids] * 10**3 + uids % 10**3,
+               lids2cids[sids] * 10**5 + uids % 10**5))
+
+  return uids_with_cids
