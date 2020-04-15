@@ -1,7 +1,10 @@
 
+import os
+import os.path as op
 import random
 
 import numpy as np
+from PIL import Image
 
 # Functions that start with underscore (_) should be considered as internal.
 # All other functions belong to the public API.
@@ -57,3 +60,23 @@ def _sparse_ids_mapping_to_dense_ids_mapping(ids_dict, void, length=None, dtype=
     raise NotImplementedError('Not yet implemented.')
 
   return dense_mapping
+
+def safe_write(path, image):
+  """
+  Check if `path` exist and if it doesn't creates all needed intermediate-level directories
+  and saves `image` to `path`.
+
+  Args:
+    path: a path passed to os.path.exists, os.makedirs and PIL.Image.save()
+    image: a numpy image passed to PIL.Image.fromarray()
+
+  Return:
+    True is path exists else False.
+  """
+  if op.exists(path):
+    print('File already exists:', path)
+    return True
+
+  os.makedirs(op.dirname(path), exist_ok=True)
+  Image.fromarray(image).save(path)
+  return False

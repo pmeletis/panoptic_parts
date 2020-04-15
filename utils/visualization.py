@@ -6,7 +6,7 @@ import collections
 from scipy import ndimage
 import numpy as np
 
-from scripts.utils.format import decode_uids
+from utils.format import decode_uids
 
 # Functions that start with underscore (_) should be considered as internal.
 # All other functions belong to the public API.

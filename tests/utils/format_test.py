@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 assert tf.version.VERSION[0] == '2', 'This test uses TF r2.x functionality.'
 
-from scripts.utils.format import decode_uids, encode_ids
+from utils.format import decode_uids, encode_ids
 
 # TOTAL_TESTS = 96 + 24 = 120
 
