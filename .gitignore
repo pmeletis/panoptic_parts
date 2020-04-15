@@ -130,4 +130,6 @@ dmypy.json
 
 # Visual Studio Code
 .vscode/
+
+# this repository
 tests/tests_files/
