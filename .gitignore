@@ -130,4 +130,4 @@ dmypy.json
 
 # Visual Studio Code
 .vscode/
-tests/test_files/
+tests/tests_files/
