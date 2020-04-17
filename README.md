@@ -1,7 +1,17 @@
 # Panoptic Parts Datasets
 This repository contains code and tools for reading, processing, and visualizing *Cityscapes-Panoptic-Parts* and *PASCAL-Panoptic-Parts* datasets. We created these datasets by extending two established datasets for image scene understanding, namely [Cityscapes](https://github.com/mcordts/cityscapesScripts "Cityscapes") and [PASCAL](http://host.robots.ox.ac.uk/pascal/VOC/voc2010/ "PASCAL") datasets.
 
-Detailed description of the datasets and various statistics are presented in our technical report in [Arxiv](link). Please cite us if you find our work useful and you use it for your research.
+Detailed description of the datasets and various statistics are presented in our technical report in [Arxiv](link). Please cite us if you find our work useful and you use it for your research:
+```
+@report{meletisetal2020panopticparts,
+	author = {Meletis Panagiotis, Xiaoxiao Wen, Chenyang Lu, Daan de Geus, Gijs Dubbelman},
+	title = {Cityscapes-Panoptic-Parts and PASCAL-Panoptic-Parts datasets for Scene Understanding},
+	type = {Technical report},
+	institution = {Eindhoven University of Technology},
+	date = {16/04/2020},
+	url = {https://github.com/tue-mps/panoptic_parts}
+}
+```
 
 ## Cityscapes-Panoptic-Parts
 ---
