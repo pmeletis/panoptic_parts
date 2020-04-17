@@ -13,7 +13,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 from utils.utils import uids_lids2uids_cids, safe_write
-from utils.visualization import colorize_uids
+from utils.visualization import _colorize_uids
 
 DEF_PATH = op.join('utils', 'defs', 'cityscapes_default_20classes.json')
 
@@ -43,7 +43,7 @@ def visualize(image_path, label_path):
 
   # uids according to our hierarchical panoptic format
   uids_with_cids = uids_lids2uids_cids(uids_with_lids, LIDS2CIDS)
-  uids_colored = colorize_uids(
+  uids_colored = _colorize_uids(
       uids_with_cids, {cid: color for cid, color in enumerate(CIDS2COLORS)}, True)
   uids_sem_colored, uids_sem_inst_colored, uids_sem_inst_parts_colored = uids_colored
 

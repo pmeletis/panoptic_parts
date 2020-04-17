@@ -13,7 +13,7 @@ from utils.format import decode_uids
 # Arguments and functions defined with the preffix experimental_ may be changed
 # and are not backward-compatible.
 
-# PUBLIC_API = [colorize_uids]
+# PUBLIC_API = []
 
 def _generate_shades(center_color, deltas, num_of_shades):
   # center_color: (R, G, B)
@@ -140,7 +140,7 @@ def _uid2colors(uids, id2color=None, experimental_deltas=(60, 60, 60), experimen
 
   return uid_2_colors
 
-def colorize_uids(uids, sid2color=None, experimental_emphasize_instance_boundary=False):
+def _colorize_uids(uids, sid2color=None, experimental_emphasize_instance_boundary=False):
   """
   This function colorizes a `uids` array that has values according to the
   hierarchical format in the README. For the semantic level it uses the colors
