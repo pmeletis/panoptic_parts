@@ -78,27 +78,26 @@ def visualize(image_path, label_path):
     # Color at the semantic level.
     color_generator = IdGenerator(CATEGORIES)
     for sid in np.unique(sids):
-        mask = sids == sid
+        mask = np.equal(sids, sid)
         color = CATEGORIES[sid]['color']
         semantic_segmentation[mask] = color
 
     # Color at the semantic and instance level and find the instance-level boundaries.
     sids_only = np.where(iids < 0, sids, np.zeros_like(iids))
     for sid in np.unique(sids_only):
-        mask = sids_only == sid
+        mask = np.equal(sids_only, sid)
         color = color_generator.get_color(sid)
         instance_segmentation[mask] = color
 
     sid_iids = np.where(iids >= 0, sids * 10**3 + iids, np.zeros_like(iids))
     boundaries = np.full(sid_iids.shape, False)
     for sid_iid in np.unique(sid_iids):
-        mask = sid_iids == sid_iid
-        color = color_generator.get_color(sid_iid // 1000)
-        instance_segmentation[mask] = color
         if sid_iid != 0:
-            sid_iid_mask = np.equal(sid_iids, sid_iid)
-            boundary_horizon = ndimage.sobel(sid_iid_mask, 0)
-            boundary_vertical = ndimage.sobel(sid_iid_mask, 1)
+            mask = np.equal(sid_iids, sid_iid)
+            color = color_generator.get_color(sid_iid // 1000)
+            instance_segmentation[mask] = color
+            boundary_horizon = ndimage.sobel(mask, 0)
+            boundary_vertical = ndimage.sobel(mask, 1)
             boundaries = np.logical_or(np.hypot(boundary_horizon, boundary_vertical), boundaries)
 
     # Color at the part level.
