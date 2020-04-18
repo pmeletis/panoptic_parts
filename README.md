@@ -33,5 +33,6 @@ Detailed description of the datasets and various statistics are presented in our
 ## Contact
 Please feel free to contact us for any suggestions or questions:
 
-Panagiotis Meletis, Vincent Wen
+Panagiotis Meletis, Vincent Wen:
 * p[DOT]c[DOT]meletis[AT]tue.nl
+* xiaoxiao[DOT]wen[AT]student.uva.nl
