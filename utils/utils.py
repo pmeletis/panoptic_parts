@@ -13,7 +13,7 @@ from utils.format import decode_uids
 # Arguments and functions defined with the preffix experimental_ may be changed
 # and are not backward-compatible.
 
-# PUBLIC_API = []
+# PUBLIC_API = [safe_write]
 
 def _random_colors(num):
   """
