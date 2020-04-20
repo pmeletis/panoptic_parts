@@ -1,7 +1,8 @@
 """
 Run this script as
-`python -m cityscapes_panoptic_parts.visualize <image_path> <label_path>`
-to visualize a Cityscapes image and label pair in the following 3.
+`python -m cityscapes_panoptic_parts.experimental_visualize <image_path> <label_path>`
+to visualize a Cityscapes-Panoptic-Parts image and label pair in the following
+3 levels: semantic, semantic-instance, semantic-instance-parts.
 """
 
 import os.path as op
@@ -25,7 +26,7 @@ LIDS2CIDS = prob_def['lids2cids']
 LIDS2CIDS = np.array([m if m!=-1 else max(LIDS2CIDS)+1 for m in LIDS2CIDS], dtype=np.int32)
 CIDS2COLORS = np.array(prob_def['cids2colors'], dtype=np.uint8)
 
-def visualize(image_path, label_path):
+def experimental_visualize(image_path, label_path):
   """
   Visualizes in a pyplot window an image and a label pair from
   provided paths. For reading Pillow is used so all paths and formats
@@ -68,4 +69,4 @@ if __name__ == "__main__":
   parser.add_argument('image_path')
   parser.add_argument('label_path')
   args = parser.parse_args()
-  visualize(args.image_path, args.label_path)
+  experimental_visualize(args.image_path, args.label_path)
