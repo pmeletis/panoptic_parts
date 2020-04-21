@@ -43,7 +43,7 @@ We encode three levels of labels: semantic, instance, and parts in a single imag
 
 ## Ground Truth usage cases
 
-We provide for each image a single (image-like) labels file encoding semantic-, instance-, and parts- levels annotations. The compactness of our encoding (see [Label format](LABEL_FORMAT.md)) together with the _decode_uids_ function (see [decode_uids](utils.format.py)) enables easy use of the labels for various image understanding tasks including:
+We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. The compactness of our encoding (see [Label format](LABEL_FORMAT.md)) together with the _decode_uids_ function (see [decode_uids](utils/format.py)) enables easy use of the labels for various image understanding tasks including:
 
 ```Python
 # Semantic Segmentation
