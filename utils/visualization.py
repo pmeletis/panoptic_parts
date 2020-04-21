@@ -2,6 +2,7 @@
 import itertools
 import random
 import collections
+import operator
 
 from scipy import ndimage
 import numpy as np
@@ -48,12 +49,31 @@ def _generate_shades(center_color, deltas, num_of_shades):
 def _num_instances_per_sid(uids):
   # Note: instances in Cityscapes are not always labeled with continuous iids,
   # e.g. one image can have instances with iids: 000, 001, 003, 007
+  # TODO(panos): deprecate this function since it has some bugs,
+  #   use _num_instances_per_sid_v2 instead
   uids = np.unique(uids)
   _, _, _, sids_iids = decode_uids(uids, experimental_return_sids_iids=True)
   sid2Ninstances = collections.defaultdict(lambda : 0)
   for sid_iid in sids_iids:
     sid, _, _ = decode_uids(sid_iid)
     sid2Ninstances[sid] += 1
+  return sid2Ninstances
+
+def _num_instances_per_sid_v2(uids):
+  # Note: instances in Cityscapes are not always labeled with continuous iids,
+  # e.g. one image can have instances with iids: 000, 001, 003, 007
+  # TODO(panos): move this functionality to utils.format
+  # np.array is needed since uids are Python ints
+  # and np.unique implicitly converts them to np.int64
+  # TODO(panos): remove this need when np.int64 is supported in decode_uids
+  uids_unique = np.unique(np.array(uids, dtype=np.int32))
+  _, _, _, sids_iids = decode_uids(uids_unique, experimental_return_sids_iids=True)
+  sids_iids_unique = np.unique(sids_iids)
+  sid2Ninstances = collections.defaultdict(lambda : 0)
+  for sid_iid in sids_iids_unique:
+    sid, iid, _ = decode_uids(sid_iid)
+    if iid >= 0:
+      sid2Ninstances[sid] += 1
   return sid2Ninstances
 
 def _uid2colors(uids, id2color=None, experimental_deltas=(60, 60, 60), experimental_alpha=0.5):
@@ -91,6 +111,7 @@ def _uid2colors(uids, id2color=None, experimental_deltas=(60, 60, 60), experimen
   if np.any(uids < 0) or np.any(uids > 99_999_99):
     raise ValueError(f'There are uids that are not in the correct range\n{np.unique(uids)}.')
 
+  # TODO(panos): generate parula on the fly so more parts can be colored
   N_MAX_COLORABLE_PARTS = 6
   # parula colormap from Matlab
   parula6 = [
@@ -225,3 +246,143 @@ def _colorize_uids(uids, sid2color=None, experimental_emphasize_instance_boundar
                                  uids_pids_colored)
 
   return uids_sids_colored, uids_iids_colored, uids_pids_colored
+
+def _random_colors(num):
+  """
+  Returns a sequence of `num` random Python int RGB color tuples in range [0, 255].
+  Colors can be repeated. This is desired behavior so we don't run out of colors.
+  """
+  return [tuple(map(int, color)) for color in np.random.choice(256, size=(num, 3))]
+
+def _sid2iids(uids):
+  # a dict mapping a sid to a set of all its iids
+  # uids: a list of Python int uids
+  # iids do not need to be consecutive numbers
+  # TODO(panos): move this functionality to utils.format
+  sid2iids = collections.defaultdict(set)
+  for uid in set(uids):
+    sid, iid, _ = decode_uids(uid)
+    if iid >= 0:
+      sid2iids[sid].add(iid)
+  return sid2iids
+
+def experimental_uid2color(uids,
+                           sid2color=None,
+                           experimental_deltas=(60, 60, 60),
+                           experimental_alpha=0.5):
+  """
+  Create an RGB palette for all unique uids in `uids`. The palette is a dictionary mapping
+  each uid from `uids` to an RGB color tuple, with values in range [0, 255].
+  The uids have to comply with the hierarchical format (see README), i.e., uid = (sid, iid, pid).
+
+  The colors are generated in the following way:
+    - If uid represents a semantic-level label (sid, N/A, N/A), then `sid2color`[sid] is used.
+    - If uid represents a semantic-instance-level label (sid, iid, N/A), then a random shade
+      of `sid2color`[sid] is used, controlled by `experimental_deltas`. The shades are
+      generated so they are as diverse as possible and the variability depends on the number
+      of iids per sid, i.e., the more the instances per sid in the `uids`, the less the
+      discriminability of shades.
+    - If uid represents a semantic-instance-parts-level label (sid, iid, pid), then a random shade
+      is generated as in the semantic-instance-level above and then it is mixed with a single
+      color from the parula colormap, controlled by `experimental_alpha`.
+
+  If `sid2color` is not provided (is None) then random colors are used. If `sid2color`
+  is provided but does not contain all the sids of uids an error is raised.
+
+  For now up to 5 parts per sid are supported, i.e., 1 <= pid <= 5.
+
+  Example usage in cityscapes_panoptic_parts/experimental_visualize.py.
+
+  Args:
+    uids: a list of Python int uids, following the hierarchical labeling format defined in README
+    sid2color: a dict mapping each sid of uids to an RGB color tuple of Python ints
+      with values in range [0, 255]
+    experimental_deltas: the range per color (Red, Green, Blue) in which to create shades, a small
+      range provides shades that are close to the sid color but makes instance colors to have less
+      contrast, a higher range provides better contrast but may create similar colors between
+      different sid instances
+    experimental_alpha: the mixing coeffient of the shade and the parula color
+
+  Returns:
+    uid2color: a dict mapping each uid to a color tuple of Python ints in range [0, 255]
+  """
+  # TODO(panos): add more checks for type, dtype, range
+
+  # The colormap is similar to Matlab's parula(6) colormap.
+  # By convention for the "void/unlabeled" semantic-instance-parts-level color,
+  #   the semantic-instance-level color is used instead of PARULA6[0]
+  N_MAX_COLORABLE_PARTS = 5
+  PARULA6 = [
+      (61, 38, 168),
+      (27, 170, 222), (71, 203, 134), (234, 186, 48), (249, 250, 20), (67, 102, 253)]
+
+  # Argument checking
+  # uids checks
+  if not isinstance(uids, list):
+    raise ValueError(f"Provide a list for uids. Given {type(uids)}.")
+  if not all(map(isinstance, uids, [int]*len(uids))):
+    raise ValueError(f"Provide a list of Python ints as uids. Given {uids}.")
+  if not all(map(lambda uid: 0 <= uid <= 99_999_99, uids)):
+    raise ValueError(f'There are uids that are not in the correct range. Given {uids}.')
+  # sid2color checks
+  if not isinstance(sid2color, dict) and sid2color is not None:
+    raise ValueError(f"sid2color must be a dict. Given {type(sid2color)}.")
+  # experimental_deltas checks
+  if not isinstance(experimental_deltas, tuple):
+    raise ValueError(f"experimental_deltas must be a tuple. Given {type(experimental_deltas)}.")
+  # if (not len(experimental_deltas) == 3 or
+  #     not all(map(isinstance, experimental_deltas, [int]*len(experimental_deltas)))):
+  #   raise
+  # if not all(map(lambda c: 0 <= c <= 255, experimental_deltas)):
+  #   raise
+  # experimental_alpha checks
+  if experimental_alpha < 0 or experimental_alpha > 1:
+    raise ValueError('experimental_alpha must be in [0, 1].')
+  # max pids check
+  # we use np.array since uids are Python ints and np.unique implicitly converts them to np.int64
+  # TODO(panos): remove this requirement when np.int64 is supported in decode_uids
+  _, _, pids = decode_uids(np.unique(np.array(uids, dtype=np.int32)))
+  pid_max = np.amax(pids)
+  if pid_max > N_MAX_COLORABLE_PARTS:
+    raise NotImplementedError(
+        f"Up to 5 parts are supported for coloring. Found pid={pid_max}.")
+
+  if sid2color is None:
+    # TODO(panos): add the list decoding functionality in decode_uids
+    sids_unique = set(map(operator.itemgetter(0), map(decode_uids, uids)))
+    random_sids_palette = _random_colors(len(sids_unique))
+    sid2color = {sid: tuple(map(int, color))
+                 for sid, color in zip(sids_unique, random_sids_palette)}
+
+  # generate instance shades
+  sid2num_instances = _num_instances_per_sid_v2(uids)
+  # TODO(panos): experimental_deltas must be large for sids with many iids and small for
+  #   sids with few iids, maybe automate this?
+  sid2shades = {sid: _generate_shades(sid2color[sid], experimental_deltas, Ninstances)
+                for sid, Ninstances in sid2num_instances.items()}
+
+  # generate the uid to colors mappings
+  # the index is needed since iids do not need be to be continuous,
+  #   otherwise we could just do sid2shades[sid][iid]
+  # convert set to list so it is indexable
+  sid_2_iids = {sid: list(iids) for sid, iids in _sid2iids(set(uids)).items()}
+  uid_2_colors = dict()
+  for uid in set(uids):
+    sid, iid, pid = decode_uids(uid)
+    if uid <= 99:
+      uid_2_colors[uid] = sid2color[sid]
+    else:
+      index = sid_2_iids[sid].index(iid)
+      sem_inst_level_color = sid2shades[sid][index]
+      if uid <= 99_999:
+        uid_2_colors[uid] = sem_inst_level_color
+      else:
+        if pid >= 1:
+          sem_inst_parts_level_color = tuple(map(int,
+              experimental_alpha * np.array(sem_inst_level_color) +
+                  (1-experimental_alpha) * np.array(PARULA6[pid])))
+        else:
+          sem_inst_parts_level_color = sem_inst_level_color
+        uid_2_colors[uid] = sem_inst_parts_level_color
+
+  return uid_2_colors
