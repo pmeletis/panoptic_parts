@@ -13,7 +13,7 @@ from utils.format import decode_uids
 # Arguments and functions defined with the preffix experimental_ may be changed
 # and are not backward-compatible.
 
-# PUBLIC_API = []
+# PUBLIC_API = [safe_write]
 
 def _random_colors(num):
   """
@@ -73,15 +73,15 @@ def safe_write(path, image):
     image: a numpy image passed to PIL.Image.fromarray()
 
   Return:
-    True is path exists else False.
+    False is path exists. True if the `image` is successfully written.
   """
   if op.exists(path):
     print('File already exists:', path)
-    return True
+    return False
 
   os.makedirs(op.dirname(path), exist_ok=True)
   Image.fromarray(image).save(path)
-  return False
+  return True
 
 def uids_lids2uids_cids(uids_with_lids, lids2cids):
   """
