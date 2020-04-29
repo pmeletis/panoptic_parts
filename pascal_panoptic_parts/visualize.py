@@ -49,7 +49,7 @@ def prepare_categories(def_path):
             sid_pid2parts_cid)
 
 
-DEF_PATH = op.join('utils', 'defs', 'ppp_193classes.json')
+DEF_PATH = op.join('utils', 'defs', 'ppp_100classes.json')
 CATEGORIES, CATEGORIES_PARTS, SID_PID2PARTS_CID = prepare_categories(DEF_PATH)
 
 
