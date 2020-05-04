@@ -6,6 +6,7 @@ import functools
 import numpy as np
 import tensorflow as tf
 assert tf.version.VERSION[0] == '2', 'This test uses TF r2.x functionality.'
+import torch
 
 from utils.format import decode_uids, encode_ids
 
@@ -80,7 +81,8 @@ def decode_uids_cases():
       # lambda x: np.array(x).astype(np.int32),
       functools.partial(np.array, dtype=np.int32),
       int,
-      np.int32
+      np.int32,
+      functools.partial(torch.tensor, dtype=torch.int32)
   ]
 
   # cases: [[inputs, outputs], ...] = [[[args, kwargs], outputs], ...]
@@ -107,6 +109,8 @@ def decode_uids_test(cases):
         all_equal &= aa == bb
       elif isinstance(aa, np.ndarray):
         all_equal &= np.all(np.equal(aa, bb))
+      elif isinstance(aa, torch.Tensor):
+        all_equal &= bool(aa == bb)
       else:
         raise NotImplementedError(f"{type(aa), type(bb)}")
     return all_equal

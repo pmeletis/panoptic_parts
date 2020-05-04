@@ -4,6 +4,7 @@ Tensorflow and Pytorch are optional frameworks.
 """
 
 from enum import Enum
+import functools
 
 import numpy as np
 
@@ -67,7 +68,12 @@ def _decode_uids_functors_and_checking(uids):
       return where, ones_like, divmod_, maximum, dtype
   if TORCH_IMPORTED:
     if isinstance(uids, torch.Tensor):
-      raise NotImplementedError('Torch is not yet supported.')
+      where = torch.where
+      ones_like = torch.ones_like
+      divmod_ = lambda x, y: (x // y, x % y)
+      maximum = torch.max
+      dtype = functools.partial(torch.tensor, dtype=torch.int32)
+      return where, ones_like, divmod_, maximum, dtype
 
   raise TypeError(f'{type(uids)} is an unsupported type of uids.')
 
