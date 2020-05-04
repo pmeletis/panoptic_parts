@@ -108,7 +108,7 @@ def decode_uids_test(cases):
       if isinstance(aa, (tf.Tensor, int, np.int32)):
         all_equal &= aa == bb
       elif isinstance(aa, np.ndarray):
-        all_equal &= np.all(np.equal(aa, bb))
+        all_equal &= bool(np.equal(aa, bb))
       elif isinstance(aa, torch.Tensor):
         all_equal &= bool(aa == bb)
       else:
