@@ -5,7 +5,7 @@ This repository contains code and tools for reading, processing, and visualizing
 Detailed description of the datasets and various statistics are presented in our technical report in [arxiv](https://arxiv.org/abs/2004.07944 "arxiv.org"). Please cite us if you find our work useful and you use it for your research:
 
 ```bibtex
-@article{meletisetal2020panopticparts,
+@article{meletis2020panopticparts,
     title = {Cityscapes-Panoptic-Parts and PASCAL-Panoptic-Parts datasets for Scene Understanding},
     author = {Meletis Panagiotis and Xiaoxiao Wen and Chenyang Lu and Daan de Geus and Gijs Dubbelman},
     type = {Technical report},
@@ -43,7 +43,7 @@ We encode three levels of labels: semantic, instance, and parts in a single imag
 
 ## Ground Truth usage cases
 
-We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. The compactness of our encoding (see [Label format](LABEL_FORMAT.md)) together with the _decode_uids_ function (see [decode_uids](utils/format.py)) enables easy use of the labels for various image understanding tasks including:
+We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. Our compact [label format](LABEL_FORMAT.md) together with [_decode_uids_](utils/format.py) function enable easy decoding of the labels for various image understanding tasks including:
 
 ```Python
 # Semantic Segmentation
@@ -68,16 +68,19 @@ _, _, _, semantic_instance_ids, semantic_parts_ids = decode_uids(labels, return_
 
 ## Requirements
 
-Tested with the following configuration:
+Tested with the following configuration (Linux system):
 
-* Linux system
-* Python >= 3.6
-* Tensorflow >= 2.0
-* Numpy
-* Pillow
-* SciPy
-* Matplotlib (only for visualization scripts)
-* panopticapi (only for PASCAL visualization script)
+* Required
+  * Python >= 3.6
+  * Numpy
+  * Pillow
+  * SciPy
+
+* Optional
+  * Tensorflow (for label format handling)
+  * Pytorch (for label format handling)
+  * Matplotlib (for visualization scripts)
+  * panopticapi (for PASCAL visualization script)
 
 ## Contact
 

@@ -87,7 +87,7 @@ def decode_uids_cases():
   cases = list()
   for example in examples:
     for type_fn in types_fn:
-      inputs = [(*map(type_fn, example[0][0]),), example[0][1]]
+      inputs = [(type_fn(example[0][0][0]),), example[0][1]]
       outputs = (*map(type_fn, example[1]),)
       cases.append([inputs, outputs])
   
@@ -100,6 +100,8 @@ def decode_uids_test(cases):
     all_equal = True
     assert len(a) == len(b)
     for (aa, bb) in zip(a, b):
+      # TODO(panos): consider checking with isinstance instead of type
+      # type(np.int32((1,))) != type(np.int32((1)))
       assert type(aa) is type(bb), f"aa: {aa} {type(aa)}, bb: {bb} {type(bb)}"
       if isinstance(aa, (tf.Tensor, int, np.int32)):
         all_equal &= aa == bb

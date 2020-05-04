@@ -1,7 +1,25 @@
+"""
+Utility functions for reading and writing to our hierarchical panoptic format (see REAMDE).
+Tensorflow and Pytorch are optional frameworks.
+"""
+
+from enum import Enum
 
 import numpy as np
-import tensorflow as tf
-# import torch as T
+
+TENSORFLOW_IMPORTED = False
+try:
+  import tensorflow as tf # pylint: disable=import-error
+  TENSORFLOW_IMPORTED = True
+except ModuleNotFoundError:
+  pass
+
+TORCH_IMPORTED = False
+try:
+  import torch # pylint: disable=import-error
+  TORCH_IMPORTED = True
+except ModuleNotFoundError:
+  pass
 
 # Functions that start with underscore (_) should be considered as internal.
 # All other functions belong to the public API.
@@ -9,6 +27,49 @@ import tensorflow as tf
 # and are not backward-compatible.
 
 # PUBLIC_API = [decode_uids, encode_ids]
+
+class Frameworks(Enum):
+  PYTHON = "python"
+  NUMPY = "numpy"
+  TENSORFLOW = "tensorflow"
+  TORCH = "torch"
+
+def _decode_uids_functors_and_checking(uids):
+  # this functions makes the decode_uids more clear
+  # required frameworks: Python and NumPy
+  if isinstance(uids, np.ndarray):
+    if uids.dtype != np.int32:
+      raise TypeError(f'{uids.dtype} is an unsupported dtype of np.ndarray uids.')
+    where = np.where
+    ones_like = np.ones_like
+    divmod_ = np.divmod
+    maximum = np.maximum
+    dtype = np.int32
+    return where, ones_like, divmod_, maximum, dtype
+  if isinstance(uids, (int, np.int32)):
+    where = lambda cond, true_br, false_br: true_br if cond else false_br
+    ones_like = lambda the_like: type(the_like)(1)
+    divmod_ = divmod
+    maximum = max
+    dtype = (lambda x: x) if isinstance(uids, int) else np.int32
+    return where, ones_like, divmod_, maximum, dtype
+
+  # optional frameworks: Tensorflow and Pytorch
+  if TENSORFLOW_IMPORTED:
+    if isinstance(uids, tf.Tensor):
+      if uids.dtype != tf.int32:
+        raise TypeError(f'{uids.dtype} is an unsupported dtype of tf.Tensor uids.')
+      where = tf.where
+      ones_like = tf.ones_like
+      divmod_ = lambda x, y: (x // y, x % y)
+      maximum = tf.maximum
+      dtype = lambda x: x
+      return where, ones_like, divmod_, maximum, dtype
+  if TORCH_IMPORTED:
+    if isinstance(uids, torch.Tensor):
+      raise NotImplementedError('Torch is not yet supported.')
+
+  raise TypeError(f'{type(uids)} is an unsupported type of uids.')
 
 def decode_uids(uids,
                 experimental_return_sids_iids=False,
@@ -45,37 +106,12 @@ def decode_uids(uids,
     if experimental_return_sids_pids:
       sids_pids: same type and shape as uids, will have no -1.
   """
+  where, ones_like, divmod_, maximum, dtype = _decode_uids_functors_and_checking(uids)
 
-  if isinstance(uids, np.ndarray):
-    if uids.dtype != np.int32:
-      raise TypeError(f'{uids.dtype} is an unsupported dtype of np.ndarray uids.')
-    where = np.where
-    ones_like = np.ones_like
-    divmod_ = np.divmod
-    maximum = np.maximum
-    dtype = np.int32
-  elif isinstance(uids, tf.Tensor):
-    if uids.dtype != tf.int32:
-      raise TypeError(f'{uids.dtype} is an unsupported dtype of tf.Tensor uids.')
-    where = tf.where
-    ones_like = tf.ones_like
-    divmod_ = lambda x, y: (x // y, x % y)
-    maximum = tf.maximum
-    dtype = lambda x: x
-  elif isinstance(uids, (int, np.int32)):
-    where = lambda cond, true_br, false_br: true_br if cond else false_br
-    ones_like = lambda the_like: type(the_like)(1)
-    divmod_ = divmod
-    maximum = max
-    dtype = (lambda x: x) if isinstance(uids, int) else np.int32
-  else:
-    raise TypeError(f'{type(uids)} is an unsupported type of uids.')
-
-  # TODO(panos): find better solution, e.g. convert to necessary type only before returning?
-  # explanations for using dtype, np.asarray that should be not needed in the following lines
-  # dtype: numpy implicitly converts Python int literals in np.int64, we need np.int32
-  # np.asarray: numpy implicitly converts ndarray with one element to np.int32 (which is not
-  #   ndarray) moreover dtypes are implicitly converted to np.int64 for arithmetic operations
+  # explanation for using dtype and np.asarray in this function:
+  #   dtype: numpy implicitly converts Python int literals in np.int64, we need np.int32
+  #   np.asarray: numpy implicitly converts ndarray with one element to np.int32 (which is not
+  #     ndarray), moreover dtypes are implicitly converted to np.int64 for arithmetic operations
 
   # pad uids to uniform 7-digit length
   uids_padded = where(uids <= 99_999,
@@ -83,16 +119,14 @@ def decode_uids(uids,
                       uids)
   # split uids to components (sids, iids, pids) from right to left
   sids_iids, pids = divmod_(uids_padded, dtype(10**2))
-  if isinstance(uids, np.ndarray):
-    sids_iids = np.asarray(sids_iids, dtype=np.int32)
   sids, iids = divmod_(sids_iids, dtype(10**3))
-  if isinstance(uids, np.ndarray):
-    sids = np.asarray(sids, dtype=np.int32)
   invalid_ids = ones_like(uids) * dtype(-1)
   # set invalid ids
   iids = where(uids <= 99, invalid_ids, iids)
   pids = where(uids <= 99_999, invalid_ids, pids)
 
+  if isinstance(uids, np.ndarray):
+    sids = np.asarray(sids, dtype=np.int32)
   returns = (sids, iids, pids)
 
   if experimental_return_sids_iids:
