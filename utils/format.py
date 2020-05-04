@@ -81,8 +81,7 @@ def decode_uids(uids,
                 experimental_return_sids_iids=False,
                 experimental_return_sids_pids=False):
   """
-  Given a numpy np.ndarray, a TF tensor, a Python int, or a np.int32
-  representing uids according to the hierarchical format described
+  Given the universal ids `uids` according to the hierarchical format described
   in README, this function returns element-wise
   the semantic ids (sids), instance ids (iids), and part ids (pids).
   Optionally (experimental for now), returns the sids_iids and sids_pids as well.
@@ -93,11 +92,17 @@ def decode_uids(uids,
   sids_pids = sids * 100 + max(pids, 0) and represent the semantic-part-level labeling,
   e.g., sids_pids(23_003_04) = 23_04.
 
+  Examples:
+    decode_uids(23) = (23, -1, -1)
+    decode_uids(23003) = (23, 3, -1)
+    decode_uids(2300304) = (23, 3, 4)
+
   Args:
     uids: tf.Tensor of dtype tf.int32 and arbitrary shape,
-          or tf.ndarray of dtype np.int32 and arbitrary shape,
+          or np.ndarray of dtype np.int32 and arbitrary shape,
+          or torch.tensor of dtype np.int32 and arbitrary shape,
           or Python int,
-          or np.int32 int,
+          or np.int32 integer,
           with elements according to hierarchical format (see README).
 
   Return:

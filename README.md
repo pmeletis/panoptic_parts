@@ -46,6 +46,8 @@ We encode three levels of labels: semantic, instance, and parts in a single imag
 We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. Our compact [label format](LABEL_FORMAT.md) together with [_decode_uids_](utils/format.py) function enable easy decoding of the labels for various image understanding tasks including:
 
 ```Python
+# labels: Python int, or np.ndarray, or tf.Tensor, or torch.tensor
+
 # Semantic Segmentation
 semantic_ids, _, _ = decode_uids(labels)
 
