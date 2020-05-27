@@ -15,12 +15,6 @@ from utils.format import decode_uids
 
 # PUBLIC_API = [safe_write]
 
-def _random_colors(num):
-  """
-  Return num random RGB colors in [0, 255] as a list of lists.
-  Colors can be repeated, which is a preferred behavior so we don't run out of colors.
-  """
-  return [list(color) for color in np.random.choice(256, size=(num, 3))]
 
 def _sparse_ids_mapping_to_dense_ids_mapping(ids_dict, void, length=None, dtype=np.int32):
   """

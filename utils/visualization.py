@@ -14,7 +14,26 @@ from utils.format import decode_uids
 # Arguments and functions defined with the preffix experimental_ may be changed
 # and are not backward-compatible.
 
-# PUBLIC_API = []
+# PUBLIC_API = [random_colors]
+
+
+def random_colors(num):
+  """
+  Returns a list of `num` random Python int RGB color tuples in range [0, 255].
+  Colors can be repeated. This is desired behavior so we don't run out of colors.
+
+  Args:
+    num: Python int, the number of colors to produce
+
+  Returns:
+    colors: a list of tuples representing RGB colors in range [0, 255]
+  """
+  if not isinstance(num, int) or num < 0:
+    raise ValueError('Provide a correct number of colors.')
+
+  return [tuple(map(int, color)) for color in np.random.choice(256, size=(num, 3))]
+
+
 
 def _generate_shades(center_color, deltas, num_of_shades):
   # center_color: (R, G, B)
@@ -247,13 +266,6 @@ def _colorize_uids(uids, sid2color=None, experimental_emphasize_instance_boundar
 
   return uids_sids_colored, uids_iids_colored, uids_pids_colored
 
-def _random_colors(num):
-  """
-  Returns a sequence of `num` random Python int RGB color tuples in range [0, 255].
-  Colors can be repeated. This is desired behavior so we don't run out of colors.
-  """
-  return [tuple(map(int, color)) for color in np.random.choice(256, size=(num, 3))]
-
 def _sid2iids(uids):
   # a dict mapping a sid to a set of all its iids
   # uids: a list of Python int uids
@@ -350,7 +362,7 @@ def experimental_uid2color(uids,
   if sid2color is None:
     # TODO(panos): add the list decoding functionality in decode_uids
     sids_unique = set(map(operator.itemgetter(0), map(decode_uids, uids)))
-    random_sids_palette = _random_colors(len(sids_unique))
+    random_sids_palette = random_colors(len(sids_unique))
     sid2color = {sid: tuple(map(int, color))
                  for sid, color in zip(sids_unique, random_sids_palette)}
 
