@@ -193,7 +193,7 @@ def _num_instances_per_sid(uids):
   # TODO(panos): deprecate this function since it has some bugs,
   #   use _num_instances_per_sid_v2 instead
   uids = np.unique(uids)
-  _, _, _, sids_iids = decode_uids(uids, experimental_return_sids_iids=True)
+  _, _, _, sids_iids = decode_uids(uids, return_sids_iids=True)
   sid2Ninstances = collections.defaultdict(lambda : 0)
   for sid_iid in sids_iids:
     sid, _, _ = decode_uids(sid_iid)
@@ -208,7 +208,7 @@ def _num_instances_per_sid_v2(uids):
   # and np.unique implicitly converts them to np.int64
   # TODO(panos): remove this need when np.int64 is supported in decode_uids
   uids_unique = np.unique(np.array(uids, dtype=np.int32))
-  _, _, _, sids_iids = decode_uids(uids_unique, experimental_return_sids_iids=True)
+  _, _, _, sids_iids = decode_uids(uids_unique, return_sids_iids=True)
   sids_iids_unique = np.unique(sids_iids)
   sid2Ninstances = collections.defaultdict(lambda : 0)
   for sid_iid in sids_iids_unique:

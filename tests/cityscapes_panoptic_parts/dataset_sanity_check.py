@@ -32,7 +32,7 @@ for i, (lp_orig, lp_ours) in enumerate(zip(labels_paths_original, labels_paths_o
   labels_orig = np.array(Image.open(lp_orig), dtype=np.int32)
   labels_ours = np.array(Image.open(lp_ours), dtype=np.int32)
 
-  _, _, _, sids_iids = decode_uids(labels_ours, experimental_return_sids_iids=True)
+  _, _, _, sids_iids = decode_uids(labels_ours, return_sids_iids=True)
   if not np.all(np.equal(labels_orig, sids_iids)):
     print(lp_orig, lp_ours, sep='\n')
     print(np.unique(labels_orig), print(np.unique(sids_iids)), np.unique(labels_ours), sep='\n')

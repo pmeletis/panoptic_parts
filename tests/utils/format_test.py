@@ -43,9 +43,9 @@ def encode_ids_test(cases):
   print(f"{len(cases)} test cases completed successfully.")
 
 def decode_uids_cases():
-  ersiT = {'experimental_return_sids_iids': True}
-  erspT = {'experimental_return_sids_pids': True}
-  ersipT = {'experimental_return_sids_iids': True, 'experimental_return_sids_pids': True}
+  ersiT = {'return_sids_iids': True}
+  erspT = {'return_sids_pids': True}
+  ersipT = {'return_sids_iids': True, 'return_sids_pids': True}
   # examples = [example, ...]
   # example = [inputs, outputs] = [[args, kwargs], outputs]
   examples = [

@@ -77,9 +77,7 @@ def _decode_uids_functors_and_checking(uids):
 
   raise TypeError(f'{type(uids)} is an unsupported type of uids.')
 
-def decode_uids(uids,
-                experimental_return_sids_iids=False,
-                experimental_return_sids_pids=False):
+def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
   """
   Given the universal ids `uids` according to the hierarchical format described
   in README, this function returns element-wise
@@ -112,9 +110,9 @@ def decode_uids(uids,
     iids will have -1 for pixels labeled with sids only.
     pids will have -1 for pixels labeled with sids or sids_iids only.
   
-    if experimental_return_sids_iids:
+    if return_sids_iids:
       sids_iids: same type and shape as uids, will have no -1.
-    if experimental_return_sids_pids:
+    if return_sids_pids:
       sids_pids: same type and shape as uids, will have no -1.
   """
   where, ones_like, divmod_, maximum, dtype = _decode_uids_functors_and_checking(uids)
@@ -140,11 +138,11 @@ def decode_uids(uids,
     sids = np.asarray(sids, dtype=np.int32)
   returns = (sids, iids, pids)
 
-  if experimental_return_sids_iids:
+  if return_sids_iids:
     sids_iids = where(uids <= 99_999, uids, sids_iids)
     returns += (sids_iids,)
 
-  if experimental_return_sids_pids:
+  if return_sids_pids:
     sids_pids = sids * dtype(10**2) + maximum(pids, dtype(0))
     if isinstance(uids, np.ndarray):
       sids_pids = np.asarray(sids_pids, dtype=np.int32)
