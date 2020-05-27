@@ -6,3 +6,4 @@
 - utils.format.encode_ids
 - utils.utils.safe_write
 - utils.visualization.random_colors
+- utils.visualization.uid2color
