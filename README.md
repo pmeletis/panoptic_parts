@@ -88,5 +88,5 @@ Tested with the following configuration (Linux system):
 
 Please feel free to contact us for any suggestions or questions:
 
-* Panagiotis Meletis: **p**[DOT]**c**[DOT]**meletis**[AT]**tue.nl**
+* Panagiotis Meletis: **p_c_meletis**[AT]**yahoo.com**
 * Vincent Wen: **xiaoxiao**[DOT]**wen**[AT]**student.uva.nl**
