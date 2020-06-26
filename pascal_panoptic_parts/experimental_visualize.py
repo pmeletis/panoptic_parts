@@ -1,7 +1,8 @@
 """
 Run this script as
-`python -m pascal_panoptic_parts.visualize <image_path> <label_path>`
-to visualize a Pascal-Panoptic-Parts image and label pair in the following 3.
+`python -m pascal_panoptic_parts.experimental_visualize <image_path> <label_path>`
+to visualize a Pascal-Panoptic-Parts image and label pair in the following
+3 levels: semantic, semantic-instance, semantic-instance-parts.
 """
 
 from panopticapi.utils import IdGenerator
