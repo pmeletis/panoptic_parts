@@ -44,18 +44,19 @@ def uid2color(uids,
   The uids have to comply with the hierarchical format (see README), i.e., uid = (sid, iid, pid).
 
   The colors are generated in the following way:
-    - If uid represents a semantic-level label (sid, N/A, N/A), then `sid2color`[sid] is used.
-    - If uid represents a semantic-instance-level label (sid, iid, N/A), then a random shade
-      of `sid2color`[sid] is used, controlled by `experimental_deltas`. The shades are
-      generated so they are as diverse as possible and the variability depends on the number
-      of iids per sid, i.e., the more the instances per sid in the `uids`, the less the
-      discriminability of shades.
-    - If uid represents a semantic-instance-parts-level label (sid, iid, pid), then a random shade
-      is generated as in the semantic-instance-level above and then it is mixed with a single
-      color from the parula colormap, controlled by `experimental_alpha`.
+    - uid represents a semantic-level label, i.e. uid=(sid, N/A, N/A),
+      then `sid2color`[sid] is used.
+    - uid represents a semantic-instance-level label, i.e. uid=(sid, iid, N/A),
+      then a random shade of `sid2color`[sid] is used, controlled by `experimental_deltas`.
+      The shades are generated so they are as diverse as possible and the variability depends
+      on the number of iids per sid, i.e., the more the instances per sid in the `uids`,
+      the less the discriminability of shades.
+    - uid represents a semantic-instance-parts-level label, i.e. uid=(sid, iid, pid),
+      then a random shade is generated as in the semantic-instance-level above and then
+      it is mixed with a single color from the parula colormap, controlled by `experimental_alpha`.
 
   If `sid2color` is not provided (is None) then random colors are used. If `sid2color`
-  is provided but does not contain all the sids of uids an error is raised.
+  is provided but does not contain all the sids of `uids` an error is raised.
 
   For now up to 5 parts per sid are supported, i.e., 1 <= pid <= 5.
 

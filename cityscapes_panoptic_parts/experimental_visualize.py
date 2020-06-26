@@ -50,6 +50,7 @@ def experimental_visualize(image_path, label_path, experimental_emphasize_instan
   # We want to visualize on all three levels so we need all the uids levels
   # and we do it here for all levels together so we call uid2color once to have
   # same shades across subfigures per plot for easier comparison
+  # sids, iids, sids_iids shapes: (height, width)
   sids, iids, _, sids_iids = decode_uids(uids_with_cids, return_sids_iids=True)
   ids_all_levels_unique = np.unique(np.stack([sids, sids_iids, uids_with_cids]))
   uid_2_color = uid2color(list(map(int, ids_all_levels_unique)), CIDS2COLORS)
@@ -57,6 +58,7 @@ def experimental_visualize(image_path, label_path, experimental_emphasize_instan
 
   # using numpy advanced indexing (gathering) a color from the (Ncolors, 3)-shaped palette
   # is chosen for each sid, sid_iid, and uid
+  # uids_*_colored shapes: (height, width, 3)
   uids_sem_colored = palette[sids]
   uids_sem_inst_colored = palette[sids_iids]
   uids_sem_inst_parts_colored = palette[uids_with_cids]
