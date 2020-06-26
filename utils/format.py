@@ -150,6 +150,35 @@ def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
 
   return returns
 
+def _encode_ids_functors_and_checking(sids, iids, pids):
+  # this functions makes the endoce_ids more clear
+  # required frameworks: Python and NumPy
+  if type(sids) is not type(iids) and type(iids) is not type(pids):
+    raise ValueError(
+        f"All arguments must have the same type, given {(*map(type, (sids, iids, pids)),)}")
+  if isinstance(sids, np.ndarray):
+    if sids.dtype != np.int32:
+      raise TypeError(f'{sids.dtype} is an unsupported dtype of np.ndarray ids.')
+    where = np.where
+    return where
+  if isinstance(sids, (int, np.int32)):
+    where = lambda cond, true_br, false_br: true_br if cond else false_br
+    return where
+
+  # optional frameworks: Tensorflow and Pytorch
+  if TENSORFLOW_IMPORTED:
+    if isinstance(sids, tf.Tensor):
+      if sids.dtype != tf.int32:
+        raise TypeError(f'{sids.dtype} is an unsupported dtype of tf.Tensor ids.')
+      where = tf.where
+      return where
+  if TORCH_IMPORTED:
+    if isinstance(sids, torch.Tensor):
+      where = torch.where
+      return where
+
+  raise TypeError(f'{type(sids)} is an unsupported type of ids.')
+
 def encode_ids(sids, iids, pids):
   """
   Given semantic ids (sids), instance ids (iids), and part ids (pids)
@@ -172,23 +201,7 @@ def encode_ids(sids, iids, pids):
   Return:
     uids: same type and shape as the args according to hierarchical format (see README).
   """
-
-  if type(sids) is not type(iids) and type(iids) is not type(pids):
-    raise ValueError(
-        f"All arguments must have the same type, not {(*map(type, (sids, iids, pids)),)}")
-  if isinstance(sids, np.ndarray):
-    if sids.dtype != np.int32:
-      raise TypeError(f'{sids.dtype} is an unsupported dtype of np.ndarray uids.')
-    where = np.where
-  elif isinstance(sids, tf.Tensor):
-    if sids.dtype != tf.int32:
-      raise TypeError(f'{sids.dtype} is an unsupported dtype of tf.Tensor uids.')
-    where = tf.where
-  elif isinstance(sids, (int, np.int32, np.int64)):
-    # assert all([0 <= sids <= 99, 0 <= iids <= 999, 0 <= pids <= 99]), f"{(sids, iids, pids)}"
-    where = lambda cond, true_br, false_br: true_br if cond else false_br
-  else:
-    raise TypeError(f'{type(sids)} is an unsupported type of ids.')
+  where = _encode_ids_functors_and_checking(sids, iids, pids)
 
   sids_iids = where(iids < 0, sids, sids * 10**3 + iids)
   uids = where(pids < 0, sids_iids, sids_iids * 10**2 + pids)

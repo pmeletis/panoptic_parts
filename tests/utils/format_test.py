@@ -7,10 +7,11 @@ import numpy as np
 import tensorflow as tf
 assert tf.version.VERSION[0] == '2', 'This test uses TF r2.x functionality.'
 import torch
+assert torch.version.__version__[0] == '1', 'This test uses PyTorch r1.x functionality.'
 
 from utils.format import decode_uids, encode_ids
 
-# TOTAL_TESTS = 96 + 24 = 120
+# TOTAL_TESTS = 120 + 30 = 150 in this file.
 
 def encode_ids_cases():
   examples = [[(1, 2, 3), (1_002_03,)],
@@ -24,7 +25,8 @@ def encode_ids_cases():
   types_fn = [functools.partial(tf.constant, dtype=tf.int32),
               functools.partial(np.array, dtype=np.int32),
               int,
-              np.int32]
+              np.int32,
+              functools.partial(torch.tensor, dtype=torch.int32)]
 
   # cases: [[inputs, outputs], ...]
   cases = list()
@@ -40,7 +42,7 @@ def encode_ids_test(cases):
   for case in cases:
     results = encode_ids(*case[0])
     assert results == case[1][0], (case, results)
-  print(f"{len(cases)} test cases completed successfully.")
+  print(f"encode_ids: {len(cases)} test cases completed successfully.")
 
 def decode_uids_cases():
   ersiT = {'return_sids_iids': True}
@@ -121,7 +123,7 @@ def decode_uids_test(cases):
     # print(results, case[1])
     if not _equal(results, case[1]):
       print(case, results)
-  print(f"{len(cases)} test cases completed successfully.")
+  print(f"decode_uids: {len(cases)} test cases completed successfully.")
 
 if __name__ == "__main__":
   decode_uids_test(decode_uids_cases())
