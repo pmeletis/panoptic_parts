@@ -29,7 +29,7 @@ def random_colors(num):
     colors: a list of tuples representing RGB colors in range [0, 255]
   """
   if not isinstance(num, int) or num < 0:
-    raise ValueError('Provide a correct number of colors.')
+    raise ValueError('Provide a correct, Python int number of colors.')
 
   return [tuple(map(int, color)) for color in np.random.choice(256, size=(num, 3))]
 
@@ -391,12 +391,14 @@ def _colorize_uids(uids, sid2color=None, experimental_emphasize_instance_boundar
 
 def _sid2iids(uids):
   # a dict mapping a sid to a set of all its iids
+  # or in other words a mapping from a semantic class to all object ids it has
   # uids: a list of Python int uids
   # iids do not need to be consecutive numbers
   # TODO(panos): move this functionality to utils.format
   sid2iids = collections.defaultdict(set)
   for uid in set(uids):
     sid, iid, _ = decode_uids(uid)
+    # decode_uids returns iid = -1 for pixels that don't have instance-level labels
     if iid >= 0:
       sid2iids[sid].add(iid)
   return sid2iids

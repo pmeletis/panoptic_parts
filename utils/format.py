@@ -82,7 +82,7 @@ def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
   Given the universal ids `uids` according to the hierarchical format described
   in README, this function returns element-wise
   the semantic ids (sids), instance ids (iids), and part ids (pids).
-  Optionally (experimental for now), returns the sids_iids and sids_pids as well.
+  Optionally it returns the sids_iids and sids_pids as well.
 
   sids_iids represent the semantic-instance-level (two-level) labeling,
   e.g., sids_iids(Cityscapes-Panoptic-Parts) = Cityscapes-Original.
@@ -90,10 +90,18 @@ def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
   sids_pids = sids * 100 + max(pids, 0) and represent the semantic-part-level labeling,
   e.g., sids_pids(23_003_04) = 23_04.
 
-  Examples:
-    decode_uids(23) = (23, -1, -1)
-    decode_uids(23003) = (23, 3, -1)
-    decode_uids(2300304) = (23, 3, 4)
+  Examples (output is same type as input - not shown for clarity):
+    - decode_uids(23) → (23, -1, -1)
+    - decode_uids(23003) → (23, 3, -1)
+    - decode_uids(2300304) → (23, 3, 4)
+    - decode_uids(tf.constant([1, 12, 1234, 12345, 123456, 1234567])) →
+      ([ 1, 12,   1,  12,   1,  12],
+       [-1, -1, 234, 345, 234, 345],
+       [-1, -1,  -1,  -1,  56,  67])
+    - decode_uids(np.array([[1, 12], [1234, 12345]])) →
+      ([[ 1, 12], [ 1, 12]],
+       [[ -1,  -1], [234, 345]],
+       [[-1, -1], [-1, -1]])
 
   Args:
     uids: tf.Tensor of dtype tf.int32 and arbitrary shape,
