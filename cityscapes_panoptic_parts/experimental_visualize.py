@@ -16,7 +16,7 @@ from scipy import ndimage
 
 from utils.utils import uids_lids2uids_cids, safe_write, _sparse_ids_mapping_to_dense_ids_mapping
 from utils.format import decode_uids
-from utils.visualization import _colorize_uids, uid2color
+from utils.visualization import uid2color
 
 DEF_PATH = op.join('utils', 'defs', 'cityscapes_default_20classes.json')
 
