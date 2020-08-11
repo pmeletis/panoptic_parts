@@ -122,7 +122,7 @@ def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
   Args:
     uids: tf.Tensor of dtype tf.int32 and arbitrary shape,
           or np.ndarray of dtype np.int32 and arbitrary shape,
-          or torch.tensor of dtype np.int32 and arbitrary shape,
+          or torch.tensor of dtype torch.int32 and arbitrary shape,
           or Python int,
           or np.int32 integer,
           with elements according to hierarchical format (see README).
@@ -218,9 +218,10 @@ def encode_ids(sids, iids, pids):
     sids, iids, pids: all of the same type with -1 for non-relevant pixels with
       elements according to hierarchical format (see README). Can be:
       tf.Tensor of dtype tf.int32 and arbitrary shape,
-      tf.ndarray of dtype np.int32 and arbitrary shape,
-      Python int,
-      np.int32 int.
+      or np.ndarray of dtype np.int32 and arbitrary shape,
+      or torch.tensor of dtype torch.int32 and arbitrary shape,
+      or Python int,
+      or np.int32 integer.
 
   Return:
     uids: same type and shape as the args according to hierarchical format (see README).
