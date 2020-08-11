@@ -35,9 +35,23 @@ class Frameworks(Enum):
   TENSORFLOW = "tensorflow"
   TORCH = "torch"
 
+def _validate_uids_values_numpy_python(uids):
+  assert isinstance(uids, (int, np.int32, np.ndarray))
+  uids = np.array(uids, dtype=np.int32)
+  if np.any(uids > 99_999_99):
+    raise ValueError('Some uids exceed the 99_999_99 encoding limit.')
+  if np.any(uids < 0):
+    raise ValueError('Some uids are negative.')
+  num_digits = (np.log10(uids) + 1).astype(np.int)
+  if 3 in np.unique(num_digits):
+    raise ValueError(
+        'Some uids have length of 3 digits that is not allowed by the encoding format.')
+
+
 def _decode_uids_functors_and_checking(uids):
   # this functions makes the decode_uids more clear
   # required frameworks: Python and NumPy
+  # TODO(panos): split this function into 2
   if isinstance(uids, np.ndarray):
     if uids.dtype != np.int32:
       raise TypeError(f'{uids.dtype} is an unsupported dtype of np.ndarray uids.')
@@ -46,6 +60,7 @@ def _decode_uids_functors_and_checking(uids):
     divmod_ = np.divmod
     maximum = np.maximum
     dtype = np.int32
+    _validate_uids_values_numpy_python(uids)
     return where, ones_like, divmod_, maximum, dtype
   if isinstance(uids, (int, np.int32)):
     where = lambda cond, true_br, false_br: true_br if cond else false_br
@@ -53,6 +68,7 @@ def _decode_uids_functors_and_checking(uids):
     divmod_ = divmod
     maximum = max
     dtype = (lambda x: x) if isinstance(uids, int) else np.int32
+    _validate_uids_values_numpy_python(uids)
     return where, ones_like, divmod_, maximum, dtype
 
   # optional frameworks: Tensorflow and Pytorch
