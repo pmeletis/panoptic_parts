@@ -174,6 +174,25 @@ def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
 
   return returns
 
+
+def _validate_ids_values_numpy_python(sids, iids, pids):
+  assert isinstance(sids, (int, np.int32, np.ndarray))
+  assert type(sids) is type(iids) and type(iids) is type(pids)
+  sids, iids, pids = map(functools.partial(np.array, dtype=np.int32), [sids, iids, pids])
+  if np.any(sids > 99):
+    raise ValueError('Some sids exceed the 99 encoding limit.')
+  if np.any(iids > 999):
+    raise ValueError('Some iids exceed the 999 encoding limit.')
+  if np.any(pids > 99):
+    raise ValueError('Some sids exceed the 99 encoding limit.')
+  if np.any(sids < -1):
+    raise ValueError('Some sids are negative.')
+  if np.any(iids < -1):
+    raise ValueError('Some iids are negative.')
+  if np.any(pids < -1):
+    raise ValueError('Some pids are negative.')
+
+
 def _encode_ids_functors_and_checking(sids, iids, pids):
   # this functions makes the endoce_ids more clear
   # required frameworks: Python and NumPy
@@ -184,9 +203,11 @@ def _encode_ids_functors_and_checking(sids, iids, pids):
     if sids.dtype != np.int32:
       raise TypeError(f'{sids.dtype} is an unsupported dtype of np.ndarray ids.')
     where = np.where
+    _validate_ids_values_numpy_python(sids, iids, pids)
     return where
   if isinstance(sids, (int, np.int32)):
     where = lambda cond, true_br, false_br: true_br if cond else false_br
+    _validate_ids_values_numpy_python(sids, iids, pids)
     return where
 
   # optional frameworks: Tensorflow and Pytorch
@@ -211,8 +232,6 @@ def encode_ids(sids, iids, pids):
 
   This function is the opposite of decode_uids, i.e.,
   uids = encode_ids(decode_uids(uids)).
-
-  Note: this function is still not fully tested.
 
   Args:
     sids, iids, pids: all of the same type with -1 for non-relevant pixels with
