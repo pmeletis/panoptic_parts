@@ -41,12 +41,13 @@ def experimental_visualize(image_path, label_path, experimental_emphasize_instan
   """
   assert op.exists(image_path)
   assert op.exists(label_path)
-
-  image = Image.open(image_path)
-  uids_with_lids = np.array(Image.open(label_path), dtype=np.int32)
+  # reduce resolution for faster execution
+  image = Image.open(image_path).resize((1024, 512))
+  label = Image.open(label_path).resize((1024, 512), resample=Image.NEAREST)
+  uids = np.array(label, dtype=np.int32)
 
   # uids according to our hierarchical panoptic format
-  uids_with_cids = uids_lids2uids_cids(uids_with_lids, LIDS2CIDS)
+  uids_with_cids = uids_lids2uids_cids(uids, LIDS2CIDS)
 
   # We want to visualize on all three levels so we need all the uids levels
   # and we do it here for all levels together so we call uid2color once to have
