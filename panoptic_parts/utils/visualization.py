@@ -1,4 +1,3 @@
-
 import itertools
 import random
 import collections
@@ -7,7 +6,7 @@ import operator
 from scipy import ndimage
 import numpy as np
 
-from utils.format import decode_uids
+from panoptic_parts.utils.format import decode_uids
 
 # Functions that start with underscore (_) should be considered as internal.
 # All other functions belong to the public API.
