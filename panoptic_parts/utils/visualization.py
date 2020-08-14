@@ -15,6 +15,19 @@ from panoptic_parts.utils.format import decode_uids
 
 # PUBLIC_API = [random_colors, uid2color]
 
+# TODO(panos): Make VALIDATE_ARGS global. Exhaustive validation is usually computationally
+#   intensive, so we want to have a global switch (which late will default to False),
+#   that during debugging only turns argument validation on
+VALIDATE_ARGS = True
+
+# Colormap for painting parts, similar to Matlab's parula(6) colormap.
+# For the "void/unlabeled" semantic-instance-parts-level color, we use
+#   the semantic-instance-level color is used instead of PARULA6[0]
+N_MAX_COLORABLE_PARTS = 5
+PARULA6 = [
+    (61, 38, 168),
+    (27, 170, 222), (71, 203, 134), (234, 186, 48), (249, 250, 20), (67, 102, 253)]
+
 
 def random_colors(num):
   """
@@ -97,6 +110,38 @@ def _sid2iids(uids):
   return sid2iids
 
 
+def _validate_uid2color_args(uids, sid2color, experimental_deltas, experimental_alpha):
+  # TODO(panos): add more checks for type, dtype, range
+  if not isinstance(uids, list):
+    raise ValueError(f"Provide a list for uids. Given {type(uids)}.")
+  if not all(map(isinstance, uids, [int]*len(uids))):
+    raise ValueError(f"Provide a list of Python ints as uids. Given {uids}.")
+  if not all(map(lambda uid: 0 <= uid <= 99_999_99, uids)):
+    raise ValueError(f'There are uids that are not in the correct range. Given {uids}.')
+  # sid2color checks
+  if not isinstance(sid2color, dict) and sid2color is not None:
+    raise ValueError(f"sid2color must be a dict. Given {type(sid2color)}.")
+  # experimental_deltas checks
+  if not isinstance(experimental_deltas, tuple):
+    raise ValueError(f"experimental_deltas must be a tuple. Given {type(experimental_deltas)}.")
+  # if (not len(experimental_deltas) == 3 or
+  #     not all(map(isinstance, experimental_deltas, [int]*len(experimental_deltas)))):
+  #   raise
+  # if not all(map(lambda c: 0 <= c <= 255, experimental_deltas)):
+  #   raise
+  # experimental_alpha checks
+  if experimental_alpha < 0 or experimental_alpha > 1:
+    raise ValueError('experimental_alpha must be in [0, 1].')
+  # max pids check
+  # we use np.array since uids are Python ints and np.unique implicitly converts them to np.int64
+  # TODO(panos): remove this requirement when np.int64 is supported in decode_uids
+  _, _, pids = decode_uids(np.unique(np.array(uids, dtype=np.int32)))
+  pid_max = np.amax(pids)
+  if pid_max > N_MAX_COLORABLE_PARTS:
+    raise NotImplementedError(
+        f"Up to 5 parts are supported for coloring. Found pid={pid_max}.")
+
+
 def uid2color(uids,
               sid2color=None,
               experimental_deltas=(60, 60, 60),
@@ -139,47 +184,11 @@ def uid2color(uids,
   Returns:
     uid2color: a dict mapping each uid to a color tuple of Python ints in range [0, 255]
   """
-  # TODO(panos): add more checks for type, dtype, range
 
-  # The colormap is similar to Matlab's parula(6) colormap.
-  # By convention for the "void/unlabeled" semantic-instance-parts-level color,
-  #   the semantic-instance-level color is used instead of PARULA6[0]
-  N_MAX_COLORABLE_PARTS = 5
-  PARULA6 = [
-      (61, 38, 168),
-      (27, 170, 222), (71, 203, 134), (234, 186, 48), (249, 250, 20), (67, 102, 253)]
+  if VALIDATE_ARGS:
+    _validate_uid2color_args(uids, sid2color, experimental_deltas, experimental_alpha)
 
-  # Argument checking
-  # uids checks
-  if not isinstance(uids, list):
-    raise ValueError(f"Provide a list for uids. Given {type(uids)}.")
-  if not all(map(isinstance, uids, [int]*len(uids))):
-    raise ValueError(f"Provide a list of Python ints as uids. Given {uids}.")
-  if not all(map(lambda uid: 0 <= uid <= 99_999_99, uids)):
-    raise ValueError(f'There are uids that are not in the correct range. Given {uids}.')
-  # sid2color checks
-  if not isinstance(sid2color, dict) and sid2color is not None:
-    raise ValueError(f"sid2color must be a dict. Given {type(sid2color)}.")
-  # experimental_deltas checks
-  if not isinstance(experimental_deltas, tuple):
-    raise ValueError(f"experimental_deltas must be a tuple. Given {type(experimental_deltas)}.")
-  # if (not len(experimental_deltas) == 3 or
-  #     not all(map(isinstance, experimental_deltas, [int]*len(experimental_deltas)))):
-  #   raise
-  # if not all(map(lambda c: 0 <= c <= 255, experimental_deltas)):
-  #   raise
-  # experimental_alpha checks
-  if experimental_alpha < 0 or experimental_alpha > 1:
-    raise ValueError('experimental_alpha must be in [0, 1].')
-  # max pids check
-  # we use np.array since uids are Python ints and np.unique implicitly converts them to np.int64
-  # TODO(panos): remove this requirement when np.int64 is supported in decode_uids
-  _, _, pids = decode_uids(np.unique(np.array(uids, dtype=np.int32)))
-  pid_max = np.amax(pids)
-  if pid_max > N_MAX_COLORABLE_PARTS:
-    raise NotImplementedError(
-        f"Up to 5 parts are supported for coloring. Found pid={pid_max}.")
-
+  ## generate semantic-level colors
   if sid2color is None:
     # TODO(panos): add the list decoding functionality in decode_uids
     sids_unique = set(map(operator.itemgetter(0), map(decode_uids, uids)))
@@ -187,36 +196,32 @@ def uid2color(uids,
     sid2color = {sid: tuple(map(int, color))
                  for sid, color in zip(sids_unique, random_sids_palette)}
 
-  # generate instance shades
+  ## generate instance shades
   sid2num_instances = _num_instances_per_sid(uids)
   # TODO(panos): experimental_deltas must be large for sids with many iids and small for
   #   sids with few iids, maybe automate this?
   sid2shades = {sid: _generate_shades(sid2color[sid], experimental_deltas, Ninstances)
                 for sid, Ninstances in sid2num_instances.items()}
 
-  # generate the uid to colors mappings
+  ## generate the uid to colors mappings
+  # convert set to list so it is indexable
   # the index is needed since iids do not need be to be continuous,
   #   otherwise we could just do sid2shades[sid][iid]
-  # convert set to list so it is indexable
   sid_2_iids = {sid: list(iids) for sid, iids in _sid2iids(set(uids)).items()}
-  uid_2_colors = dict()
+  uid_2_color = dict()
   for uid in set(uids):
     sid, iid, pid = decode_uids(uid)
     if uid <= 99:
-      uid_2_colors[uid] = sid2color[sid]
-    else:
-      index = sid_2_iids[sid].index(iid)
-      sem_inst_level_color = sid2shades[sid][index]
-      if uid <= 99_999:
-        uid_2_colors[uid] = sem_inst_level_color
-      else:
-        if pid >= 1:
-          sem_inst_parts_level_color = tuple(map(int,
-              experimental_alpha * np.array(sem_inst_level_color) +
-                  (1-experimental_alpha) * np.array(PARULA6[pid])))
-        else:
-          sem_inst_parts_level_color = sem_inst_level_color
-        uid_2_colors[uid] = sem_inst_parts_level_color
+      uid_2_color[uid] = sid2color[sid]
+      continue
+    index = sid_2_iids[sid].index(iid)
+    sem_inst_level_color = sid2shades[sid][index]
+    if uids <= 99_999 or pid == 0:
+      uid_2_color[uid] = sem_inst_level_color
+      continue
+    if pid >= 1:
+      uid_2_color[uid] = tuple(map(int,
+          experimental_alpha * np.array(sem_inst_level_color) +
+              (1-experimental_alpha) * np.array(PARULA6[pid])))
 
-  return uid_2_colors
-
+  return uid_2_color
