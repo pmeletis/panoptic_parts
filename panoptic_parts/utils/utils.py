@@ -1,4 +1,3 @@
-
 import os
 import os.path as op
 import random
@@ -6,7 +5,7 @@ import random
 import numpy as np
 from PIL import Image
 
-from utils.format import decode_uids
+from panoptic_parts.utils.format import decode_uids
 
 # Functions that start with underscore (_) should be considered as internal.
 # All other functions belong to the public API.

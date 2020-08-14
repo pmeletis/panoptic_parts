@@ -1,4 +1,3 @@
-
 import sys
 assert float(sys.version[:3]) >= 3.7, 'This test uses Python >= 3.7 functionality.'
 import functools
@@ -9,7 +8,7 @@ assert tf.version.VERSION[0] == '2', 'This test uses TF r2.x functionality.'
 import torch
 assert torch.version.__version__[0] == '1', 'This test uses PyTorch r1.x functionality.'
 
-from utils.format import decode_uids, encode_ids
+from panoptic_parts.utils.format import decode_uids, encode_ids
 
 # TOTAL_TESTS = 120 + 30 = 150 in this file.
 

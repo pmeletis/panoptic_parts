@@ -35,9 +35,23 @@ class Frameworks(Enum):
   TENSORFLOW = "tensorflow"
   TORCH = "torch"
 
+def _validate_uids_values_numpy_python(uids):
+  assert isinstance(uids, (int, np.int32, np.ndarray))
+  uids = np.array(uids, dtype=np.int32)
+  if np.any(uids > 99_999_99):
+    raise ValueError('Some uids exceed the 99_999_99 encoding limit.')
+  if np.any(uids < 0):
+    raise ValueError('Some uids are negative.')
+  num_digits = (np.log10(uids) + 1).astype(np.int)
+  if 3 in np.unique(num_digits):
+    raise ValueError(
+        'Some uids have length of 3 digits that is not allowed by the encoding format.')
+
+
 def _decode_uids_functors_and_checking(uids):
   # this functions makes the decode_uids more clear
   # required frameworks: Python and NumPy
+  # TODO(panos): split this function into 2
   if isinstance(uids, np.ndarray):
     if uids.dtype != np.int32:
       raise TypeError(f'{uids.dtype} is an unsupported dtype of np.ndarray uids.')
@@ -46,6 +60,7 @@ def _decode_uids_functors_and_checking(uids):
     divmod_ = np.divmod
     maximum = np.maximum
     dtype = np.int32
+    _validate_uids_values_numpy_python(uids)
     return where, ones_like, divmod_, maximum, dtype
   if isinstance(uids, (int, np.int32)):
     where = lambda cond, true_br, false_br: true_br if cond else false_br
@@ -53,6 +68,7 @@ def _decode_uids_functors_and_checking(uids):
     divmod_ = divmod
     maximum = max
     dtype = (lambda x: x) if isinstance(uids, int) else np.int32
+    _validate_uids_values_numpy_python(uids)
     return where, ones_like, divmod_, maximum, dtype
 
   # optional frameworks: Tensorflow and Pytorch
@@ -82,7 +98,7 @@ def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
   Given the universal ids `uids` according to the hierarchical format described
   in README, this function returns element-wise
   the semantic ids (sids), instance ids (iids), and part ids (pids).
-  Optionally (experimental for now), returns the sids_iids and sids_pids as well.
+  Optionally it returns the sids_iids and sids_pids as well.
 
   sids_iids represent the semantic-instance-level (two-level) labeling,
   e.g., sids_iids(Cityscapes-Panoptic-Parts) = Cityscapes-Original.
@@ -90,15 +106,23 @@ def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
   sids_pids = sids * 100 + max(pids, 0) and represent the semantic-part-level labeling,
   e.g., sids_pids(23_003_04) = 23_04.
 
-  Examples:
-    decode_uids(23) = (23, -1, -1)
-    decode_uids(23003) = (23, 3, -1)
-    decode_uids(2300304) = (23, 3, 4)
+  Examples (output is same type as input - not shown for clarity):
+    - decode_uids(23) → (23, -1, -1)
+    - decode_uids(23003) → (23, 3, -1)
+    - decode_uids(2300304) → (23, 3, 4)
+    - decode_uids(tf.constant([1, 12, 1234, 12345, 123456, 1234567])) →
+      ([ 1, 12,   1,  12,   1,  12],
+       [-1, -1, 234, 345, 234, 345],
+       [-1, -1,  -1,  -1,  56,  67])
+    - decode_uids(np.array([[1, 12], [1234, 12345]])) →
+      ([[ 1, 12], [ 1, 12]],
+       [[ -1,  -1], [234, 345]],
+       [[-1, -1], [-1, -1]])
 
   Args:
     uids: tf.Tensor of dtype tf.int32 and arbitrary shape,
           or np.ndarray of dtype np.int32 and arbitrary shape,
-          or torch.tensor of dtype np.int32 and arbitrary shape,
+          or torch.tensor of dtype torch.int32 and arbitrary shape,
           or Python int,
           or np.int32 integer,
           with elements according to hierarchical format (see README).
@@ -150,6 +174,25 @@ def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
 
   return returns
 
+
+def _validate_ids_values_numpy_python(sids, iids, pids):
+  assert isinstance(sids, (int, np.int32, np.ndarray))
+  assert type(sids) is type(iids) and type(iids) is type(pids)
+  sids, iids, pids = map(functools.partial(np.array, dtype=np.int32), [sids, iids, pids])
+  if np.any(sids > 99):
+    raise ValueError('Some sids exceed the 99 encoding limit.')
+  if np.any(iids > 999):
+    raise ValueError('Some iids exceed the 999 encoding limit.')
+  if np.any(pids > 99):
+    raise ValueError('Some sids exceed the 99 encoding limit.')
+  if np.any(sids < -1):
+    raise ValueError('Some sids are negative.')
+  if np.any(iids < -1):
+    raise ValueError('Some iids are negative.')
+  if np.any(pids < -1):
+    raise ValueError('Some pids are negative.')
+
+
 def _encode_ids_functors_and_checking(sids, iids, pids):
   # this functions makes the endoce_ids more clear
   # required frameworks: Python and NumPy
@@ -160,9 +203,11 @@ def _encode_ids_functors_and_checking(sids, iids, pids):
     if sids.dtype != np.int32:
       raise TypeError(f'{sids.dtype} is an unsupported dtype of np.ndarray ids.')
     where = np.where
+    _validate_ids_values_numpy_python(sids, iids, pids)
     return where
   if isinstance(sids, (int, np.int32)):
     where = lambda cond, true_br, false_br: true_br if cond else false_br
+    _validate_ids_values_numpy_python(sids, iids, pids)
     return where
 
   # optional frameworks: Tensorflow and Pytorch
@@ -188,15 +233,14 @@ def encode_ids(sids, iids, pids):
   This function is the opposite of decode_uids, i.e.,
   uids = encode_ids(decode_uids(uids)).
 
-  Note: this function is still not fully tested.
-
   Args:
     sids, iids, pids: all of the same type with -1 for non-relevant pixels with
       elements according to hierarchical format (see README). Can be:
       tf.Tensor of dtype tf.int32 and arbitrary shape,
-      tf.ndarray of dtype np.int32 and arbitrary shape,
-      Python int,
-      np.int32 int.
+      or np.ndarray of dtype np.int32 and arbitrary shape,
+      or torch.tensor of dtype torch.int32 and arbitrary shape,
+      or Python int,
+      or np.int32 integer.
 
   Return:
     uids: same type and shape as the args according to hierarchical format (see README).

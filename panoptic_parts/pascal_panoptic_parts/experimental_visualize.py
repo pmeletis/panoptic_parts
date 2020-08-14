@@ -4,19 +4,19 @@ Run this script as
 to visualize a Pascal-Panoptic-Parts image and label pair in the following
 3 levels: semantic, semantic-instance, semantic-instance-parts.
 """
-
-from panopticapi.utils import IdGenerator
-from utils.format import decode_uids
-from utils.utils import color_map
-from scipy import ndimage
-from copy import deepcopy
-from PIL import Image
-import json
-import numpy as np
-import matplotlib.pyplot as plt
 import argparse
 import os.path as op
+import json
+from copy import deepcopy
 
+from scipy import ndimage
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+from panopticapi.utils import IdGenerator
+
+from panoptic_parts.utils.format import decode_uids
+from panoptic_parts.utils.utils import color_map
 
 def prepare_categories(def_path):
     # prepare some constants needed in visualize()

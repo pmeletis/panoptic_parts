@@ -4,17 +4,15 @@ the Cityscapes-Panoptic-Parts (CPP) labels. For now it validates that the
 semantic and instance level of Cityscapes Panoptic Parts (CPP) is equivalent to
 original Cityscapes (CO), i.e., sids_iids_CPP == sids_iids_CO.
 """
-
 import sys
 assert float(sys.version[:3]) >= 3.6, 'This test uses Python >= 3.6 functionality.'
-
 import os.path as op
 import glob
 
 import numpy as np
 from PIL import Image
 
-from utils.format import decode_uids
+from panoptic_parts.utils.format import decode_uids
 
 # find all label paths
 BASEPATH_LABELS_ORIGINAL = 'tests/tests_files/cityscapes/gtFine'

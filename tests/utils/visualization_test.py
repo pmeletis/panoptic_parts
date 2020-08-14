@@ -1,5 +1,4 @@
-
-from utils.visualization import random_colors
+from panoptic_parts.utils.visualization import random_colors
 
 def random_colors_test():
   colors0 = random_colors(0)
