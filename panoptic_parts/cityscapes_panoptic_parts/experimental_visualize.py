@@ -1,6 +1,6 @@
 """
 Run this script as
-`python -m cityscapes_panoptic_parts.experimental_visualize <image_path> <label_path>`
+`python -m panoptic_parts.cityscapes_panoptic_parts.experimental_visualize <image_path> <label_path>`
 to visualize a Cityscapes-Panoptic-Parts image and label pair in the following
 3 levels: semantic, semantic-instance, semantic-instance-parts.
 """
@@ -19,7 +19,7 @@ from panoptic_parts.utils.utils import (
 from panoptic_parts.utils.format import decode_uids
 from panoptic_parts.utils.visualization import uid2color
 
-DEF_PATH = op.join('utils', 'defs', 'cityscapes_default_20classes.json')
+DEF_PATH = op.join('panoptic_parts', 'utils', 'defs', 'cityscapes_default_20classes.json')
 
 # prepare some constants needed in visualize()
 with open(DEF_PATH, 'r') as fp:

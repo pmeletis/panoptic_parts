@@ -216,7 +216,7 @@ def uid2color(uids,
       continue
     index = sid_2_iids[sid].index(iid)
     sem_inst_level_color = sid2shades[sid][index]
-    if uids <= 99_999 or pid == 0:
+    if uid <= 99_999 or pid == 0:
       uid_2_color[uid] = sem_inst_level_color
       continue
     if pid >= 1:

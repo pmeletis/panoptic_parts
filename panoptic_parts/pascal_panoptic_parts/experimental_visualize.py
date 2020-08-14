@@ -1,6 +1,6 @@
 """
 Run this script as
-`python -m pascal_panoptic_parts.experimental_visualize <image_path> <label_path>`
+`python -m panoptic_parts.pascal_panoptic_parts.experimental_visualize <image_path> <label_path>`
 to visualize a Pascal-Panoptic-Parts image and label pair in the following
 3 levels: semantic, semantic-instance, semantic-instance-parts.
 """
@@ -50,7 +50,7 @@ def prepare_categories(def_path):
             sid_pid2parts_cid)
 
 
-DEF_PATH = op.join('utils', 'defs', 'ppp_100classes.json')
+DEF_PATH = op.join('panoptic_parts', 'utils', 'defs', 'ppp_100classes.json')
 CATEGORIES, CATEGORIES_PARTS, SID_PID2PARTS_CID = prepare_categories(DEF_PATH)
 
 
