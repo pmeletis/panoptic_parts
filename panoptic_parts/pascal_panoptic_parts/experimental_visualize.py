@@ -54,7 +54,7 @@ DEF_PATH = op.join('panoptic_parts', 'utils', 'defs', 'ppp_100classes.json')
 CATEGORIES, CATEGORIES_PARTS, SID_PID2PARTS_CID = prepare_categories(DEF_PATH)
 
 
-def visualize(image_path, label_path):
+def experimental_visualize(image_path, label_path):
     """
     Visualizes in a pyplot window an image and a label pair from
     provided paths. For reading Pillow is used so all paths and formats
@@ -156,4 +156,4 @@ if __name__ == "__main__":
     parser.add_argument('image_path')
     parser.add_argument('label_path')
     args = parser.parse_args()
-    visualize(args.image_path, args.label_path)
+    experimental_visualize(args.image_path, args.label_path)
