@@ -13,21 +13,25 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 from scipy import ndimage
+import yaml
 
 from panoptic_parts.utils.utils import (
     uids_lids2uids_cids, safe_write, _sparse_ids_mapping_to_dense_ids_mapping)
 from panoptic_parts.utils.format import decode_uids
 from panoptic_parts.utils.visualization import uid2color
 
-DEF_PATH = op.join('panoptic_parts', 'utils', 'defs', 'cityscapes_default_20classes.json')
 
-# prepare some constants needed in visualize()
-with open(DEF_PATH, 'r') as fp:
-  prob_def = json.load(fp)
-LIDS2CIDS = prob_def['lids2cids']
-# replace voids (-1) with max+1
-LIDS2CIDS = np.array([m if m!=-1 else max(LIDS2CIDS)+1 for m in LIDS2CIDS], dtype=np.int32)
-CIDS2COLORS = {cid: tuple(map(int, color)) for cid, color in enumerate(prob_def['cids2colors'])}
+# prepare SID2COLOR constant needed in experimental_visualize()
+# SID2COLOR is a mapping from all possible sids to colors
+DEF_PATH = op.join('panoptic_parts', 'utils', 'defs', 'cpp_20.yaml')
+with open(DEF_PATH) as fp:
+  defs = yaml.load(fp)
+SID2COLOR = defs['sid2color']
+# add colors for all sids that may exist in labels, but don't have a color from defs
+SID2COLOR.update({sid: SID2COLOR[-1]
+                  for sid in range(defs['max_sid'])
+                  if not (sid in defs['valid_sids'] or sid in SID2COLOR)})
+
 
 def experimental_visualize(image_path, label_path, experimental_emphasize_instance_boundary=True):
   """
@@ -46,26 +50,24 @@ def experimental_visualize(image_path, label_path, experimental_emphasize_instan
   label = Image.open(label_path).resize((1024, 512), resample=Image.NEAREST)
   uids = np.array(label, dtype=np.int32)
 
-  # uids according to our hierarchical panoptic format
-  uids_with_cids = uids_lids2uids_cids(uids, LIDS2CIDS)
-
-  # We want to visualize on all three levels so we need all the uids levels
-  # and we do it here for all levels together so we call uid2color once to have
-  # same shades across subfigures per plot for easier comparison
+  # We visualize labels on three levels: semantic, semantic-instance, semantic-instance-parts.
+  # We want to colorize same instances with the same shades across subfigures for easier comparison
+  # so we create ids_all_levels_unique and call uid2color() once to achieve that.
   # sids, iids, sids_iids shapes: (height, width)
-  sids, iids, _, sids_iids = decode_uids(uids_with_cids, return_sids_iids=True)
-  ids_all_levels_unique = np.unique(np.stack([sids, sids_iids, uids_with_cids]))
-  uid_2_color = uid2color(list(map(int, ids_all_levels_unique)), CIDS2COLORS)
-  palette = _sparse_ids_mapping_to_dense_ids_mapping(uid_2_color, (0, 0, 0), dtype=np.uint8)
+  sids, iids, _, sids_iids = decode_uids(uids, return_sids_iids=True)
+  ids_all_levels_unique = np.unique(np.stack([sids, sids_iids, uids]))
+  uid2color_dict = uid2color(ids_all_levels_unique, sid2color=SID2COLOR)
 
-  # using numpy advanced indexing (gathering) a color from the (Ncolors, 3)-shaped palette
-  # is chosen for each sid, sid_iid, and uid
+  # We colorize ids using numpy advanced indexing (gathering). This needs an array palette, thus we
+  # convert the dictionary uid2color_dict to a "continuous" array with shape (Ncolors, 3) and
+  # values in range [0, 255] (RGB).
   # uids_*_colored shapes: (height, width, 3)
+  palette = _sparse_ids_mapping_to_dense_ids_mapping(uid2color_dict, (0, 0, 0), dtype=np.uint8)
   uids_sem_colored = palette[sids]
   uids_sem_inst_colored = palette[sids_iids]
-  uids_sem_inst_parts_colored = palette[uids_with_cids]
+  uids_sem_inst_parts_colored = palette[uids]
 
-  # add boundaries
+  # optionally add boundaries to the colorized labels uids_*_colored
   edge_option = 'sobel' # or 'erosion'
   if experimental_emphasize_instance_boundary:
     # TODO(panos): simplify this algorithm
