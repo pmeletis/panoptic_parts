@@ -112,17 +112,21 @@ def _sid2iids(uids):
 
 def _validate_uid2color_args(uids, sid2color, experimental_deltas, experimental_alpha):
   # TODO(panos): add more checks for type, dtype, range
+  # TODO(panos): optimize performance by minimizing overlapping functionality
   if not isinstance(uids, (list, np.ndarray)):
     raise ValueError(f"Provide a list or np.ndarray of uids. Given {type(uids)}.")
-  # TODO(panos): add tests in case of uids isinstance of np.ndarray
-  if isinstance(uids, list):
-    if not all(map(isinstance, uids, [int]*len(uids))):
-      raise ValueError(f"Provide a list of Python ints as uids. Given {uids}.")
-    if not all(map(lambda uid: 0 <= uid <= 99_999_99, uids)):
-      raise ValueError(f'There are uids that are not in the correct range. Given {uids}.')
+  if isinstance(uids, np.ndarray):
+    uids = list(map(int, np.unique(uids)))
+  if not all(map(isinstance, uids, [int]*len(uids))):
+    raise ValueError(f"Provide a list of Python ints as uids. Given {uids}.")
+  if not all(map(lambda uid: 0 <= uid <= 99_999_99, uids)):
+    raise ValueError(f'There are uids that are not in the correct range. Given {uids}.')
   # sid2color checks
   if not isinstance(sid2color, dict) and sid2color is not None:
     raise ValueError(f"sid2color must be a dict. Given {type(sid2color)}.")
+  sids_unique_from_uids = set(map(operator.itemgetter(0), map(decode_uids, uids)))
+  if not sids_unique_from_uids.issubset(sid2color):
+    raise ValueError(f"Not all sids in uids have a matching color in sid2color.")
   # experimental_deltas checks
   if not isinstance(experimental_deltas, tuple):
     raise ValueError(f"experimental_deltas must be a tuple. Given {type(experimental_deltas)}.")
@@ -176,7 +180,7 @@ def uid2color(uids,
     uids: a list of Python int, or an np.ndarray, with elements following the hierarchical labeling
       format defined in README
     sid2color: a dict mapping each sid of uids to an RGB color tuple of Python ints
-      with values in range [0, 255]
+      with values in range [0, 255], sids that are not present in uids will be ignored
     experimental_deltas: the range per color (Red, Green, Blue) in which to create shades, a small
       range provides shades that are close to the sid color but makes instance colors to have less
       contrast, a higher range provides better contrast but may create similar colors between
