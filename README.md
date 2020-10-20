@@ -77,6 +77,7 @@ Tested with the following configuration (Linux system):
   * Numpy
   * Pillow
   * SciPy
+  * PyYAML
 
 * Optional
   * Tensorflow (for label format handling)
