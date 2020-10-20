@@ -112,12 +112,14 @@ def _sid2iids(uids):
 
 def _validate_uid2color_args(uids, sid2color, experimental_deltas, experimental_alpha):
   # TODO(panos): add more checks for type, dtype, range
-  if not isinstance(uids, list):
-    raise ValueError(f"Provide a list for uids. Given {type(uids)}.")
-  if not all(map(isinstance, uids, [int]*len(uids))):
-    raise ValueError(f"Provide a list of Python ints as uids. Given {uids}.")
-  if not all(map(lambda uid: 0 <= uid <= 99_999_99, uids)):
-    raise ValueError(f'There are uids that are not in the correct range. Given {uids}.')
+  if not isinstance(uids, (list, np.ndarray)):
+    raise ValueError(f"Provide a list or np.ndarray of uids. Given {type(uids)}.")
+  # TODO(panos): add tests in case of uids isinstance of np.ndarray
+  if isinstance(uids, list):
+    if not all(map(isinstance, uids, [int]*len(uids))):
+      raise ValueError(f"Provide a list of Python ints as uids. Given {uids}.")
+    if not all(map(lambda uid: 0 <= uid <= 99_999_99, uids)):
+      raise ValueError(f'There are uids that are not in the correct range. Given {uids}.')
   # sid2color checks
   if not isinstance(sid2color, dict) and sid2color is not None:
     raise ValueError(f"sid2color must be a dict. Given {type(sid2color)}.")
@@ -152,14 +154,14 @@ def uid2color(uids,
   The uids have to comply with the hierarchical format (see README), i.e., uid = (sid, iid, pid).
 
   The colors are generated in the following way:
-    - uid represents a semantic-level label, i.e. uid=(sid, N/A, N/A),
+    - if uid represents a semantic-level label, i.e. uid=(sid, N/A, N/A),
       then `sid2color`[sid] is used.
-    - uid represents a semantic-instance-level label, i.e. uid=(sid, iid, N/A),
+    - if uid represents a semantic-instance-level label, i.e. uid=(sid, iid, N/A),
       then a random shade of `sid2color`[sid] is used, controlled by `experimental_deltas`.
       The shades are generated so they are as diverse as possible and the variability depends
       on the number of iids per sid, i.e., the more the instances per sid in the `uids`,
       the less the discriminability of shades.
-    - uid represents a semantic-instance-parts-level label, i.e. uid=(sid, iid, pid),
+    - if uid represents a semantic-instance-parts-level label, i.e. uid=(sid, iid, pid),
       then a random shade is generated as in the semantic-instance-level above and then
       it is mixed with a single color from the parula colormap, controlled by `experimental_alpha`.
 
@@ -171,7 +173,8 @@ def uid2color(uids,
   Example usage in cityscapes_panoptic_parts/experimental_visualize.py.
 
   Args:
-    uids: a list of Python int uids, following the hierarchical labeling format defined in README
+    uids: a list of Python int, or an np.ndarray, with elements following the hierarchical labeling
+      format defined in README
     sid2color: a dict mapping each sid of uids to an RGB color tuple of Python ints
       with values in range [0, 255]
     experimental_deltas: the range per color (Red, Green, Blue) in which to create shades, a small
@@ -187,6 +190,9 @@ def uid2color(uids,
 
   if VALIDATE_ARGS:
     _validate_uid2color_args(uids, sid2color, experimental_deltas, experimental_alpha)
+
+  if isinstance(uids, np.ndarray):
+    uids = list(map(int, np.unique(uids)))
 
   ## generate semantic-level colors
   if sid2color is None:
