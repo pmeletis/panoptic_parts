@@ -15,8 +15,7 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 import yaml
 
-from panoptic_parts.utils.utils import (
-    uids_lids2uids_cids, safe_write, _sparse_ids_mapping_to_dense_ids_mapping)
+from panoptic_parts.utils.utils import _sparse_ids_mapping_to_dense_ids_mapping
 from panoptic_parts.utils.format import decode_uids
 from panoptic_parts.utils.visualization import uid2color
 
