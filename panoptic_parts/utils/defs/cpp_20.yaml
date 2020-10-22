@@ -1,9 +1,6 @@
 version: 1.0
 comments:
   - default Cityscapes 20 class problem
-  - by convention sids are zero-based
-  - sid2name and sid2color can optionally have an unlabeled/void/don't care key represented by -1, that will match sids not in validsids
-  - keys of sid2name and sid2color must at least cover all valid_sids
 valid_sids: [7, 8, 11, 12, 13, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33]
 max_sid: 33
 sid2name: {
