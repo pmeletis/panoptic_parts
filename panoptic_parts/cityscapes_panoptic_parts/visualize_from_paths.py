@@ -1,6 +1,7 @@
 """
 Run this script as
-`python -m panoptic_parts.cityscapes_panoptic_parts.experimental_visualize <image_path> <label_path>`
+`python -m panoptic_parts.cityscapes_panoptic_parts.visualize_sample_from_paths \
+     <image_path> <label_path> <task_def_path>`
 to visualize a Cityscapes-Panoptic-Parts image and label pair in the following
 3 levels: semantic, semantic-instance, semantic-instance-parts.
 """
@@ -17,28 +18,27 @@ import yaml
 from panoptic_parts.utils.visualization import experimental_colorize_label
 
 
-# prepare SID2COLOR constant needed in experimental_visualize()
-# SID2COLOR is a mapping from all possible sids to colors
-DEF_PATH = op.join('panoptic_parts', 'utils', 'defs', 'cpp_20.yaml')
-with open(DEF_PATH) as fp:
-  defs = yaml.load(fp)
-SID2COLOR = defs['sid2color']
-# add colors for all sids that may exist in labels, but don't have a color from defs
-SID2COLOR.update({sid: SID2COLOR[-1]
-                  for sid in range(defs['max_sid'])
-                  if not (sid in defs['valid_sids'] or sid in SID2COLOR)})
-
-
-def experimental_visualize(image_path, label_path, experimental_emphasize_instance_boundary=True):
+def visualize_from_paths(image_path, label_path, task_def_path):
   """
   Visualizes in a pyplot window an image and a label pair from
-  provided paths. For reading Pillow is used so all paths and formats
-  must be Pillow-compatible.
+  provided paths. For reading files, Pillow is used so all paths and formats
+  must be Pillow-compatible. The task definition is used to define colors
+  for label ids (see panoptic_parts/utils/defs/template_v1.0.yaml).
 
   Args:
-    image_path: an image path provided to Pillow.Image.open
-    label_path: a label path provided to Pillow.Image.open
+    image_path: an image path, will be passed to Pillow.Image.open
+    label_path: a label path, will be passed to Pillow.Image.open
+    task_def_path: a YAML file path, including keys: `sid2color`, `max_sid`, `valid_sids`
   """
+  # sid2color is a mapping from all possible sids to colors
+  with open(task_def_path) as fp:
+    task_def = yaml.load(fp)
+  sid2color = task_def['sid2color']
+  # add colors for all sids that may exist in labels, but don't have a color from task_def
+  sid2color.update({sid: sid2color[-1]
+                    for sid in range(task_def['max_sid'])
+                    if not (sid in task_def['valid_sids'] or sid in sid2color)})
+
   # reduce resolution for faster execution
   image = Image.open(image_path).resize((1024, 512))
   label = Image.open(label_path).resize((1024, 512), resample=Image.NEAREST)
@@ -46,7 +46,7 @@ def experimental_visualize(image_path, label_path, experimental_emphasize_instan
 
   uids_sem_inst_parts_colored, uids_sem_colored, uids_sem_inst_colored  = \
       experimental_colorize_label(uids,
-                                  sid2color=SID2COLOR,
+                                  sid2color=sid2color,
                                   return_sem=True,
                                   return_sem_inst=True,
                                   emphasize_instance_boundaries=True)
@@ -71,5 +71,6 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('image_path')
   parser.add_argument('label_path')
+  parser.add_argument('task_def_path')
   args = parser.parse_args()
-  experimental_visualize(args.image_path, args.label_path)
+  visualize_from_paths(args.image_path, args.label_path, args.task_def_path)
