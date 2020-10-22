@@ -53,11 +53,12 @@ def _generate_shades(center_color, deltas, num_of_shades):
   # returns a list of rgb color tuples
   # TODO: move all checks to the first API-visible function
   if num_of_shades <= 0:
-    return []
+    raise ValueError(f"num_of_shades must be a positive integer (was {num_of_shades}).")
   if num_of_shades == 1:
     return [center_color]
-  if not all(map(lambda d: 0 <= d <= 255, deltas)):
-    raise ValueError('deltas were not valid.')
+  # TODO: enable d=0
+  if not all(map(lambda d: 0 < d <= 255, deltas)):
+    raise ValueError(f"deltas were not valid ({deltas}).")
 
   center_color = np.array(center_color)
   deltas = np.array(deltas)
@@ -70,12 +71,11 @@ def _generate_shades(center_color, deltas, num_of_shades):
   shades = itertools.product(*map(np.arange, starts, stops, steps))
   # convert to int
   shades = list(map(lambda shade: tuple(map(int, shade)), shades))
-
   # sanity check
   assert len(shades) >= num_of_shades, (
       f"_generate_shades: Report case with provided arguments as an issue.")
 
-  return random.sample(shades, num_of_shades)
+  return list(sorted(random.sample(shades, num_of_shades), key=lambda t: np.linalg.norm(t, ord=2)))
 
 
 def _num_instances_per_sid(uids):
@@ -234,6 +234,8 @@ def uid2color(uids,
       uid_2_color[uid] = tuple(map(int,
           experimental_alpha * np.array(sem_inst_level_color) +
               (1-experimental_alpha) * np.array(PARULA6[pid])))
+    # catch any possible errors
+    assert uid in uid_2_color.keys()
 
   return uid_2_color
 
