@@ -7,6 +7,7 @@ from scipy import ndimage
 import numpy as np
 
 from panoptic_parts.utils.format import decode_uids
+from panoptic_parts.utils.utils import _sparse_ids_mapping_to_dense_ids_mapping
 
 # Functions that start with underscore (_) should be considered as internal.
 # All other functions belong to the public API.
@@ -235,3 +236,74 @@ def uid2color(uids,
               (1-experimental_alpha) * np.array(PARULA6[pid])))
 
   return uid_2_color
+
+
+def experimental_colorize_label(label,
+                                sid2color=None,
+                                return_sem=False,
+                                return_sem_inst=False,
+                                emphasize_instance_boundaries=True):
+  """
+  Colorizes a `label` with part-level panoptic colors (semantic-instance-parts-level)
+  based on sid2color. See uid2color for more info.
+  """
+  
+  assert all([isinstance(label, np.ndarray), label.ndim == 2, label.dtype == np.int32])
+
+  # We visualize labels on three levels: semantic, semantic-instance, semantic-instance-parts.
+  # We want to colorize same instances with the same shades across subfigures for easier comparison
+  # so we create ids_all_levels_unique and call uid2color() once to achieve that.
+  # sids, iids, sids_iids shapes: (height, width)
+  sids, iids, _, sids_iids = decode_uids(label, return_sids_iids=True)
+  ids_all_levels_unique = np.unique(np.stack([sids, sids_iids, label]))
+  uid2color_dict = uid2color(ids_all_levels_unique, sid2color=sid2color)
+
+  # We colorize ids using numpy advanced indexing (gathering). This needs an array palette, thus we
+  # convert the dictionary uid2color_dict to an array palette with shape (Ncolors, 3) and
+  # values in range [0, 255] (RGB).
+  # uids_*_colored shapes: (height, width, 3)
+  palette = _sparse_ids_mapping_to_dense_ids_mapping(uid2color_dict, (0, 0, 0), dtype=np.uint8)
+  uids_sem_colored = palette[sids]
+  uids_sem_inst_colored = palette[sids_iids]
+  uids_sem_inst_parts_colored = palette[label]
+
+  # optionally add boundaries to the colorized labels uids_*_colored
+  edge_option = 'sobel' # or 'erosion'
+  if emphasize_instance_boundaries:
+    # TODO(panos): simplify this algorithm
+    # create per-instance binary masks
+    iids_unique = np.unique(iids)
+    boundaries = np.full(iids.shape, False)
+    edges = np.full(iids.shape, False)
+    for iid in iids_unique:
+      if 0 <= iid <= 999:
+        iid_mask = np.equal(iids, iid)
+        if edge_option == 'sobel':
+          edge_horizont = ndimage.sobel(iid_mask, 0)
+          edge_vertical = ndimage.sobel(iid_mask, 1)
+          edges = np.logical_or(np.hypot(edge_horizont, edge_vertical), edges)
+        elif edge_option == 'erosion':
+          boundary = np.logical_xor(iid_mask,
+                                    ndimage.binary_erosion(iid_mask, structure=np.ones((4, 4))))
+          boundaries = np.logical_or(boundaries, boundary)
+
+    if edge_option == 'sobel':
+      boundaries_image = np.uint8(edges)[..., np.newaxis] * np.uint8([[[255, 255, 255]]])
+    elif edge_option == 'erosion':
+      boundaries_image = np.uint8(boundaries)[..., np.newaxis] * np.uint8([[[255, 255, 255]]])
+
+    uids_sem_inst_colored = np.where(boundaries_image,
+                                     boundaries_image,
+                                     uids_sem_inst_colored)
+    uids_sem_inst_parts_colored = np.where(boundaries_image,
+                                           boundaries_image,
+                                           uids_sem_inst_parts_colored)
+    
+    returns = (uids_sem_inst_parts_colored,)
+    if return_sem:
+      returns += (uids_sem_colored,)
+    if return_sem_inst:
+      returns += (uids_sem_inst_colored,)
+    if len(returns) == 1:
+      return returns[0]
+    return returns
