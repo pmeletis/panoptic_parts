@@ -25,6 +25,12 @@ def visualize_from_paths(image_path, label_path, task_def_path):
   must be Pillow-compatible. The task definition is used to define colors
   for label ids (see panoptic_parts/utils/defs/template_v1.0.yaml).
 
+  For visualization pixels are colored:
+    - semantic-level ids: according to colors defined in task_def
+    - semantic-instance-level ids: with random shades of colors defined in task_def
+    - semantic-instance-parts-level ids: with a mixture of parula colormap and the shades above
+  See panoptic_parts.utils.visualization.uid2color for more information on color generation.
+
   Args:
     image_path: an image path, will be passed to Pillow.Image.open
     label_path: a label path, will be passed to Pillow.Image.open
