@@ -154,19 +154,20 @@ def uid2color(uids,
               experimental_deltas=(60, 60, 60),
               experimental_alpha=0.5):
   """
-  Create an RGB palette for all unique uids in `uids`. The palette is a dictionary mapping
+  Generate an RGB palette for all unique uids in `uids`. The palette is a dictionary mapping
   each uid from `uids` to an RGB color tuple, with values in range [0, 255].
-  The uids have to comply with the hierarchical format (see README), i.e., uid = (sid, iid, pid).
+  A uid is an up to 7-digit integer that is interpreted according to our panoptic parts format
+  (see README), i.e., decode_uids(uid) = (sid, iid, pid).
 
   The colors are generated in the following way:
-    - if uid represents a semantic-level label, i.e. uid=(sid, N/A, N/A),
+    - if uid represents a semantic-level label, i.e. uid = (sid, N/A, N/A),
       then `sid2color`[sid] is used.
-    - if uid represents a semantic-instance-level label, i.e. uid=(sid, iid, N/A),
+    - if uid represents a semantic-instance-level label, i.e. uid = (sid, iid, N/A),
       then a random shade of `sid2color`[sid] is used, controlled by `experimental_deltas`.
       The shades are generated so they are as diverse as possible and the variability depends
       on the number of iids per sid, i.e., the more the instances per sid in the `uids`,
-      the less the discriminability of shades.
-    - if uid represents a semantic-instance-parts-level label, i.e. uid=(sid, iid, pid),
+      the less discriminable the shades are.
+    - if uid represents a semantic-instance-parts-level label, i.e. uid = (sid, iid, pid),
       then a random shade is generated as in the semantic-instance-level above and then
       it is mixed with a single color from the parula colormap, controlled by `experimental_alpha`.
 
@@ -175,11 +176,11 @@ def uid2color(uids,
 
   For now up to 5 parts per sid are supported, i.e., 1 <= pid <= 5.
 
-  Example usage in cityscapes_panoptic_parts/experimental_visualize.py.
+  Example usage in cityscapes_panoptic_parts/visualize_from_paths.py.
 
   Args:
-    uids: a list of Python int, or an np.ndarray, with elements following the hierarchical labeling
-      format defined in README
+    uids: a list of Python int, or a np.int32 np.ndarray, with elements following the panoptic
+      parts format (see README)
     sid2color: a dict mapping each sid of uids to an RGB color tuple of Python ints
       with values in range [0, 255], sids that are not present in uids will be ignored
     experimental_deltas: the range per color (Red, Green, Blue) in which to create shades, a small
@@ -190,7 +191,7 @@ def uid2color(uids,
       will make the semantic-instance-level shade more dominant over the parula color
 
   Returns:
-    uid2color: a dict mapping each uid to a color tuple of Python ints in range [0, 255]
+    uid2color: a dict mapping each uid to a color tuple of Python int in range [0, 255]
   """
 
   if VALIDATE_ARGS:
