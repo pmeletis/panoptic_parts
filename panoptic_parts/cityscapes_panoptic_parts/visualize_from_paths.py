@@ -1,6 +1,6 @@
 """
 Run this script as
-`python -m panoptic_parts.cityscapes_panoptic_parts.visualize_sample_from_paths \
+`python -m panoptic_parts.cityscapes_panoptic_parts.visualize_from_paths \
      <image_path> <label_path> <task_def_path>`
 to visualize a Cityscapes-Panoptic-Parts image and label pair in the following
 3 levels: semantic, semantic-instance, semantic-instance-parts.
