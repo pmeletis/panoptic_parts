@@ -238,7 +238,7 @@ def uid2color(uids,
   If `sid2color` is not provided (is None) then random colors are used. If `sid2color`
   is provided but does not contain all the sids of `uids` an error is raised.
 
-  Example usage in cityscapes_panoptic_parts/visualize_from_paths.py.
+  Example usage in {cityscapes, pascal}_panoptic_parts/visualize_from_paths.py.
 
   Args:
     uids: a list of Python int, or a np.int32 np.ndarray, with elements following the panoptic
