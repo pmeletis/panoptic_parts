@@ -330,7 +330,20 @@ def experimental_colorize_label(label,
                                 emphasize_instance_boundaries=True):
   """
   Colorizes a `label` with part-level panoptic colors (semantic-instance-parts-level)
-  based on sid2color. See uid2color for more info.
+  based on sid2color. Optionally, semantic-level and semantic-instance-level colorings can be
+  returned. The option emphasize_instance_boundaries will draw a 4-pixel white line around
+  instance boundaries for the semantic-instance-level and semantic-instance-parts-level outputs.
+  If a sid2color dict is provided colors from that will be used otherwise random colors will
+  be generated.
+  See panoptic_parts.utils.visualization.uid2color for how colors are generated.
+
+  Args:
+    label: 2-D, np.int32, np.ndarray with uids according to format in README
+
+  Returns:
+    sem_inst_parts_colored: 3-D, np.ndarray with RGB colors in [0, 255]
+    sem_colored: 3-D, np.ndarray with RGB colors in [0, 255]
+    sem_inst_colored: 3-D, np.ndarray with RGB colors in [0, 255]
   """
   
   assert all([isinstance(label, np.ndarray), label.ndim == 2, label.dtype == np.int32])
@@ -384,11 +397,11 @@ def experimental_colorize_label(label,
                                            boundaries_image,
                                            uids_sem_inst_parts_colored)
     
-    returns = (uids_sem_inst_parts_colored,)
-    if return_sem:
-      returns += (uids_sem_colored,)
-    if return_sem_inst:
-      returns += (uids_sem_inst_colored,)
-    if len(returns) == 1:
-      return returns[0]
-    return returns
+  returns = (uids_sem_inst_parts_colored,)
+  if return_sem:
+    returns += (uids_sem_colored,)
+  if return_sem_inst:
+    returns += (uids_sem_inst_colored,)
+  if len(returns) == 1:
+    return returns[0]
+  return returns
