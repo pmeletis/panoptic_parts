@@ -2,9 +2,11 @@ import itertools
 import random
 import collections
 import operator
+import functools
 
 from scipy import ndimage
 import numpy as np
+import matplotlib
 
 from panoptic_parts.utils.format import decode_uids
 from panoptic_parts.utils.utils import _sparse_ids_mapping_to_dense_ids_mapping
@@ -21,13 +23,43 @@ from panoptic_parts.utils.utils import _sparse_ids_mapping_to_dense_ids_mapping
 #   that during debugging only turns argument validation on
 VALIDATE_ARGS = True
 
-# Colormap for painting parts, similar to Matlab's parula(6) colormap.
-# For the "void/unlabeled" semantic-instance-parts-level color, we use
-#   the semantic-instance-level color is used instead of PARULA6[0]
-N_MAX_COLORABLE_PARTS = 5
-PARULA6 = [
-    (61, 38, 168),
+# For Cityscapes Panoptic Parts the previously defined parula colormap slightly differs from
+# PARULA99. This is done so vehicle chassis is colored with blue shades and thus resemble the
+# original colors. This flag is enabled by default, although, if it is not possible to use the
+# legacy colormap PARULA99 colormap is used. This flag will be disabled by default in the future.
+USE_LEGACY_CPP_PARTS_COLORMAP = True
+# same as parula99_cm(np.linspace(0, 1, 6)), but with second color (id=1) moved to the end
+LEGACY_PARULA6 = [
+    # (61, 38, 168),
     (27, 170, 222), (71, 203, 134), (234, 186, 48), (249, 250, 20), (67, 102, 253)]
+
+# MATLAB® PARULA99 colormap, generated with Matlab 2019a
+# colors for up to 99 parts pids
+# PARULA99_INT = uint8(floor(parula(99)*255))
+PARULA99_INT = [
+    (61, 38, 168), (63, 40, 176), (64, 43, 183), (65, 46, 190), (66, 48, 197),
+    (67, 51, 205), (68, 54, 211), (69, 57, 217), (70, 60, 223), (70, 64, 227),
+    (71, 67, 231), (71, 71, 235), (71, 75, 238), (71, 78, 241), (71, 82, 244),
+    (71, 85, 246), (71, 89, 248), (70, 93, 250), (69, 96, 251), (68, 100, 252),
+    (66, 104, 253), (64, 108, 254), (61, 112, 254), (57, 116, 254), (53, 120, 253),
+    (49, 124, 252), (47, 127, 250), (46, 131, 248), (45, 134, 246), (45, 138, 244),
+    (44, 141, 241), (43, 145, 238), (40, 148, 236), (38, 151, 234), (37, 154, 231),
+    (36, 157, 230), (34, 160, 228), (32, 163, 227), (30, 166, 225), (28, 169, 223),
+    (25, 172, 220), (22, 174, 217), (17, 177, 214), (11, 179, 210), (4, 181, 206),
+    (1, 183, 202), (0, 185, 198), (2, 187, 193), (9, 188, 189), (17, 190, 185),
+    (26, 191, 180), (33, 192, 175), (39, 194, 171), (44, 195, 166), (47, 197, 161),
+    (51, 198, 156), (55, 199, 151), (59, 201, 145), (65, 202, 139), (73, 203, 133),
+    (81, 203, 126), (89, 204, 119), (97, 204, 112), (106, 204, 105), (115, 204, 98),
+    (125, 204, 91), (134, 203, 84), (144, 202, 76), (153, 201, 69), (162, 200, 62),
+    (171, 198, 56), (179, 197, 51), (188, 195, 46), (196, 193, 42), (204, 192, 39),
+    (211, 190, 39), (218, 189, 40), (225, 187, 42), (231, 186, 46), (237, 185, 51),
+    (243, 185, 57), (248, 186, 61), (252, 188, 61), (254, 191, 58), (254, 195, 56),
+    (254, 199, 53), (253, 202, 50), (252, 207, 48), (250, 211, 46), (248, 215, 44),
+    (247, 219, 42), (245, 223, 40), (244, 227, 38), (244, 231, 36), (244, 235, 34),
+    (245, 239, 31), (246, 243, 28), (247, 247, 24), (249, 250, 20)]
+PARULA99_FLOAT = list(map(lambda t: tuple(map(lambda c: c/255, t)), PARULA99_INT))
+# parula_cm(x), x can be float in [0.0, 1.0] or int in [0, 99) to return a color
+PARULA99_CM = matplotlib.colors.LinearSegmentedColormap.from_list('parula99', PARULA99_FLOAT, 99)
 
 
 def random_colors(num):
@@ -96,6 +128,22 @@ def _num_instances_per_sid(uids):
   return sid2Ninstances
 
 
+def _num_parts_per_sid(uids):
+  assert isinstance(uids, list)
+  # TODO(panos): add the list decoding functionality in decode_uids
+  sids_pids_unique = set(
+      map(operator.itemgetter(3),
+          map(functools.partial(decode_uids, return_sids_pids=True), uids)))
+  sid2Nparts = collections.defaultdict(lambda : 0)
+  for sid_pid in sids_pids_unique:
+    sid_pid_full = sid_pid * 100 if sid_pid <= 99 else sid_pid
+    sid = sid_pid_full // 100
+    pid = sid_pid_full % 100
+    if pid > 0:
+      sid2Nparts[sid] += 1
+  return sid2Nparts
+
+
 def _sid2iids(uids):
   # a dict mapping a sid to a set of all its iids
   # or in other words a mapping from a semantic class to all object ids it has
@@ -110,6 +158,20 @@ def _sid2iids(uids):
       sid2iids[sid].add(iid)
   return sid2iids
 
+
+def _sid2pids(uids):
+  # a dict mapping a sid to a set of all its pids
+  # uids: a list of Python int uids
+  # TODO(panos): move this functionality to utils.format
+  assert isinstance(uids, list)
+  sid2pids = collections.defaultdict(set)
+  for uid in set(uids):
+    sid, _, pid = decode_uids(uid)
+    # decode_uids returns pid = -1 for pixels that don't have part-level labels
+    if pid >= 0:
+      sid2pids[sid].add(pid)
+  return sid2pids
+  
 
 def _validate_uid2color_args(uids, sid2color, experimental_deltas, experimental_alpha):
   # TODO(panos): add more checks for type, dtype, range
@@ -142,11 +204,11 @@ def _validate_uid2color_args(uids, sid2color, experimental_deltas, experimental_
   # max pids check
   # we use np.array since uids are Python ints and np.unique implicitly converts them to np.int64
   # TODO(panos): remove this requirement when np.int64 is supported in decode_uids
-  _, _, pids = decode_uids(np.unique(np.array(uids, dtype=np.int32)))
-  pid_max = np.amax(pids)
-  if pid_max > N_MAX_COLORABLE_PARTS:
-    raise NotImplementedError(
-        f"Up to 5 parts are supported for coloring. Found pid={pid_max}.")
+  # _, _, pids = decode_uids(np.unique(np.array(uids, dtype=np.int32)))
+  # pid_max = np.amax(pids)
+  # if pid_max > N_MAX_COLORABLE_PARTS:
+  #   raise NotImplementedError(
+  #       f"Up to 5 parts are supported for coloring. Found pid={pid_max}.")
 
 
 def uid2color(uids,
@@ -163,18 +225,18 @@ def uid2color(uids,
     - if uid represents a semantic-level label, i.e. uid = (sid, N/A, N/A),
       then `sid2color`[sid] is used.
     - if uid represents a semantic-instance-level label, i.e. uid = (sid, iid, N/A),
-      then a random shade of `sid2color`[sid] is used, controlled by `experimental_deltas`.
+      then a random shade of `sid2color`[sid] is generated, controlled by `experimental_deltas`.
       The shades are generated so they are as diverse as possible and the variability depends
-      on the number of iids per sid, i.e., the more the instances per sid in the `uids`,
-      the less discriminable the shades are.
+      on the number of iids per sid. The more the instances per sid in the `uids`, the less
+      discriminable the shades are.
     - if uid represents a semantic-instance-parts-level label, i.e. uid = (sid, iid, pid),
-      then a random shade is generated as in the semantic-instance-level above and then
+      then a random shade is generated as in the semantic-instance-level case above and then
       it is mixed with a single color from the parula colormap, controlled by `experimental_alpha`.
+      A different parula colormap is generated for each sid to achieve best discriminability
+      of parts colors per sid.
 
   If `sid2color` is not provided (is None) then random colors are used. If `sid2color`
   is provided but does not contain all the sids of `uids` an error is raised.
-
-  For now up to 5 parts per sid are supported, i.e., 1 <= pid <= 5.
 
   Example usage in cityscapes_panoptic_parts/visualize_from_paths.py.
 
@@ -215,26 +277,46 @@ def uid2color(uids,
   sid2shades = {sid: _generate_shades(sid2color[sid], experimental_deltas, Ninstances)
                 for sid, Ninstances in sid2num_instances.items()}
 
+  ## generate discriminable per-sid parula colormap for parts
+  # For best part-level color discriminability we generate a colormap per-sid,
+  # this creates a discrininable colormap per-sid irrespectible of the number of parts.
+  sid2num_parts = _num_parts_per_sid(uids)
+  is_maybe_cpp = (USE_LEGACY_CPP_PARTS_COLORMAP and
+                  all(map(lambda n: n<= 5, sid2num_parts.values())))
+  sid2parulaX = {
+      sid: LEGACY_PARULA6 if is_maybe_cpp
+           else (PARULA99_CM(np.linspace(0, 1, num=Nparts))*255)[:,:3].astype(np.int32)
+      for sid, Nparts in sid2num_parts.items()}
+
   ## generate the uid to colors mappings
-  # convert set to list so it is indexable
-  # the index is needed since iids do not need be to be continuous,
-  #   otherwise we could just do sid2shades[sid][iid]
+  # convert sets to lists so they are indexable, the .index() is needed since iids and
+  # pids do not need be to be continuous (otherwise sid2shades[sid][iid] is enough)
+  # TODO(panos): sid_2_* have overlapping functionality, consider merging them
   sid_2_iids = {sid: list(iids) for sid, iids in _sid2iids(set(uids)).items()}
+  def _remove_all_no_error(lst, el):
+    if el in lst:
+      lst.remove(el)
+    assert el not in lst
+    return lst
+  sid_2_non_zero_pids = {sid: _remove_all_no_error(list(pids), 0)
+                         for sid, pids in _sid2pids(uids).items()}
+
   uid_2_color = dict()
   for uid in set(uids):
     sid, iid, pid = decode_uids(uid)
     if uid <= 99:
       uid_2_color[uid] = sid2color[sid]
       continue
-    index = sid_2_iids[sid].index(iid)
-    sem_inst_level_color = sid2shades[sid][index]
+    index_iid = sid_2_iids[sid].index(iid)
+    sem_inst_level_color = sid2shades[sid][index_iid]
     if uid <= 99_999 or pid == 0:
       uid_2_color[uid] = sem_inst_level_color
       continue
     if pid >= 1:
+      index_pid = sid_2_non_zero_pids[sid].index(pid)
       uid_2_color[uid] = tuple(map(int,
           experimental_alpha * np.array(sem_inst_level_color) +
-              (1-experimental_alpha) * np.array(PARULA6[pid])))
+              (1-experimental_alpha) * np.array(sid2parulaX[sid][index_pid])))
     # catch any possible errors
     assert uid in uid_2_color.keys()
 

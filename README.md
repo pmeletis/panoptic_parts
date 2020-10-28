@@ -82,7 +82,7 @@ Tested with the following configuration (Linux system):
 * Optional
   * Tensorflow (for label format handling)
   * Pytorch (for label format handling)
-  * Matplotlib (for visualization scripts)
+  * Matplotlib >= 3.3.0 (for visualization scripts)
   * panopticapi (for PASCAL visualization script)
 
 ## Contact
