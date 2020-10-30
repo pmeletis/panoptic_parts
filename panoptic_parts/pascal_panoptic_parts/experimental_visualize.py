@@ -4,6 +4,7 @@ Run this script as
 to visualize a Pascal-Panoptic-Parts image and label pair in the following
 3 levels: semantic, semantic-instance, semantic-instance-parts.
 """
+raise AssertionError('This visualization script is deprecated. Use visualize_from_paths.')
 import argparse
 import os.path as op
 import json
