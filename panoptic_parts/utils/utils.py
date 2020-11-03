@@ -117,3 +117,109 @@ def color_map(N=256, normalized=False):
 
   cmap = cmap/255 if normalized else cmap
   return cmap
+
+
+def _print_metrics_from_confusion_matrix(cm,
+                                         names=None,
+                                         printfile=None,
+                                         printcmd=False,
+                                         summary=False,
+                                         ignore_ids=list()):
+  # cm: numpy, 2D, square, np.int32 or np.int64 array, not containing NaNs
+  # names: python list of names
+  # printfile: file handler or None to print metrics to file
+  # printcmd: True to print a summary of metrics to terminal
+  # summary: if printfile is not None, prints only a summary of metrics to file
+  # ignore_ids: ids in cm to ignore, zero-based
+  #  this is needed for example in the case of unlabeled pixels:
+  #  it will be like pixels with those classes do not exist in the dataset and
+  #  predictions in these classes are not made
+
+  # Common situations in the CM:
+  # i) there is an "unlabeled" class in the dataset:
+  #   since "unlabeled" pixels is like they do not exist in the dataset we want them
+  #   to be ignored from the metrics, however if the network predicts the "unlabeled"
+  #   class, then some pixels belonging to other classes can be predicted as "unlabeled"
+  # ii) there are some classes that have no pixels in the evaluation dataset,
+  #   this results in the row of those classes to have all zeros (tp_fp = 0),
+  #   we can safely remove these rows, however we cannot remove the column of these classes
+  #   because they act as FP to the other classes
+
+  # Solutions:
+  # i) this case involves definition of the user of what is "unlabeled" so it must be
+  #   provided in the ignore_ids
+  # ii) this case is automatically found (all zero rows) and can be handled
+  # For both cases we remove the rows from the CM, and we aggregate the columns into
+  #   a new IGNORE column in order to keep the FP for all other classes, this leads
+  #   to a non-square CM, having more columns than rows
+
+  # sanity checks
+  assert isinstance(cm, np.ndarray), 'Confusion matrix must be numpy array.'
+  cms = cm.shape
+  assert all([cm.dtype in [np.int32, np.int64],
+              cm.ndim==2,
+              cms[0]==cms[1],
+              not np.any(np.isnan(cm))]), (
+                f"Check print_metrics_from_confusion_matrix input requirements. "
+                f"Input has {cm.ndim} dims, is {cm.dtype}, has shape {cms[0]}x{cms[1]} "
+                f"or may contain NaNs.")
+  if not names:
+    names = ['unknown']*cms[0]
+  assert len(names)==cms[0], (
+    f"names ({len(names)}) must be enough for indexing confusion matrix ({cms[0]}x{cms[1]}).")
+  #assert os.path.isfile(printfile), 'printfile is not a file.'
+  if ignore_ids:
+    # convention: ids start from 0
+    assert all([min(ignore_ids) >= 0, max(ignore_ids) <= cms[0] - 1]), (
+        f"Ignore ids {np.unique(ignore_ids)} not in correct range [0, {cms[0] - 1}].")
+
+  # refine CM
+  # accumulate all ignored classes FP into a new column
+  # remove ignored rows and columns from the CM
+  extra_fp = np.zeros_like(cm[0])
+  # add an assertion for next np.sum(cm,1) > 0
+  ids_class_not_exist = np.nonzero(np.equal(np.sum(cm,1), 0))[0]
+  ids_remove = set(ids_class_not_exist) | set(ignore_ids)
+  for id_remove in ids_remove:
+    extra_fp += cm[:, id_remove]
+  ids_keep = list(set(range(cms[0])) - ids_remove)
+  cm = cm[:, ids_keep][ids_keep, :]
+  extra_fp = extra_fp[ids_keep]
+  names_new = list(map(lambda t: t[1], filter(lambda t: t[0] in ids_keep, enumerate(names))))
+
+  # metric computations
+  tp = np.diagonal(cm)
+  tp_fp = np.sum(cm, 1) + extra_fp
+  tp_fn = np.sum(cm, 0)
+  accuracies = tp / tp_fp * 100
+  ious = tp / (tp_fn + tp_fp - tp) * 100
+  # summarize per-class metrics
+  global_accuracy = np.trace(cm) / np.sum(cm) * 100
+  mean_accuracy = np.mean(accuracies)
+  mean_iou = np.mean(ious)
+
+  # reporting
+  names_ignored = list(map(lambda t: t[1], filter(lambda t: t[0] in ids_remove, enumerate(names))))
+  log_string = "\n"
+  log_string += f"Ignored classes ({len(ids_remove)}/{cms[0]}): {names_ignored}.\n"
+  log_string += "Per class accuracies and ious:\n"
+  for l, a, i in zip(names_new, accuracies, ious):
+      log_string += f"{l:<30s}  {a:>5.2f}  {i:>5.2f}\n"
+  num_classes_average = len(ids_keep)
+  log_string += f"Global accuracy: {global_accuracy:5.2f}\n"
+  log_string += f"Average accuracy ({num_classes_average}): {mean_accuracy:5.2f}\n"
+  log_string += f"Average iou ({num_classes_average}): {mean_iou:5.2f}\n"
+
+  if printcmd:
+    print(log_string)
+
+  if printfile:
+    if summary:
+      printfile.write(log_string)
+    else:
+      print(f"{global_accuracy:>5.2f}",
+            f"{mean_accuracy:>5.2f}",
+            f"{mean_iou:>5.2f}",
+            accuracies,
+            ious,
+            file=printfile)
