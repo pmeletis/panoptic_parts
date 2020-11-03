@@ -1,0 +1,13 @@
+version: 1.0
+comments:
+  - PASCAL Panoptic Parts 57 parts classes + 1 background
+max_sid: ??
+sid_pid2eval_id: {
+  # evaluated
+  ??
+  # ignored
+  ??
+  # background
+  -1: 0}
+eval_id2name: {
+  ??}
