@@ -2,11 +2,12 @@ version: 1.0
 comments:
   - max_sid is the maximum sid existing in labels, by convention sids start from 0
   - sid_pid2eval_id maps all integer sids_pids in range [0, max_sid*100 + 99 + 1] from ground truth to evaluation ids (eval_id s)
-  - For economy not all sid_pid s need to be present, and in this case the following rules for parsing sid_pid2eval_id apply
-    - key -1 represents all sid_pid s not existing in the mapping
-    - keys in [0, max_sid] represent all sid_pid s, having sid that key, not existing in the mapping
+  - For economy not all sid_pid s need to be present, and in this case the following rules for parsing sid_pid2eval_id apply with the following descending order
     - value -1 represents an ignored sid_pid
-  - For the parsing algorithm see experimental_eval_cpp_parts_24.py
+    - keys in [0, max_sid] represent all sid_pid s, having sid that key, not existing in the mapping
+    - key -1 represents all sid_pid s not existing in the mapping
+  - If -1 exists in sid_pid2eval_id.values(), then eval_id2name must have a max(sid_pid2eval_id.values())+1 key
+  - For the parsing algorithm see experimental_eval_segmentation_parts.py
 max_sid: int
 sid_pid2eval_id: mapping int -> int
-eval_id2name: mapping int -> string
+eval_id2name: (optional) mapping int -> string

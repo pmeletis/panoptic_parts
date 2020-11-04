@@ -54,7 +54,7 @@ from panoptic_parts.utils.format import decode_uids
 from panoptic_parts.utils.experimental_evaluation import ConfusionMatrixEvaluator
 
 
-FILEPATH_EVALUATION_DEF = 'panoptic_parts/evaluation/defs/cpp_parts_24.yaml'
+FILEPATH_EVALUATION_DEF = 'panoptic_parts/evaluation/defs/cpp_parts_9.yaml'
 BASEPATH_GT = op.join('tests', 'tests_files', 'cityscapes_panoptic_parts', 'gtFine', 'val')
 # use a real path with predictions
 BASEPATH_PRED = BASEPATH_GT
@@ -161,6 +161,6 @@ ignore_ids = [max(sid_pid2eval_id.values())] if -1 in defs['sid_pid2eval_id'].va
 names = list(defs['eval_id2name'].values()) if 'eval_id2name' in defs.keys() else None
 
 # create and run evaluator
-evaluator = ConfusionMatrixEvaluator(filepaths_pairs, reader_fn, Nclasses)
+evaluator = ConfusionMatrixEvaluator(filepaths_pairs, reader_fn, Nclasses, experimental_validate_args=False)
 cm = evaluator.compute_cm()
 evaluator.print_metrics(names=names, printcmd=True, ignore_ids=ignore_ids)
