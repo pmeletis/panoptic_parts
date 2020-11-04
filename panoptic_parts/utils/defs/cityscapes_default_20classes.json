@@ -1,6 +1,6 @@
 {
 "version": 1.0,
-"comments": "0) default cityscapes 20 class problem, 1) by convention label and class ids start at 0, and void is represented as -1 and is mapped internally to last index (here 19), 2) lids2cids: list ids -> label ids -> class ids, 3) cids2colors: list ids -> class ids -> rgb colors",
+"comments": "!!!OBSOLETE: see cpp_20.yaml!!! 0) default cityscapes 20 class problem, 1) by convention label and class ids start at 0, and void is represented as -1 and is mapped internally to last index (here 19), 2) lids2cids: list ids -> label ids -> class ids, 3) cids2colors: list ids -> class ids -> rgb colors",
 "lids2cids": [-1,-1,-1,-1,-1,-1,-1, 0, 1,-1,-1, 2, 3, 4,-1,-1,-1, 5,-1, 6, 7, 8, 9,10,11,12,13,14,15,-1,-1,16,17,18],
 "cids2labels": ["road", "sidewalk", "building", "wall", "fence", "pole", "traffic light", "traffic sign", "vegetation", "terrain", "sky", "person", "rider", "car", "truck", "bus", "train", "motorcycle", "bicycle", "void"],
 "cids2colors": [[128,64,128], [244,35,232], [70,70,70],   [102,102,156],[190,153,153],
