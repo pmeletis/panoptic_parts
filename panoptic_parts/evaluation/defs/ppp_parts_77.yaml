@@ -2,6 +2,7 @@ version: 1.0
 comments:
   - PASCAL Panoptic Parts 76 parts classes + 1 background
   - This is our official grouping for the 198 (363 distinct) annotated parts of PASCAL-Part dataset to 77 classes
+  - 72 parts from 16 scene-level semantic classes, 4 parts from 4 scene-level classes, 1 background
   - 4 classes are not annotated on part-level, or equivalently they have one part, thus 194 + 4 parts in total
 max_sid: 99
 sid_pid2eval_id: {

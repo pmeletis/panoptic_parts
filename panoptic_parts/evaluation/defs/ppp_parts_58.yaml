@@ -1,13 +1,12 @@
 version: 1.0
 comments:
   - PASCAL Panoptic Parts 57 parts classes + 1 background
-max_sid: ??
+max_sid: 99
 sid_pid2eval_id: {
   # evaluated
-  ??
+  To Be Filled
+  20: 55, 20_00: 55, 20_01: 56 # tvmonitor (20) has only one part ("screen") so we set the rest of the object as "frame"
   # ignored
-  ??
+
   # background
   -1: 0}
-eval_id2name: {
-  ??}

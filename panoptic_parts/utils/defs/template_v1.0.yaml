@@ -1,9 +1,10 @@
 version: 1.0
 comments:
+  - This is a YAML file containing definitions for a dataset
   - any comments can go under the comments key
   - sids are the integer semantic-level ids, by convention sids are zero-based
-  - valid_sids is the subset of sids that exist in label files
-  - max_sid is the maximum sid that exist in label files
+  - valid_sids is the subset of sids that we consider
+  - max_sid is the maximum sid that can exist in label files
   - sid2name is a mapping from sids to names
   - sid2color is a mapping from sids to colors
   - sid2name and sid2color can optionally have an unlabeled/void/don't care key represented by -1, that will match sids not in validsids
