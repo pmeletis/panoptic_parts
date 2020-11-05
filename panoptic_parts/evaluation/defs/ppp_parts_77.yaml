@@ -1,7 +1,8 @@
 version: 1.0
 comments:
   - PASCAL Panoptic Parts 76 parts classes + 1 background
-  - This is our official grouping for the 192 annotated parts of PASCAL-Part dataset
+  - This is our official grouping for the 198 (363 distinct) annotated parts of PASCAL-Part dataset to 77 classes
+  - 4 classes are not annotated on part-level, or equivalently they have one part, thus 194 + 4 parts in total
 max_sid: 99
 sid_pid2eval_id: {
   # evaluated
@@ -15,7 +16,7 @@ sid_pid2eval_id: {
   3_01: 12, 3_02: 12, 3_03: 12, 3_04: 12,
   3_05: 13, 3_06: 14, 3_07: 15, 3_08: 15, 3_09: 16, 3_10: 16, 3_11: 16, 3_12: 16, 3_13: 17,
 
-  4: 18,
+  4: 18, 4_00: 18,
 
   5_01: 19, 5_02: 20,
 
@@ -40,14 +41,14 @@ sid_pid2eval_id: {
   8_09: 34, 8_10: 34, 8_11: 34, 8_12: 34, 8_13: 34, 8_14: 34, 8_15: 34, 8_16: 34,
   8_17: 35,
 
-  9: 36,
+  9: 36, 9_00: 36,
 
   10_01: 37, 10_02: 37, 10_03: 37, 10_04: 37, 10_05: 37, 10_06: 37, 10_07: 37, 10_08: 37,
   10_09: 38, 10_10: 39,
   10_11: 40, 10_12: 40, 10_13: 40, 10_14: 40, 10_15: 40, 10_16: 40, 10_17: 40, 10_18: 40,
   10_19: 41,
 
-  11: 42,
+  11: 42, 11_00: 42,
 
   12_01: 43, 12_02: 43, 12_03: 43, 12_04: 43, 12_05: 43, 12_06: 43,
   12_07: 44, 12_08: 45,
@@ -78,7 +79,7 @@ sid_pid2eval_id: {
   17_11: 69, 17_12: 69, 17_13: 69, 17_14: 69, 17_15: 69, 17_16: 69, 17_17: 69, 17_18: 69,
   17_19: 70,
 
-  18: 71,
+  18: 71, 18_00: 71,
 
   19_01: 72,
   19_02: 73, 19_03: 73, 19_04: 73, 19_05: 73, 19_06: 73,

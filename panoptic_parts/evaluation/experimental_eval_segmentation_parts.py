@@ -12,10 +12,9 @@ The `ConfusionMatrixEvaluator` class requires:
   3. the number of classes for initializing the confusion matrix
 
 This script generates these requirements as follows:
-  1. The list of paths is created by `filepaths_pairs_fn` using `BASEPATH_GT` and `BASEPATH_PRED`,
-     change these paths and the function implementation according to your needs, note that
-     `ConfusionMatrixEvaluator` requires only a list of path pairs, how it is created is up
-     to the user.
+  1. The list of paths is created by `filepaths_pairs_fn`, change the function implementation
+     according to your needs, note that `ConfusionMatrixEvaluator` requires only a list of path
+     pairs, how it is created is up to the user.
   2. The reader function reads the labels from the filepaths into tf.int32 tf.Tensor s with
      values from the evaluation ids in `FILEPATH_EVALUATION_DEF`. We provide an example
      implementation `reader_fn`. Implement your reader function according to your
@@ -23,19 +22,21 @@ This script generates these requirements as follows:
   3. The number of classes are computed using only `FILEPATH_EVALUATION_DEF`.
 
 Examples:
-  1. Compute per-class and mIoU for Cityscapes Panoptic Parts 24 parts classes:
-     a. change `BASEPATH_GT` and `BASEPATH_PRED` and adapt the `filepaths_pairs_fn`
+  1. Compute part-level class IoUs and mIoU for Cityscapes Panoptic Parts 24 parts classes:
+     a. change `FILEPATH_PATTERN_GT_CPP` and `BASEPATH_PRED` and adapt the `filepaths_pairs_fn`
         function code section denoted by ########
      b. use FILEPATH_EVALUATION_DEF = 'panoptic_parts/evaluation/defs/cpp_parts_24.yaml' and
         adapt the `read_filepaths_and_convert` function code section denoted by ########,
         e.g. if predictions are already encoded using the evaluation ids from
         FILEPATH_EVALUATION_DEF, then just delete the lines in adapt section
-     c. Run from the top-level directory panoptic_parts the script as:
+     c. Run from the top-level directory panoptic_parts this script as:
         python -m panoptic_parts.evaluation.experimental_eval_mIoU_parts
 
 
 This is the Tensorflow CPU implementation for faster, concurrent implementation.
-Benchmarks: ~35 sec for full resolution Cityscapes evaluation.
+Benchmarks (full resolution):
+  1. ~35 sec for Cityscapes Panoptic Parts val set evaluation.
+  2. ~30 sec for PASCAL Panoptic Parts val set evaluation.
 """
 
 import glob
@@ -54,15 +55,15 @@ from panoptic_parts.utils.format import decode_uids
 from panoptic_parts.utils.experimental_evaluation import ConfusionMatrixEvaluator
 
 
-FILEPATH_EVALUATION_DEF = 'panoptic_parts/evaluation/defs/cpp_parts_9.yaml'
-BASEPATH_GT = op.join('tests', 'tests_files', 'cityscapes_panoptic_parts', 'gtFine', 'val')
-# use a real path with predictions
-BASEPATH_PRED = BASEPATH_GT
+FILEPATH_EVALUATION_DEF = 'panoptic_parts/evaluation/defs/cpp_parts_24.yaml'
+FILEPATH_PATTERN_GT_CPP = op.join('tests', 'tests_files', 'cityscapes_panoptic_parts', 'gtFine', 'val', '*', '*.tif')
+# FILEPATH_PATTERN_GT_PPP = op.join('tests', 'tests_files', 'pascal_panoptic_parts', 'labels', '*.tif')
+BASEPATH_PRED = '/use/a/real/path'
 
 
-def filepaths_pairs_fn(basepath_gt, basepath_pred):
+def filepaths_pairs_fn(filepath_pattern_gt, basepath_pred):
   # return a list of tuples with paths
-  filepaths_gt = glob.glob(op.join(basepath_gt, '*', '*.tif'))
+  filepaths_gt = glob.glob(filepath_pattern_gt)
   print(f"Found {len(filepaths_gt)} ground truth labels.")
   pairs = list()
   for fp_gt in filepaths_gt:
@@ -77,7 +78,7 @@ def filepaths_pairs_fn(basepath_gt, basepath_pred):
     pairs.append((fp_gt, fp_pred))
   return pairs
 
-filepaths_pairs = filepaths_pairs_fn(BASEPATH_GT, BASEPATH_PRED)
+filepaths_pairs = filepaths_pairs_fn(FILEPATH_PATTERN_GT_CPP, BASEPATH_PRED)
 
 
 def parse_sid_pid2eval_id(sid_pid2eval_id, max_sid):
