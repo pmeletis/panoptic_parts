@@ -5,6 +5,9 @@ It globs the FILEPATH_PATTERN_LABELS pattern to find labels and uses the
 `panoptic_parts/utils/defs/ppp_100_72.yaml` task definition for visualization.
 Visualization will be written in a directory named `labels_colored` aside
 the `labels` directory (here `tests/tests_files/pascal_panoptic_parts/labels_colored`).
+
+Benchmark:
+  1. ~50 sec to write 5105 visualized labels (val set)
 """
 
 import glob
@@ -20,8 +23,9 @@ from panoptic_parts.utils.visualization import experimental_colorize_label
 FILEPATH_PATTERN_LABELS = 'tests/tests_files/pascal_panoptic_parts/labels/*.tif'
 
 filepaths_labels = glob.glob(FILEPATH_PATTERN_LABELS)
-filepaths_images = [fl.replace('/labels/', '/images/').replace('.tif', '.jpg')
-                    for fl in filepaths_labels]
+# filepaths_images = [fl.replace('/labels/', '/images/').replace('.tif', '.jpg')
+#                     for fl in filepaths_labels]
+filepaths_images = [None] * len(filepaths_labels) # unused for now
 basepaths_outputs = [fl.replace('/labels/', '/labels_colored/').replace('.tif', '')
                      for fl in filepaths_labels]
 
@@ -39,10 +43,9 @@ SID2PIDS_GROUPS = task_def['sid2pids_groups']
 
 
 def write_fn(args):
-  image_path, label_path, basepath_output = args
+  _, label_path, basepath_output = args
 
-  label = Image.open(label_path)
-  uids = np.array(label, dtype=np.int32)
+  uids = np.asarray(Image.open(label_path), dtype=np.int32)
   uids = _transform_uids(uids, MAX_SID, SID2PIDS_GROUPS)
   uids_sem_inst_parts_colored, uids_sem_colored, uids_sem_inst_colored  = \
       experimental_colorize_label(uids,
@@ -51,7 +54,6 @@ def write_fn(args):
                                   return_sem_inst=True,
                                   emphasize_instance_boundaries=True)
 
-  # write outputs
   safe_write(basepath_output + '_sem_inst_parts_colored.png', uids_sem_inst_parts_colored)
   safe_write(basepath_output + '_sem_colored.png', uids_sem_colored)
   safe_write(basepath_output + '_sem_inst_colored.png', uids_sem_inst_colored)
@@ -60,7 +62,6 @@ def write_fn(args):
 
 
 args_zip = zip(filepaths_images, filepaths_labels, basepaths_outputs)
-
 with Pool() as pool:
   results = tuple(pool.imap_unordered(write_fn, args_zip, chunksize=10))
 
