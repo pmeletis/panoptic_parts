@@ -5,7 +5,7 @@ import random
 import numpy as np
 from PIL import Image
 
-from panoptic_parts.utils.format import decode_uids
+from panoptic_parts.utils.format import decode_uids, encode_ids
 
 # Functions that start with underscore (_) should be considered as internal.
 # All other functions belong to the public API.
@@ -117,3 +117,39 @@ def color_map(N=256, normalized=False):
 
   cmap = cmap/255 if normalized else cmap
   return cmap
+
+
+def _parse_sid_group(sid, sid_group):
+  assert sid >= 1
+  # import itertools
+  # pids_all = itertools.chain.from_iterable(sid_group)
+  sid_pid_old2sid_pid_new = dict()
+  for i, pids_group in enumerate(sid_group, start=1):
+    for pid in pids_group:
+      sid_pid_old2sid_pid_new[sid * 100 + pid] = sid * 100 + i
+  return sid_pid_old2sid_pid_new
+
+
+def _transform_uids(uids, max_sid, sid2pids_groups):
+  sid_pid_old2sid_pid_new = dict()
+  for sid, sid_group in sid2pids_groups.items():
+    sid_pid_old2sid_pid_new.update(_parse_sid_group(sid, sid_group))
+  sid_pid_old2sid_pid_new[0] = 0
+  for sid in range(1, max_sid + 1):
+    if sid not in sid_pid_old2sid_pid_new.keys():
+      sid_pid_old2sid_pid_new[sid] = sid
+    for pid in range(100):
+      sid_pid = sid * 100 + pid
+      if pid == 0:
+        sid_pid_old2sid_pid_new[sid_pid] = sid
+        continue
+      if sid_pid not in sid_pid_old2sid_pid_new.keys():
+        sid_pid_old2sid_pid_new[sid_pid] = sid
+  sid_pid_old2sid_pid_new = dict(sorted(sid_pid_old2sid_pid_new.items()))
+  palette = np.asarray(list(sid_pid_old2sid_pid_new.values()), dtype=np.int32)
+
+  _, iids, _, sids_pids = decode_uids(uids, return_sids_pids=True)
+  sids_pids = palette[sids_pids]
+  sids = np.where(sids_pids <= 99, sids_pids, sids_pids // 100)
+  pids = np.where(sids_pids <= 99, -1, sids_pids % 100)
+  return encode_ids(sids, iids, pids)

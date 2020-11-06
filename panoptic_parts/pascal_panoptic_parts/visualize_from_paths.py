@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import yaml
 
 from panoptic_parts.utils.visualization import experimental_colorize_label
+from panoptic_parts.utils.utils import _transform_uids
 
 
 def visualize_from_paths(image_path, label_path, task_def_path):
@@ -35,13 +36,14 @@ def visualize_from_paths(image_path, label_path, task_def_path):
     image_path: an image path, will be passed to Pillow.Image.open
     label_path: a label path, will be passed to Pillow.Image.open
     task_def_path: a YAML file path, including keys: `sid2color`, `max_sid`, `valid_sids`
+      and optionally 'sid2pids_groups'
   """
   # sid2color is a mapping from all possible sids to colors
   with open(task_def_path) as fp:
     task_def = yaml.load(fp)
   sid2color = task_def['sid2color']
   # add colors for all sids that may exist in labels, but don't have a color from task_def
-  sid2color.update({sid: sid2color[-1]
+  sid2color.update({sid: sid2color[-1] # we use the void color here
                     for sid in range(task_def['max_sid'])
                     if not (sid in task_def['valid_sids'] or sid in sid2color)})
 
@@ -50,6 +52,14 @@ def visualize_from_paths(image_path, label_path, task_def_path):
   label = Image.open(label_path)
   uids = np.array(label, dtype=np.int32)
 
+  # optionally transform parts ids
+  # here we trasform the pids from the original dataset to another set of pids according
+  # to sid2pids_groups, where parts for some scene-level semantic classes are grouped
+  # TODO(panos): consider moving this functionality to colorize_label
+  if 'sid2pids_groups' in task_def.keys():
+    uids = _transform_uids(uids, task_def['max_sid'], task_def['sid2pids_groups'])
+
+  # create the colorized label images
   uids_sem_inst_parts_colored, uids_sem_colored, uids_sem_inst_colored  = \
       experimental_colorize_label(uids,
                                   sid2color=sid2color,
