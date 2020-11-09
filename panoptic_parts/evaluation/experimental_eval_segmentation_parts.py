@@ -15,8 +15,8 @@ This script generates these requirements as follows:
   1. The list of paths is created by `filepaths_pairs_fn`, change the function implementation
      according to your needs, note that `ConfusionMatrixEvaluator` requires only a list of path
      pairs, how it is created is up to the user.
-  2. The reader function reads the predictions from the filepaths into tf.int32 tf.Tensor s with
-     values from the evaluation ids in `FILEPATH_EVALUATION_DEF`. We provide an example
+  2. The reader function reads the predictions from the filepaths into an np.int32, np.ndarray
+     with values in the evaluation ids range in `FILEPATH_EVALUATION_DEF`. We provide an example
      implementation `reader_fn`. Implement your reader function according to your
      predictions values. Definitions from `FILEPATH_EVALUATION_DEF` can be used.
 
