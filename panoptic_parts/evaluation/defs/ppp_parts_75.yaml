@@ -68,7 +68,7 @@ sid_pid2eval_id: {
   14_01: 53, 14_02: 53,
   14_03: 54, 14_04: 55,
   14_05: 56, 14_06: 56, 14_07: 56, 14_08: 56, 14_09: 56, 14_10: 56, 14_11: 56, 14_12: 56, 14_13: 56, 14_14: 56,
-  
+
   15_01: 57, 15_02: 57, 15_03: 57, 15_04: 57, 15_05: 57, 15_06: 57, 15_07: 57, 15_08: 57, 15_09: 57, 15_10: 57, 15_12: 57,
   15_11: 58,
   15_13: 59, 15_15: 59, 15_16: 59, 15_18: 59,
@@ -102,46 +102,47 @@ sid_pid2eval_id: {
   -1: 0}
 
 eval_id2name: {
+  # background
   0: background,
-
+  #aeroplane
   1: body, 2: stern, 3: wing, 4: tail, 5: engine, 6: wheel,
-
+  # bicycle
   7: wheel, 8: saddle, 9: handlebar, 10: chainwheel, 11: headlight,
-
+  # bird
   12: head, 13: torso, 14: neck, 15: wing, 16: leg, 17: tail,
-
+  # boat
   18: boat,
-
+  # bottle
   19: cap, 20: body,
-
+  # bus
   21: chassis, 22: license plate, 23: wheel, 24: headlight, 25: window,
-
+  # car
   26: chassis, 27: license plate, 28: wheel, 29: headlight, 30: window,
-
+  # cat
   31: head, 32: torso, 33: neck, 34: leg, 35: tail,
-
+  # chair
   36: chair,
-
+  # cow
   37: head, 38: torso, 39: neck, 40: leg, 41: tail,
-
+  # table
   42: table,
-
+  # dog
   43: head, 44: torso, 45: neck, 46: leg, 47: tail,
-
+  # horse
   48: head, 49: leg, 50: torso, 51: neck, 52: tail,
-
+  # motorbike
   53: wheel, 54: handlebar, 55: saddle, 56: headlight,
-
+  # person
   57: head, 58: torso, 59: lower arm, 60: upper arm, 61: lower leg, 62: upper leg,
-
+  # pottedplant
   63: pot, 64: plant,
-
+  # sheep
   65: head, 66: torso, 67: neck, 68: leg, 69: tail,
-
+  # sofa
   70: sofa,
-
+  # train
   71: head, 72: headlight, 73: coach,
-
+  # tvmonitor
   74: tv monitor,
-
+  # ignored
   75: unlabeled}
