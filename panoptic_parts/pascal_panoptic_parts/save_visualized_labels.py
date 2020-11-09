@@ -2,7 +2,7 @@
 This script saves visualized PASCAL Panoptic Parts labels on three levels:
   semantic, semantic-instance, and semantic-instance-parts
 It globs the FILEPATH_PATTERN_LABELS pattern to find labels and uses the
-`panoptic_parts/utils/defs/ppp_100_72.yaml` task definition for visualization.
+`panoptic_parts/utils/defs/ppp_100_70.yaml` task definition for visualization.
 Visualization will be written in a directory named `labels_colored` aside
 the `labels` directory (here `tests/tests_files/pascal_panoptic_parts/labels_colored`).
 
@@ -29,7 +29,7 @@ filepaths_images = [None] * len(filepaths_labels) # unused for now
 basepaths_outputs = [fl.replace('/labels/', '/labels_colored/').replace('.tif', '')
                      for fl in filepaths_labels]
 
-FILEPATH_TASK_DEF = 'panoptic_parts/utils/defs/ppp_100_72.yaml'
+FILEPATH_TASK_DEF = 'panoptic_parts/utils/defs/ppp_100_70.yaml'
 
 with open(FILEPATH_TASK_DEF) as fp:
   task_def = yaml.load(fp)
