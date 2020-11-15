@@ -28,6 +28,10 @@ VALIDATE_ARGS = True
 # original colors. This flag is enabled by default, although, if it is not possible to use the
 # legacy colormap PARULA99 colormap is used. This flag will be disabled by default in the future.
 USE_LEGACY_CPP_PARTS_COLORMAP = True
+def set_use_legacy_cpp_parts_colormap(boolean):
+  global USE_LEGACY_CPP_PARTS_COLORMAP
+  assert isinstance(boolean, bool)
+  USE_LEGACY_CPP_PARTS_COLORMAP = boolean
 # same as parula99_cm(np.linspace(0, 1, 6)), but with second color (id=1) moved to the end
 LEGACY_PARULA6 = [
     # (61, 38, 168),
