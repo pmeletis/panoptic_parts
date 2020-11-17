@@ -26,7 +26,8 @@ VALIDATE_ARGS = True
 # For Cityscapes Panoptic Parts the previously defined parula colormap slightly differs from
 # PARULA99. This is done so vehicle chassis is colored with blue shades and thus resemble the
 # original colors. This flag is enabled by default, although, if it is not possible to use the
-# legacy colormap PARULA99 colormap is used. This flag will be disabled by default in the future.
+# legacy colormap PARULA99 colormap is used. Otherwise, use set_use_legacy_cpp_parts_colormap.
+# This flag will be disabled by default in the future.
 USE_LEGACY_CPP_PARTS_COLORMAP = True
 def set_use_legacy_cpp_parts_colormap(boolean):
   global USE_LEGACY_CPP_PARTS_COLORMAP
@@ -37,9 +38,8 @@ LEGACY_PARULA6 = [
     # (61, 38, 168),
     (27, 170, 222), (71, 203, 134), (234, 186, 48), (249, 250, 20), (67, 102, 253)]
 
-# MATLAB® PARULA99 colormap, generated with Matlab 2019a
-# colors for up to 99 parts pids
-# PARULA99_INT = uint8(floor(parula(99)*255))
+# MATLAB® PARULA99 colormap, generated with Matlab 2019a: uint8(floor(parula(99)*255))
+# This colormap is used for colorizing up to 99 parts pids
 PARULA99_INT = [
     (61, 38, 168), (63, 40, 176), (64, 43, 183), (65, 46, 190), (66, 48, 197),
     (67, 51, 205), (68, 54, 211), (69, 57, 217), (70, 60, 223), (70, 64, 227),
@@ -333,27 +333,39 @@ def experimental_colorize_label(label,
                                 return_sem_inst=False,
                                 emphasize_instance_boundaries=True):
   """
-  Colorizes a `label` with part-level panoptic colors (semantic-instance-parts-level)
-  based on sid2color. Optionally, semantic-level and semantic-instance-level colorings can be
-  returned. The option emphasize_instance_boundaries will draw a 4-pixel white line around
-  instance boundaries for the semantic-instance-level and semantic-instance-parts-level outputs.
-  If a sid2color dict is provided colors from that will be used otherwise random colors will
-  be generated.
+  Colorizes a `label` with semantic-instance-parts-level colors based on sid2color.
+  Optionally, semantic-level and semantic-instance-level colorings can be returned.
+  The option emphasize_instance_boundaries will draw a 4-pixel white line around instance
+  boundaries for the semantic-instance-level and semantic-instance-parts-level outputs.
+  If a sid2color dict is provided colors from that will be used otherwise random colors
+  will be generated.
   See panoptic_parts.utils.visualization.uid2color for how colors are generated.
 
   Args:
-    label: 2-D, np.int32, np.ndarray with uids according to format in README
+    label: 2-D, np.int32, np.ndarray with up to 7-digit uids, according to format in README
+    sid2color: a dictionary mapping sids to RGB color tuples in [0, 255], all sids in `labels`
+      must be in `sid2color`, otherwise provide None to use random colors
+    return_sem: if True returns `sem_colored`
+    return_sem_inst: if True returns `sem_inst_colored`
 
   Returns:
-    sem_inst_parts_colored: 3-D, np.ndarray with RGB colors in [0, 255]
-    sem_colored: 3-D, np.ndarray with RGB colors in [0, 255]
-    sem_inst_colored: 3-D, np.ndarray with RGB colors in [0, 255]
+    sem_inst_parts_colored: 3-D, np.ndarray with RGB colors in [0, 255],
+      colorized `label` with colors that distinguish scene-level semantics, part-level semantics,
+      and instance-level ids
+    sem_colored: 3-D, np.ndarray with RGB colors in [0, 255], returned if return_sem=True,
+      colorized `label` with colors that distinguish scene-level semantics
+    sem_inst_colored: 3-D, np.ndarray with RGB colors in [0, 255], returned if return_sem_inst=True,
+      colorized `label` with colors that distinguish scene-level semantics and part-level semantics
   """
-  
-  assert all([isinstance(label, np.ndarray), label.ndim == 2, label.dtype == np.int32])
+  if not isinstance(label, np.ndarray):
+    raise ValueError(f"label is type: {type(label)}, only np.ndarray is supported.")
+  if not all([label.ndim == 2, label.dtype == np.int32]):
+    raise ValueError(
+        f"label has: {label.ndim} dims and {label.dtype} dtype, only 2 dims"
+        " and np.int32 are supported.")
 
   # We visualize labels on three levels: semantic, semantic-instance, semantic-instance-parts.
-  # We want to colorize same instances with the same shades across subfigures for easier comparison
+  # We want to colorize same instances with the same shades across levels for easier comparison
   # so we create ids_all_levels_unique and call uid2color() once to achieve that.
   # sids, iids, sids_iids shapes: (height, width)
   sids, iids, _, sids_iids = decode_uids(label, return_sids_iids=True)
@@ -370,6 +382,10 @@ def experimental_colorize_label(label,
   uids_sem_inst_parts_colored = palette[label]
 
   # optionally add boundaries to the colorized labels uids_*_colored
+  # TODO(panos): instance boundaries are found by the iids, if two iids are the same
+  #   then an instance boundary is not drawn between different semantic-level classes
+  # TODO(panos): same iids islands, that are occluded, must not have closed boundaries
+  #   investigate if a solution to that is easy
   edge_option = 'sobel' # or 'erosion'
   if emphasize_instance_boundaries:
     # TODO(panos): simplify this algorithm
