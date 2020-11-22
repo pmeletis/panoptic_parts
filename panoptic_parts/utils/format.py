@@ -245,6 +245,8 @@ def encode_ids(sids, iids, pids):
   Return:
     uids: same type and shape as the args according to hierarchical format (see README).
   """
+  # TODO!!!(panos): encode_ids(sid, -1, pid) ends with a sid_pid and not a uid,
+  #   is this behavior desirable?
   where = _encode_ids_functors_and_checking(sids, iids, pids)
 
   sids_iids = where(iids < 0, sids, sids * 10**3 + iids)
