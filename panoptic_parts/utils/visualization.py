@@ -388,23 +388,26 @@ def experimental_colorize_label(label,
   #   investigate if a solution to that is easy
   edge_option = 'sobel' # or 'erosion'
   if emphasize_instance_boundaries:
+    # Create concatenation of sids and iids.
+    sids_iids_concat = np.where(sids_iids > 100, sids_iids, np.zeros_like(sids_iids))
     # TODO(panos): simplify this algorithm
     # create per-instance binary masks
-    sids_iids_unique = np.unique(sids_iids)
+    sids_iids_unique = np.unique(sids_iids_concat)
     boundaries = np.full(sids_iids.shape, False)
     edges = np.full(sids_iids.shape, False)
     for sid_iid in sids_iids_unique:
-      iid = sid_iid % 1000
-      if 0 <= iid <= 999:
-        sid_iid_mask = np.equal(sids_iids, sid_iid)
-        if edge_option == 'sobel':
-          edge_horizont = ndimage.sobel(sid_iid_mask, 0)
-          edge_vertical = ndimage.sobel(sid_iid_mask, 1)
-          edges = np.logical_or(np.hypot(edge_horizont, edge_vertical), edges)
-        elif edge_option == 'erosion':
-          boundary = np.logical_xor(sid_iid_mask,
-                                    ndimage.binary_erosion(sid_iid_mask, structure=np.ones((4, 4))))
-          boundaries = np.logical_or(boundaries, boundary)
+      if sid_iid != 0:
+        iid = sid_iid % 1000
+        if 0 <= iid <= 999:
+          sid_iid_mask = np.equal(sids_iids, sid_iid)
+          if edge_option == 'sobel':
+            edge_horizont = ndimage.sobel(sid_iid_mask, 0)
+            edge_vertical = ndimage.sobel(sid_iid_mask, 1)
+            edges = np.logical_or(np.hypot(edge_horizont, edge_vertical), edges)
+          elif edge_option == 'erosion':
+            boundary = np.logical_xor(sid_iid_mask,
+                                      ndimage.binary_erosion(sid_iid_mask, structure=np.ones((4, 4))))
+            boundaries = np.logical_or(boundaries, boundary)
 
     if edge_option == 'sobel':
       boundaries_image = np.uint8(edges)[..., np.newaxis] * np.uint8([[[255, 255, 255]]])
