@@ -390,19 +390,20 @@ def experimental_colorize_label(label,
   if emphasize_instance_boundaries:
     # TODO(panos): simplify this algorithm
     # create per-instance binary masks
-    iids_unique = np.unique(iids)
-    boundaries = np.full(iids.shape, False)
-    edges = np.full(iids.shape, False)
-    for iid in iids_unique:
+    sids_iids_unique = np.unique(sids_iids)
+    boundaries = np.full(sids_iids.shape, False)
+    edges = np.full(sids_iids.shape, False)
+    for sid_iid in sids_iids_unique:
+      iid = sid_iid % 1000
       if 0 <= iid <= 999:
-        iid_mask = np.equal(iids, iid)
+        sid_iid_mask = np.equal(sids_iids, sid_iid)
         if edge_option == 'sobel':
-          edge_horizont = ndimage.sobel(iid_mask, 0)
-          edge_vertical = ndimage.sobel(iid_mask, 1)
+          edge_horizont = ndimage.sobel(sid_iid_mask, 0)
+          edge_vertical = ndimage.sobel(sid_iid_mask, 1)
           edges = np.logical_or(np.hypot(edge_horizont, edge_vertical), edges)
         elif edge_option == 'erosion':
-          boundary = np.logical_xor(iid_mask,
-                                    ndimage.binary_erosion(iid_mask, structure=np.ones((4, 4))))
+          boundary = np.logical_xor(sid_iid_mask,
+                                    ndimage.binary_erosion(sid_iid_mask, structure=np.ones((4, 4))))
           boundaries = np.logical_or(boundaries, boundary)
 
     if edge_option == 'sobel':

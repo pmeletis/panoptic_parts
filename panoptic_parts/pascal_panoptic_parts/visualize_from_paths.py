@@ -40,7 +40,7 @@ def visualize_from_paths(image_path, label_path, task_def_path):
   """
   # sid2color is a mapping from all possible sids to colors
   with open(task_def_path) as fp:
-    task_def = yaml.load(fp)
+    task_def = yaml.load(fp, Loader=yaml.Loader)
   sid2color = task_def['sid2color']
   # add colors for all sids that may exist in labels, but don't have a color from task_def
   sid2color.update({sid: sid2color[-1] # we use the void color here
