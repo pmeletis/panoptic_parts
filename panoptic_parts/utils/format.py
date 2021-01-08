@@ -42,6 +42,7 @@ def _validate_uids_values_numpy_python(uids):
     raise ValueError('Some uids exceed the 99_999_99 encoding limit.')
   if np.any(uids < 0):
     raise ValueError('Some uids are negative.')
+  # TODO(panos): this gives a warning for 0 uids
   num_digits = (np.log10(uids) + 1).astype(np.int)
   if 3 in np.unique(num_digits):
     raise ValueError(
