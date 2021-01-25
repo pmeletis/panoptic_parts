@@ -90,4 +90,4 @@ Tested with the following configuration (Linux system):
 Please feel free to contact us for any suggestions or questions:
 
 * Panagiotis Meletis: **p**[DOT]**c**[DOT]**meletis**[AT]**tue.nl**
-* Vincent Wen: **xiaoxiao**[DOT]**wen**[AT]**student.uva.nl**
+* Vincent (Xiaoxiao) Wen: **wenxx10**[AT]**gmail.com**
