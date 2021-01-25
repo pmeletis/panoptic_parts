@@ -35,7 +35,7 @@ def set_use_legacy_cpp_parts_colormap(boolean):
   USE_LEGACY_CPP_PARTS_COLORMAP = boolean
 # same as parula99_cm(np.linspace(0, 1, 6)), but with second color (id=1) moved to the end
 LEGACY_PARULA6 = [
-    # (61, 38, 168),
+    (0, 0, 0), #(61, 38, 168),
     (27, 170, 222), (71, 203, 134), (234, 186, 48), (249, 250, 20), (67, 102, 253)]
 
 # MATLAB® PARULA99 colormap, generated with Matlab 2019a: uint8(floor(parula(99)*255))
@@ -302,7 +302,8 @@ def uid2color(uids,
       lst.remove(el)
     assert el not in lst
     return lst
-  sid_2_non_zero_pids = {sid: _remove_all_no_error(list(pids), 0)
+  sid_2_non_zero_pids = {sid: list(range(6)) if is_maybe_cpp
+                              else _remove_all_no_error(list(pids), 0)
                          for sid, pids in _sid2pids(uids).items()}
 
   uid_2_color = dict()
