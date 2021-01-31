@@ -3,7 +3,7 @@
 Please contact us to request the dataset.
 
 * Panagiotis Meletis: **p**[DOT]**c**[DOT]**meletis**[AT]**tue.nl**
-* Vincent Wen: **xiaoxiao**[DOT]**wen**[AT]**student.uva.nl**
+* Xiaoxiao (Vincent) Wen: **xiaoxiao**[DOT]**wen**[AT]**student.uva.nl**
 
 ## Form
 

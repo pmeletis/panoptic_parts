@@ -74,14 +74,14 @@ Tested with the following configuration (Linux system):
 
 * Required
   * Python >= 3.6
-  * Numpy
-  * Pillow
-  * SciPy
-  * PyYAML
+  * Numpy >= 1.19.4
+  * Pillow >= 8.0.1
+  * SciPy >= 1.5.4
+  * PyYAML >= 5.3.1
 
 * Optional
-  * Tensorflow (for label format handling)
-  * Pytorch (for label format handling)
+  * Tensorflow >= 2.4.0 (for label format handling)
+  * Pytorch >= 1.7.0 (for label format handling)
   * Matplotlib >= 3.3.0 (for visualization scripts)
   * panopticapi (for PASCAL visualization script)
 
@@ -90,4 +90,4 @@ Tested with the following configuration (Linux system):
 Please feel free to contact us for any suggestions or questions:
 
 * Panagiotis Meletis: **p**[DOT]**c**[DOT]**meletis**[AT]**tue.nl**
-* Vincent Wen: **xiaoxiao**[DOT]**wen**[AT]**student.uva.nl**
+* Xiaoxiao (Vincent) Wen: **wenxx10**[AT]**gmail.com**
