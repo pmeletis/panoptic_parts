@@ -45,24 +45,24 @@ Cityscapes-Panoptic-Parts
    :header-rows: 1
 
    * - 
-      .. image:: ../../readme/aachen_000012_000019_leftImg8bit.jpg
-         :target: ../../readme/aachen_000012_000019_leftImg8bit.jpg
-         :alt: Image
+      .. image:: _static/aachen_000012_000019_leftImg8bit.jpg
+         :target: _static/aachen_000012_000019_leftImg8bit.jpg
+         :alt: aachen_000012_000019_leftImg8bit
      
      - 
-      .. image:: ../../readme/aachen_000012_000019_uids_pids_colored.png
-         :target: ../../readme/aachen_000012_000019_uids_pids_colored.png
-         :alt: Image
+      .. image:: _static/aachen_000012_000019_uids_pids_colored.png
+         :target: _static/aachen_000012_000019_uids_pids_colored.png
+         :alt: aachen_000012_000019_uids_pids_colored
      
    * - 
-      .. image:: ../../readme/frankfurt_000001_011835_leftImg8bit.jpg
-         :target: ../../readme/frankfurt_000001_011835_leftImg8bit.jpg
-         :alt: Image
+      .. image:: _static/frankfurt_000001_011835_leftImg8bit.jpg
+         :target: _static/frankfurt_000001_011835_leftImg8bit.jpg
+         :alt: frankfurt_000001_011835_leftImg8bit
      
      - 
-      .. image:: ../../readme/frankfurt_000001_011835_uids_pids_colored.png
-         :target: ../../readme/frankfurt_000001_011835_uids_pids_colored.png
-         :alt: Image
+      .. image:: _static/frankfurt_000001_011835_uids_pids_colored.png
+         :target: _static/frankfurt_000001_011835_uids_pids_colored.png
+         :alt: frankfurt_000001_011835_uids_pids_colored
      
 
 
@@ -73,44 +73,44 @@ PASCAL-Panoptic-Parts
    :header-rows: 1
 
    * - 
-      .. image:: ../../readme/2008_000393.jpg
-         :target: ../../readme/2008_000393.jpg
-         :alt: Image
+      .. image:: _static/2008_000393.jpg
+         :target: _static/2008_000393.jpg
+         :alt: 2008_000393
      
      - 
-      .. image:: ../../readme/2008_000393_colored.png
-         :target: ../../readme/2008_000393_colored.png
-         :alt: Image
+      .. image:: _static/2008_000393_colored.png
+         :target: _static/2008_000393_colored.png
+         :alt: 2008_000393_colored
      
      - 
-      .. image:: ../../readme/2008_000716.jpg
-         :target: ../../readme/2008_000716.jpg
-         :alt: Image
+      .. image:: _static/2008_000716.jpg
+         :target: _static/2008_000716.jpg
+         :alt: 2008_000716
      
      - 
-      .. image:: ../../readme/2008_000716_colored.png
-         :target: ../../readme/2008_000716_colored.png
-         :alt: Image
+      .. image:: _static/2008_000716_colored.png
+         :target: _static/2008_000716_colored.png
+         :alt: 2008_000716_colored
      
    * - 
-      .. image:: ../../readme/2008_007456.jpg
-         :target: ../../readme/2008_007456.jpg
-         :alt: Image
+      .. image:: _static/2008_007456.jpg
+         :target: _static/2008_007456.jpg
+         :alt: 2008_007456
      
      - 
-      .. image:: ../../readme/2008_007456_colored_repainted.png
-         :target: ../../readme/2008_007456_colored_repainted.png
-         :alt: Image
+      .. image:: _static/2008_007456_colored_repainted.png
+         :target: _static/2008_007456_colored_repainted.png
+         :alt: 2008_007456_colored_repainted
      
      - 
-      .. image:: ../../readme/2010_002356.jpg
-         :target: ../../readme/2010_002356.jpg
-         :alt: Image
+      .. image:: _static/2010_002356.jpg
+         :target: _static/2010_002356.jpg
+         :alt: 2010_002356
       
      - 
-      .. image:: ../../readme/2010_002356_colored.png
-         :target: ../../readme/2010_002356_colored.png
-         :alt: Image
+      .. image:: _static/2010_002356_colored.png
+         :target: _static/2010_002356_colored.png
+         :alt: 2010_002356_colored
      
 
 Installation
@@ -145,7 +145,7 @@ We encode three levels of labels: semantic, instance, and parts in a single imag
 Ground Truth usage cases
 ------------------------
 
-We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. Our compact :doc:`Label format </label_format>` together with `decode\_uids <../../panoptic_parts/utils/format.py>`_ function enable easy decoding of the labels for various image understanding tasks including:
+We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. Our compact :doc:`Label format </label_format>` together with :doc:`decode\_uids </_autosummary/panoptic_parts.utils.format.decode_uids>` function enable easy decoding of the labels for various image understanding tasks including:
 
 .. code-block:: Python
 

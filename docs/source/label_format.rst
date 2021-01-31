@@ -5,7 +5,11 @@
 Hierarchical panoptic format and labels encoding
 ================================================
 
-:raw-html-m2r:`<img src="../../readme/hierarchical_format.jpg" height="300"/>`
+.. :raw-html-m2r:`<img src="_static/hierarchical_format.jpg" height="300"/>`
+
+.. image:: _static/hierarchical_format.jpg
+   :target: _static/hierarchical_format.jpg
+   :alt: Hierarchical Label Format
 
 Each pixel in our hierarchical label format has an up to 7-digit *universal id* (\ *uid*\ ) containing:
 
