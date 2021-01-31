@@ -7,7 +7,7 @@ Detailed description of the datasets and various statistics are presented in our
 ```bibtex
 @article{meletis2020panopticparts,
     title = {Cityscapes-Panoptic-Parts and PASCAL-Panoptic-Parts datasets for Scene Understanding},
-    author = {Meletis Panagiotis and Xiaoxiao Wen and Chenyang Lu and Daan de Geus and Gijs Dubbelman},
+    author = {Panagiotis Meletis and Xiaoxiao Wen and Chenyang Lu and Daan de Geus and Gijs Dubbelman},
     type = {Technical report},
     institution = {Eindhoven University of Technology},
     date = {16/04/2020},

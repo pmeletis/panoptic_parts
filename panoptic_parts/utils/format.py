@@ -42,6 +42,7 @@ def _validate_uids_values_numpy_python(uids):
     raise ValueError('Some uids exceed the 99_999_99 encoding limit.')
   if np.any(uids < 0):
     raise ValueError('Some uids are negative.')
+  # TODO(panos): this gives a warning for 0 uids
   num_digits = (np.log10(uids) + 1).astype(np.int)
   if 3 in np.unique(num_digits):
     raise ValueError(
@@ -167,7 +168,7 @@ def decode_uids(uids, return_sids_iids=False, return_sids_pids=False):
     returns += (sids_iids,)
 
   if return_sids_pids:
-    sids_pids = sids * dtype(10**2) + maximum(pids, dtype(0))
+    sids_pids = where(uids <= 99_999, sids, sids * dtype(10**2) + maximum(pids, dtype(0)))
     if isinstance(uids, np.ndarray):
       sids_pids = np.asarray(sids_pids, dtype=np.int32)
     returns += (sids_pids,)

@@ -1,13 +1,14 @@
 """
 This script reads the original labels of Cityscapes (CO) and compares them against
-the Cityscapes-Panoptic-Parts (CPP) labels. For now it validates that the
-semantic and instance level of Cityscapes Panoptic Parts (CPP) is equivalent to
+the Cityscapes-Panoptic-Parts (CPP) labels. It verifies that the semantic and instance
+level labels of Cityscapes Panoptic Parts (CPP) are equivalent to
 original Cityscapes (CO), i.e., sids_iids_CPP == sids_iids_CO.
 """
 import sys
 assert float(sys.version[:3]) >= 3.6, 'This test uses Python >= 3.6 functionality.'
 import os.path as op
 import glob
+import multiprocessing
 
 import numpy as np
 from PIL import Image
@@ -24,14 +25,21 @@ labels_paths_ours = [
     for lp in labels_paths_original]
 print(len(labels_paths_ours))
 
-# validate labels
-for i, (lp_orig, lp_ours) in enumerate(zip(labels_paths_original, labels_paths_ours)):
-  print(f"{i+1}/{len(labels_paths_original)}")
-  labels_orig = np.array(Image.open(lp_orig), dtype=np.int32)
-  labels_ours = np.array(Image.open(lp_ours), dtype=np.int32)
-
+def _sids_iids_are_maintained(inpts):
+  lp_orig, lp_ours = inpts
+  labels_orig = np.asarray(Image.open(lp_orig), dtype=np.int32)
+  labels_ours = np.asarray(Image.open(lp_ours), dtype=np.int32)
   _, _, _, sids_iids = decode_uids(labels_ours, return_sids_iids=True)
-  if not np.all(np.equal(labels_orig, sids_iids)):
-    print(lp_orig, lp_ours, sep='\n')
-    print(np.unique(labels_orig), print(np.unique(sids_iids)), np.unique(labels_ours), sep='\n')
-    breakpoint()
+  returns = np.all(np.equal(labels_orig, sids_iids))
+  # if not returns:
+  #   print(lp_orig, lp_ours, sep='\n')
+  #   print(np.unique(labels_orig), print(np.unique(sids_iids)), np.unique(labels_ours), sep='\n')
+  return returns
+
+# validate labels
+with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
+  maintained_bools =[mb for mb in pool.imap_unordered(
+      _sids_iids_are_maintained, zip(labels_paths_original, labels_paths_ours), chunksize=10)]
+
+print(len(maintained_bools), 'files were verified.')
+assert all(maintained_bools), 'some sids_iids are not the same'
