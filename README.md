@@ -1,4 +1,4 @@
-# *Cityscapes-Panoptic-Parts* and *PASCAL-Panoptic-Parts* for Scene Understanding
+# Panoptic Parts datasets for Holistic Scene Understanding
 
 [![Documentation Status](https://readthedocs.org/projects/panoptic-parts/badge/?version=latest)](https://panoptic-parts.readthedocs.io/en/latest/?badge=latest)
 
