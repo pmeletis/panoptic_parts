@@ -20,7 +20,7 @@ Detailed description of the datasets and various statistics are presented in our
 }
 ```
 
-<a href="https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab"><img src="readme/mps_logo.png" height="100" alt="HTML tutorial"></a> &emsp; <img src="readme/tue_logo.jpg" height="100"/>
+<a href="https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab"><img src="readme/mps_logo.png" height="100" alt="MPS"></a> &emsp; <a href="https://www.tue.nl"><img src="readme/tue_logo.jpg" height="100" alt="TU/e"></a>
 
 ## Cityscapes-Panoptic-Parts
 
