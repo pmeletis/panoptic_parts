@@ -20,19 +20,19 @@ Detailed description of the datasets and various statistics are presented in our
 }
 ```
 
-<a href="https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab"><img src="readme/mps_logo.png" height="100" alt="MPS"></a> &emsp; <a href="https://www.tue.nl"><img src="readme/tue_logo.jpg" height="100" alt="TU/e"></a>
+<a href="https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab"><img src="docs/source/_static/mps_logo.png" height="100" alt="MPS"></a> &emsp; <a href="https://www.tue.nl"><img src="docs/source/_static/tue_logo.jpg" height="100" alt="TU/e"></a>
 
 ## Cityscapes-Panoptic-Parts
 
-![Image](readme/aachen_000012_000019_leftImg8bit.jpg "Image") | ![Image](readme/aachen_000012_000019_uids_pids_colored.png "Image")
+![Image](docs/source/_static/aachen_000012_000019_leftImg8bit.jpg "Image") | ![Image](docs/source/_static/aachen_000012_000019_uids_pids_colored.png "Image")
 ---- | ----
-![Image](readme/frankfurt_000001_011835_leftImg8bit.jpg "Image") | ![Image](readme/frankfurt_000001_011835_uids_pids_colored.png "Image")
+![Image](docs/source/_static/frankfurt_000001_011835_leftImg8bit.jpg "Image") | ![Image](docs/source/_static/frankfurt_000001_011835_uids_pids_colored.png "Image")
 
 ## PASCAL-Panoptic-Parts
 
-![Image](readme/2008_000393.jpg "Image") | ![Image](readme/2008_000393_colored.png "Image") | ![Image](readme/2008_000716.jpg "Image") | ![Image](readme/2008_000716_colored.png "Image")
+![Image](docs/source/_static/2008_000393.jpg "Image") | ![Image](docs/source/_static/2008_000393_colored.png "Image") | ![Image](docs/source/_static/2008_000716.jpg "Image") | ![Image](docs/source/_static/2008_000716_colored.png "Image")
 ---- | ---- | ---- | ----
-![Image](readme/2008_007456.jpg "Image") | ![Image](readme/2008_007456_colored_repainted.png "Image") | ![Image](readme/2010_002356.jpg "Image") | ![Image](readme/2010_002356_colored.png "Image")
+![Image](docs/source/_static/2008_007456.jpg "Image") | ![Image](docs/source/_static/2008_007456_colored_repainted.png "Image") | ![Image](docs/source/_static/2010_002356.jpg "Image") | ![Image](docs/source/_static/2010_002356_colored.png "Image")
 
 ## Code usage
 
@@ -43,11 +43,11 @@ belong to the stable API and may change.
 
 ## Hierarchical format and labels encoding
 
-We encode three levels of labels: semantic, instance, and parts in a single image-like file. The hierarchical panoptic encoding of the labels is explained here: [Label format](LABEL_FORMAT.md). Labels for both datasets follow this format.
+We encode three levels of labels: semantic, instance, and parts in a single image-like file. The hierarchical panoptic encoding of the labels is explained here: [Label format](docs/source/label_format.md). Labels for both datasets follow this format.
 
 ## Ground Truth usage cases
 
-We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. Our compact [label format](LABEL_FORMAT.md) together with [_decode_uids_](utils/format.py) function enable easy decoding of the labels for various image understanding tasks including:
+We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. Our compact [label format](docs/source/label_format.md) together with [_decode_uids_](utils/format.py) function enable easy decoding of the labels for various image understanding tasks including:
 
 ```Python
 # labels: Python int, or np.ndarray, or tf.Tensor, or torch.tensor

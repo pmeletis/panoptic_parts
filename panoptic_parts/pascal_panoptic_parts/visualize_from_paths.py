@@ -80,8 +80,7 @@ def visualize_from_paths(image_path, label_path, task_def_path):
   ax3.set_title('labels colored on semantic and instance levels')
   ax4.imshow(uids_sem_inst_parts_colored)
   ax4.set_title('labels colored on semantic, instance, and parts levels')
-  plt.savefig('test')
-  # plt.show()
+  plt.show()
 
 
 if __name__ == "__main__":
