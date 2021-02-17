@@ -21,7 +21,7 @@ Detailed description of the datasets and various statistics are presented in our
 
 ```eval_rst
 .. image:: _static/mps_logo.png
-    :target: https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab_static/
+    :target: https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab/
     :alt: MPS
     :height: 100
 
