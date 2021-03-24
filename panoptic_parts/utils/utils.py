@@ -259,3 +259,80 @@ def _print_metrics_from_confusion_matrix(cm,
             accuracies,
             ious,
             file=printfile)
+
+
+# def parse_sids_pids_ppp_to_dense_mapping(sids_pids_ppp2sids_pids):
+#   # TODO(panos): consider providing transformers only for sids and pids
+#   uids_ppp2uids_new = dict()
+#   uids_ppp2uids_new[0] = sids_pids_ppp2sids_pids.get(0, 0)
+#   for s in range(1, 100):
+#     if s not in sids_pids_ppp2sids_pids.keys():
+#       sids_pids_ppp2sids_pids[s] = sids_pids_ppp2sids_pids[-1]
+#     uids_ppp2uids_new[s] = sids_pids_ppp2sids_pids[s]
+#     for i in range(1000):
+#       sid_iid = s * 1000 + i
+#       uids_ppp2uids_new[sid_iid] = uids_ppp2uids_new[s] * 1000 + i
+#       for p in range(100):
+#         sid_iid_pid = sid_iid * 100 + p
+#         sid_pid = s * 100 + p
+#         if sid_pid in sids_pids_ppp2sids_pids.keys():
+#           sid_pid_new = sids_pids_ppp2sids_pids[sid_pid]
+#           sid_new, pid_new = divmod(sid_pid_new, 100)
+#           uids_ppp2uids_new[sid_iid_pid] = sid_new * 100000 + i * 100 + pid_new
+#           print(sid_pid_new, sid_new, pid_new)
+#         elif sids_pids_ppp2sids_pids[s] != 0:
+#           uids_ppp2uids_new[sid_iid_pid] = sids_pids_ppp2sids_pids[s] * 100000 + i * 100 + p
+#         else:
+#           uids_ppp2uids_new[sid_iid_pid] = 0
+#         assert sid_iid_pid in uids_ppp2uids_new.keys()
+#         assert uids_ppp2uids_new[sid_iid_pid] <= 99_999_99, (
+#             uids_ppp2uids_new[sid_iid_pid], sid_pid, sid_iid_pid)
+#   return uids_ppp2uids_new
+
+
+def parse_sids_pids_ppp_to_dense_mapping(sids_pids_ppp2sids_pids):
+  # TODO(panos): consider providing transformers only for sids and pids
+  # -1 in values not yet handled
+  assert -1 not in sids_pids_ppp2sids_pids.values()
+  sp_ppp2sp_new = dict()
+  sp_ppp2sp_new[0] = sids_pids_ppp2sids_pids.get(0, sids_pids_ppp2sids_pids[-1])
+  for sid in range(1, 100):
+    sp_ppp2sp_new[sid] = sids_pids_ppp2sids_pids.get(sid, sids_pids_ppp2sids_pids[-1])
+    for pid in range(100):
+      sid_pid = sid * 100 + pid
+      if sid_pid in sids_pids_ppp2sids_pids:
+        sp_ppp2sp_new[sid_pid] = sids_pids_ppp2sids_pids[sid_pid]
+      elif sid in sids_pids_ppp2sids_pids:
+        mp = sids_pids_ppp2sids_pids[sid]
+        # try to guess if the value represents only a sid or a sid_pid
+        # TODO(panos): maybe this is not a desired behavior for some cases
+        # there is an ambiguity here, reconsider it, maybe differentiate
+        # when pid == 0?
+        # if 0 <= mp <= 99:
+        #   sp_ppp2sp_new[sid_pid] = mp * 100 + pid
+        # elif 1_00 <= mp <= 99_99:
+        sp_ppp2sp_new[sid_pid] = mp
+        # else:
+        #   raise ValueError(f'Unhandled key {mp} in mappings.')
+      else:
+        sp_ppp2sp_new[sid_pid] = sids_pids_ppp2sids_pids[-1]
+  assert set(sp_ppp2sp_new) == set(range(10000)), 'Some PPP sids_pids are not mapped.'
+  return sp_ppp2sp_new
+  # # add iids
+  # uids_ppp2uids_new = dict()
+  # uids_ppp2uids_new[0] = sp_ppp2sp_new[0]
+  # for sid in range(1, 100):
+  #   uid = sid
+  #   uids_ppp2uids_new[uid] = sp_ppp2sp_new[sid]
+  #   for iid in range(1000):
+  #     uid = sid * 1000 + iid
+  #     uids_ppp2uids_new[uid] = sp_ppp2sp_new[sid]
+  #     for pid in range(100):
+  #       uid = sid * 1_000_00 + iid * 100 + pid
+  #       sid_pid = sid * 100 + pid
+  #       uids_ppp2uids_new[uid] = sp_ppp2sp_new[sid_pid]
+  # diff = set(range(100_000_00)) - set(range(100, 1000)) - set(uids_ppp2uids_new)
+  # if diff:
+  #   print('Some PPP uids are not mapped:', list(diff)[:10])
+  # assert all(m <= 99_999_99 for m in uids_ppp2uids_new)
+  # return uids_ppp2uids_new
