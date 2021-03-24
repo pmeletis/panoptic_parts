@@ -1,5 +1,5 @@
 """
-Utility functions for reading and writing to our hierarchical panoptic format (see REAMDE).
+Utility functions for reading and writing to our hierarchical panoptic format (see README).
 Tensorflow and Pytorch are optional frameworks.
 """
 

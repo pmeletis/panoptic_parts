@@ -24,4 +24,4 @@ Pixels of humans and vehicles (_sids_: 24, 25, 26, 27, or 28) that are not assig
 ## Contact
 Please feel free to contact us for any suggestions or questions:
 * Panagiotis Meletis: **p**[DOT]**c**[DOT]**meletis**[AT]**tue.nl**
-* Vincent (Xiaoxiao) Wen: **wenxx10**[AT]**gmail.com**
+* Xiaoxiao (Vincent) Wen: **wenxx10**[AT]**gmail.com**
