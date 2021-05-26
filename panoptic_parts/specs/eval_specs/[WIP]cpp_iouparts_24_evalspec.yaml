@@ -1,0 +1,32 @@
+version: 2.0
+comments:
+  - Cityscapes Panoptic Parts 23 parts classes + 1 background
+  - sid_pid2eid__template refers to ground truth and eval_id2scene_part_class refers to predictions
+  - sid_pid2eid__template contains rules on how to parse semantic-part ids (sid_pid) to eval ids (eid),
+    for parsing rules see parse__sid_pid2eid__v2
+
+dataset_spec_path: cpp_datasetspec.yaml
+
+sid_pid2eid__template: {
+  # evaluated
+  24_01: 1,  24_02: 2,  24_03: 3,  24_04: 4,
+  25_01: 5,  25_02: 6,  25_03: 7,  25_04: 8,
+  26_01: 9,  26_02: 10, 26_03: 11, 26_04: 12, 26_05: 13,
+  27_01: 14, 27_02: 15, 27_03: 16, 27_04: 17, 27_05: 18,
+  28_01: 19, 28_02: 20, 28_03: 21, 28_04: 22, 28_05: 23,
+  # ignored
+  24: IGNORED, 25: IGNORED, 26: IGNORED, 27: IGNORED, 28: IGNORED,
+  0: IGNORED, 1: IGNORED, 2: IGNORED, 3: IGNORED, 4: IGNORED, 5: IGNORED, 6: IGNORED, 9: IGNORED, 10: IGNORED, 14: IGNORED, 15: IGNORED, 16: IGNORED, 18: IGNORED, 29: IGNORED, 30: IGNORED,
+  # background
+  DEFAULT: 0
+}
+
+eval_id2scene_part_class: {
+  0: background,
+  1: person-torso, 2: person-head, 3: person-arms, 4: person-legs,
+  5: rider-torso, 6: rider-head, 7: rider-arms, 8: rider-legs,
+  9: car-windows, 10: car-wheels, 11: car-lights, 12: car-license_plate, 13: car-chassis,
+  14: truck-windows, 15: truck-wheels, 16: truck-lights, 17: truck-license_plate, 18: truck-chassis,
+  19: bus-windows, 20: bus-wheels, 21: bus-lights, 22: bus-license_plate, 23: bus-chassis,
+  24: ignored
+}

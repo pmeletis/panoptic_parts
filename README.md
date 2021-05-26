@@ -47,7 +47,7 @@ We encode three levels of labels: semantic, instance, and parts in a single imag
 
 ## Ground Truth usage cases
 
-We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. Our compact [label format](LABEL_FORMAT.md) together with [_decode_uids_](utils/format.py) function enable easy decoding of the labels for various image understanding tasks including:
+We provide for each image a single (image-like) ground truth file encoding semantic-, instance-, and parts- levels annotations. Our compact [label format](LABEL_FORMAT.md) together with [_decode_uids_](panoptic_parts/utils/format.py) function enable easy decoding of the labels for various image understanding tasks including:
 
 ```Python
 # labels: Python int, or np.ndarray, or tf.Tensor, or torch.tensor
@@ -77,21 +77,25 @@ _, _, _, semantic_instance_ids, semantic_parts_ids = decode_uids(labels, return_
 Tested with the following configuration (Linux system):
 
 * Required
-  * Python >= 3.6
-  * Numpy >= 1.19.4
-  * Pillow >= 8.0.1
-  * SciPy >= 1.5.4
-  * PyYAML >= 5.3.1
+  * Python >= 3.7
+  * numpy >= 1.15
+  * Pillow >= 8.0
+  * scipy >= 1.4
+  * ruamel.yaml
 
 * Optional
-  * Tensorflow >= 2.4.0 (for label format handling)
-  * Pytorch >= 1.7.0 (for label format handling)
-  * Matplotlib >= 3.3.0 (for visualization scripts)
+  * tensorflow >= 2.0 (for label format handling)
+  * torch >= 1.4 (for label format handling)
+  * matplotlib >= 3.2 (for visualization scripts)
   * panopticapi (for PASCAL visualization script)
+  * pycocotools
 
 ## Contact
 
-Please feel free to contact us for any suggestions or questions:
+Please feel free to contact us for any suggestions or questions.
 
-* Panagiotis Meletis: **p**[DOT]**c**[DOT]**meletis**[AT]**tue.nl**
-* Xiaoxiao (Vincent) Wen: **wenxx10**[AT]**gmail.com**
+**panoptic.parts@outlook.com**
+
+The Panoptic Parts datasets team
+
+Correspondence: Panagiotis Meletis, Vincent Wen

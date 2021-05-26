@@ -1,0 +1,71 @@
+version: 2.0
+comments:
+  - Cityscapes Panoptic Parts 23 parts classes
+
+dataset_spec_path: cpp_datasetspec.yaml
+
+panoptic_dict_path: "/home/cylu/Documents/fpsnetv2/datasets/Cityscapes/validation/panoptic.json"
+
+cat_definition: {
+  num_cats : 19,
+  cat_def :  [
+  {
+    sem_cls : [7],
+    parts_cls : [1]
+  },{
+    sem_cls : [8],
+    parts_cls : [1]
+  },{
+    sem_cls : [11],
+    parts_cls : [1]
+  },{
+    sem_cls : [12],
+    parts_cls : [1]
+  },{
+    sem_cls : [13],
+    parts_cls : [1]
+  },{
+    sem_cls : [17],
+    parts_cls : [1]
+  },{
+    sem_cls : [19],
+    parts_cls : [1]
+  },{
+    sem_cls : [20],
+    parts_cls : [1]
+  },{
+    sem_cls : [21],
+    parts_cls : [1]
+  },{
+    sem_cls : [22],
+    parts_cls : [1]
+  },{
+    sem_cls : [23],
+    parts_cls : [1]
+  },{
+    sem_cls : [24],
+    parts_cls : [1, 2, 3, 4]
+  },{
+    sem_cls : [25],
+    parts_cls : [1, 2, 3, 4]
+  },{
+    sem_cls : [26],
+    parts_cls : [1, 2, 3, 4, 5]
+  },{
+    sem_cls : [27],
+    parts_cls : [1, 2, 3, 4, 5]
+  },{
+    sem_cls : [28],
+    parts_cls : [1, 2, 3, 4, 5]
+  },{
+    sem_cls : [31],
+    parts_cls : [1]
+  },{
+    sem_cls : [32],
+    parts_cls : [1]
+  },{
+    sem_cls : [33],
+    parts_cls : [1]
+  }
+]
+}

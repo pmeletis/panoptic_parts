@@ -1,0 +1,69 @@
+version: 2.0
+comments:
+ First version containing all information I (Daan) think is necessary for merging to panoptic and part-aware panoptic (and it should also be usable for PartPQ evaluation)
+
+dataset_spec_path: panoptic_parts/specs/dataset_specs/cpp_datasetspec.yaml
+
+# To be used for evaluation
+ignore_label: 255
+
+# To be used for evaluation
+dataset_sid2eval_sid: {
+  # evaluated
+  7: 7,   8: 8,   11: 11, 12: 12, 13: 13,
+  17: 17, 19: 19, 20: 20, 21: 21, 22: 22,
+  23: 23, 24: 24, 25: 25, 26: 26, 27: 27,
+  28: 28, 31: 31, 32: 32, 33: 33,
+  # ignored
+  0: IGNORED, 1: IGNORED, 2: IGNORED, 3: IGNORED, 4: IGNORED, 5: IGNORED, 6: IGNORED, 9: IGNORED, 10: IGNORED, 14: IGNORED, 15: IGNORED, 16: IGNORED, 18: IGNORED, 29: IGNORED, 30: IGNORED,
+  # default
+  DEFAULT: IGNORED
+}
+
+# To be used for evaluation
+dataset_sid_pid2eval_sid_pid: {
+  # evaluated
+  24_01: 24_01, 24_02: 24_02, 24_03: 24_03, 24_04: 24_04,
+  25_01: 25_01, 25_02: 25_02, 25_03: 25_03, 25_04: 25_04,
+  26_01: 26_01, 26_02: 26_02, 26_03: 26_03, 26_04: 26_04, 26_05: 26_05,
+  27_01: 27_01, 27_02: 27_02, 27_03: 27_03, 27_04: 27_04, 27_05: 27_05,
+  28_01: 28_01, 28_02: 28_02, 28_03: 28_03, 28_04: 28_04, 28_05: 28_05,
+  # ignored
+  24: IGNORED, 25: IGNORED, 26: IGNORED, 27: IGNORED, 28: IGNORED,
+  0: IGNORED, 1: IGNORED, 2: IGNORED, 3: IGNORED, 4: IGNORED, 5: IGNORED, 6: IGNORED, 9: IGNORED, 10: IGNORED, 14: IGNORED, 15: IGNORED, 16: IGNORED, 18: IGNORED, 29: IGNORED, 30: IGNORED,
+  # default
+  DEFAULT: IGNORED
+}
+
+# Used for merging and evaluation
+eval_sid_things: [24, 25, 26, 27, 28, 31, 32, 33]
+eval_sid_stuff: [7, 8, 11, 12, 13, 17, 19, 20, 21, 22, 23]
+eval_sid_parts: [24, 25, 26, 27, 28]
+eval_sid_no_parts: [7, 8, 11, 12, 13, 17, 19, 20, 21, 22, 23, 31, 32, 33]
+
+# Used for merging panoptic & parts
+eval_sid_pid2eval_pid_flat: {
+  24_01: 1,  24_02: 2,  24_03: 3,  24_04: 4,
+  25_01: 5,  25_02: 6,  25_03: 7,  25_04: 8,
+  26_01: 9,  26_02: 10, 26_03: 11, 26_04: 12, 26_05: 13,
+  27_01: 14, 27_02: 15, 27_03: 16, 27_04: 17, 27_05: 18,
+  28_01: 19, 28_02: 20, 28_03: 21, 28_04: 22, 28_05: 23,
+}
+
+
+# Names for all labels that are to be evaluated
+eval_sid2scene_label: {
+  7: road, 8: sidewalk, 11: building, 12: wall,
+  13: fence, 17: pole, 19: traffic light, 20: traffic sign,
+  21: vegetation, 22: terrain, 23: sky, 24: person,
+  25: rider, 26: car, 27: truck, 28: bus,
+  31: train, 32: motorcycle, 33: bicycle
+}
+
+eval_pid_flat2scene_part_label: {
+  1: person-torso, 2: person-head, 3: person-arms, 4: person-legs,
+  5: rider-torso, 6: rider-head, 7: rider-arms, 8: rider-legs,
+  9: car-windows, 10: car-wheels, 11: car-lights, 12: car-license_plate, 13: car-chassis,
+  14: truck-windows, 15: truck-wheels, 16: truck-lights, 17: truck-license_plate, 18: truck-chassis,
+  19: bus-windows, 20: bus-wheels, 21: bus-lights, 22: bus-license_plate, 23: bus-chassis,
+}

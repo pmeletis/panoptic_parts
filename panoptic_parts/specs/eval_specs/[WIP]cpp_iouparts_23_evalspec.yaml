@@ -1,0 +1,66 @@
+version: 2.0
+comments:
+ - The IoU eval specification contains two optional fields.
+ - scene_class_new2scene_classes_old contains a mapping from the new scene-level classes to at least one of the original scene-level classes of the dataset (dataset_spec.l). Use this mapping to group or ignore scene-level classes.
+ - part_groupings is a mapping from the new part-level classes to at least one of the original part-level classes of the dataset.
+
+dataset_spec_path: ppp_datasetspec.yaml
+
+# 
+#scene_class_new2scene_classes_old: {
+#}
+
+# Dict(scene_class_new, Dict(part_class_new, part_classes_old))
+
+# part_groupings provides the information of the grouped part-level classes. Only classes with parts in dataset_spec can have groupings. The countable parts are again folded. Part-level Background and ignored classes are not included.
+# reserved keywords: DEFAULT key, BACKGROUND, IGNORE values
+# using typing module conventions:
+scene_class2part_groupings: {
+  DEFAULT: BACKGROUND,
+  person: {
+    person: IGNORE
+  },
+  rider: {
+    rider: IGNORE
+  },
+  car: {
+    head: [head, leye, reye, beak],
+    torso: [torso, neck, tail],
+    wing: [lwing, rwing],
+    leg: [lleg, lfoot, rleg, rfoot],
+  },
+  truck: {
+    boat: [void],
+  },
+  bus: {
+    cap: [cap],
+    body: [body],
+  },
+  bus: {
+    body: [frontside, leftside, rightside, backside, roofside, leftmirror, rightmirror, fliplate, bliplate, door, headlight],
+    wheel: [wheel],
+    window: [window],
+  },
+  unlabeled: IGNORE,
+  ego vehicle: IGNORE,
+  rectification border: IGNORE,
+  out of roi: IGNORE,
+  static: IGNORE,
+  dynamic: IGNORE,
+  ground: IGNORE,
+  parking: IGNORE,
+  rail track: IGNORE,
+  guard rail: IGNORE,
+  bridge: IGNORE,
+  tunnel: IGNORE,
+  polegroup: IGNORE,
+  caravan: IGNORE,
+  trailer: IGNORE,
+  license plate: IGNORE,
+}
+
+
+
+
+
+

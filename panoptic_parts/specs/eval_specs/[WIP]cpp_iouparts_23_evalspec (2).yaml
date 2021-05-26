@@ -1,0 +1,29 @@
+version: 2.0
+comments:
+  - Cityscapes Panoptic Parts 23 parts classes (without background)
+  - refer to cpp_iouparts_24_evalspec for now
+
+dataset_spec_path: cpp_datasetspec.yaml
+
+sid_pid2eid__template: {
+  # evaluated
+  24_01: 0,  24_02: 1,  24_03: 2,  24_04: 3,
+  25_01: 4,  25_02: 5,  25_03: 6,  25_04: 7,
+  26_01: 8,  26_02: 9, 26_03: 10, 26_04: 11, 26_05: 12,
+  27_01: 13, 27_02: 14, 27_03: 15, 27_04: 16, 27_05: 17,
+  28_01: 18, 28_02: 19, 28_03: 20, 28_04: 21, 28_05: 22,
+  # ignored
+  24: IGNORED, 25: IGNORED, 26: IGNORED, 27: IGNORED, 28: IGNORED,
+  0: IGNORED, 1: IGNORED, 2: IGNORED, 3: IGNORED, 4: IGNORED, 5: IGNORED, 6: IGNORED, 9: IGNORED, 10: IGNORED, 14: IGNORED, 15: IGNORED, 16: IGNORED, 18: IGNORED, 29: IGNORED, 30: IGNORED,
+  # default
+  DEFAULT: IGNORED
+}
+
+eval_id2scene_part_class: {
+  0: person-torso, 1: person-head, 2: person-arms, 3: person-legs,
+  4: rider-torso, 5: rider-head, 6: rider-arms, 7: rider-legs,
+  8: car-windows, 9: car-wheels, 10: car-lights, 11: car-license_plate, 12: car-chassis,
+  13: truck-windows, 14: truck-wheels, 15: truck-lights, 16: truck-license_plate, 17: truck-chassis,
+  18: bus-windows, 19: bus-wheels, 20: bus-lights, 21: bus-license_plate, 22: bus-chassis,
+  23: ignored
+}
