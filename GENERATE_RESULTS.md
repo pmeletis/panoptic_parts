@@ -137,7 +137,7 @@ To merge to panoptic, run the command below. This generates the images and JSON 
 From the main `panoptic_parts` directory, run:
 
 ```shell
-python -m panoptic_parts.merge_to_panoptic \
+python -m panoptic_parts.merging.merge_to_panoptic \
     $EVAL_SPEC_PATH \
     $INST_PRED_PATH \
     $SEM_PRED_PATH \
@@ -162,7 +162,7 @@ It stores the PPS predictions as a 3-channel PNG in shape `[height x width x 3]`
 From the main `panoptic_parts` directory, run:
 
 ```shell
-python -m panoptic_parts.merge_to_pps \
+python -m panoptic_parts.merging.merge_to_pps \
     $EVAL_SPEC_PATH \
     $PANOPTIC_PRED_DIR \
     $PANOPTIC_PRED_JSON \

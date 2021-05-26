@@ -1,7 +1,6 @@
 import yaml
 
 from panoptic_parts.specs.dataset_spec import DatasetSpec
-from panoptic_parts.specs.merge_eval_spec import PartPQEvalSpec
 
 
 with open('ppp_20_58_iou_evalspec.yaml') as fd:
