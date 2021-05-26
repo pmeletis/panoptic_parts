@@ -1,4 +1,6 @@
-# *Cityscapes-Panoptic-Parts* and *PASCAL-Panoptic-Parts* for Scene Understanding
+# Panoptic Parts datasets for Holistic Scene Understanding
+
+[![Documentation Status](https://readthedocs.org/projects/panoptic-parts/badge/?version=latest)](https://panoptic-parts.readthedocs.io/en/latest/?badge=latest)
 
 This repository contains code and tools for reading, processing, and visualizing *Cityscapes-Panoptic-Parts* and *PASCAL-Panoptic-Parts* datasets. We created these datasets by extending two established datasets for image scene understanding, namely [Cityscapes](https://github.com/mcordts/cityscapesScripts "Cityscapes") and [PASCAL](http://host.robots.ox.ac.uk/pascal/VOC/voc2010/ "PASCAL") datasets.
 
@@ -7,7 +9,7 @@ Detailed description of the datasets and various statistics are presented in our
 ```bibtex
 @article{meletis2020panopticparts,
     title = {Cityscapes-Panoptic-Parts and PASCAL-Panoptic-Parts datasets for Scene Understanding},
-    author = {Meletis Panagiotis and Xiaoxiao Wen and Chenyang Lu and Daan de Geus and Gijs Dubbelman},
+    author = {Panagiotis Meletis and Xiaoxiao Wen and Chenyang Lu and Daan de Geus and Gijs Dubbelman},
     type = {Technical report},
     institution = {Eindhoven University of Technology},
     date = {16/04/2020},
@@ -17,6 +19,8 @@ Detailed description of the datasets and various statistics are presented in our
     primaryClass={cs.CV}
 }
 ```
+
+<a href="https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab"><img src="readme/mps_logo.png" height="100" alt="MPS"></a> &emsp; <a href="https://www.tue.nl"><img src="readme/tue_logo.jpg" height="100" alt="TU/e"></a>
 
 ## Cityscapes-Panoptic-Parts
 
@@ -74,14 +78,14 @@ Tested with the following configuration (Linux system):
 
 * Required
   * Python >= 3.6
-  * Numpy
-  * Pillow
-  * SciPy
-  * PyYAML
+  * Numpy >= 1.19.4
+  * Pillow >= 8.0.1
+  * SciPy >= 1.5.4
+  * PyYAML >= 5.3.1
 
 * Optional
-  * Tensorflow (for label format handling)
-  * Pytorch (for label format handling)
+  * Tensorflow >= 2.4.0 (for label format handling)
+  * Pytorch >= 1.7.0 (for label format handling)
   * Matplotlib >= 3.3.0 (for visualization scripts)
   * panopticapi (for PASCAL visualization script)
 
@@ -90,4 +94,4 @@ Tested with the following configuration (Linux system):
 Please feel free to contact us for any suggestions or questions:
 
 * Panagiotis Meletis: **p**[DOT]**c**[DOT]**meletis**[AT]**tue.nl**
-* Vincent Wen: **xiaoxiao**[DOT]**wen**[AT]**student.uva.nl**
+* Xiaoxiao (Vincent) Wen: **wenxx10**[AT]**gmail.com**
