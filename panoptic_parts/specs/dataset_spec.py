@@ -2,9 +2,7 @@
 This module contains tools for handling dataset specifications.
 """
 import copy
-from functools import partial
 from typing import Union
-from itertools import chain
 import platform
 version = platform.python_version()
 if float(version[:3]) <= 3.6:

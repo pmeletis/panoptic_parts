@@ -48,7 +48,7 @@ assert tf.version.VERSION[0] == '2', 'Uses TF r2.x functionality.'
 
 from panoptic_parts.utils.format import decode_uids
 from panoptic_parts.utils.experimental_evaluation_IOU import ConfusionMatrixEvaluator_v2
-from eval_spec import SegmentationPartsEvalSpec
+from panoptic_parts.specs.eval_spec import SegmentationPartsEvalSpec
 
 
 FILEPATH_EVALUATION_DEF = 'cpp_iouparts_24_evalspec.yaml'

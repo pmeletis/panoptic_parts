@@ -6,7 +6,7 @@ import argparse
 from tqdm import tqdm
 from PIL import Image
 
-from panoptic_parts.specs.merge_eval_spec import PartPQEvalSpec
+from panoptic_parts.specs.eval_spec import PartPQEvalSpec
 from panoptic_parts.utils.utils import get_filenames_in_dir, find_filename_in_list
 
 

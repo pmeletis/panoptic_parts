@@ -3,8 +3,6 @@ This module contains tools for handling evaluation specifications.
 """
 import yaml
 import warnings
-import json
-import platform
 from operator import itemgetter
 
 from panoptic_parts.utils.utils import (
@@ -172,8 +170,3 @@ class SegmentationPartsEvalSpec(object):
     self.scene_part_classes = list(
         map(itemgetter(1), sorted(self.eval_id2scene_part_class.items())))
     self.Nclasses = len(self.scene_part_classes)
-
-
-if __name__ == '__main__':
-  spec = SegmentationPartsEvalSpec('cpp_iouparts_24_evalspec.yaml')
-  breakpoint()

@@ -14,10 +14,9 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import yaml
 
-from panoptic_parts.utils.visualization import (experimental_colorize_label, uid2color)
+from panoptic_parts.utils.visualization import experimental_colorize_label
 from panoptic_parts.utils.format import decode_uids, encode_ids
-from panoptic_parts.utils.utils import _transform_uids
-from specs.dataset_specs.dataset_spec import DatasetSpec
+from panoptic_parts.specs.dataset_spec import DatasetSpec
 
 
 def visualize_from_paths(label_path, datasetspec_path):

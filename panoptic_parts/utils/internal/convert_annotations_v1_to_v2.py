@@ -7,7 +7,6 @@ from tqdm import tqdm
 import numpy as np
 from PIL import Image
 
-sys.path.append('metrics_design/panoptic_parts')
 from panoptic_parts.utils.format import decode_uids, encode_ids
 
 
