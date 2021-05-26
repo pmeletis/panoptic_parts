@@ -7,12 +7,12 @@ from tqdm import tqdm
 import numpy as np
 from PIL import Image
 
-sys.path.append('/home/panos/git/github/pmeletis/metrics_design/panoptic_parts')
+sys.path.append('metrics_design/panoptic_parts')
 from panoptic_parts.utils.format import decode_uids, encode_ids
 
 
 def convert():
-  basepath = '/media/panos/data/datasets/pascal_panoptic_parts/releases/20201704/pascal_panoptic_parts_v1'
+  basepath = 'pascal_panoptic_parts/releases/20201704/pascal_panoptic_parts_v1'
 
   filepaths = glob.glob(op.join(basepath, 'training/*.tif')) + glob.glob(op.join(basepath, 'validation/*.tif'))
 
@@ -38,8 +38,8 @@ def convert():
 
 
 def validate():
-  basepath_v1 = '/media/panos/data/datasets/pascal_panoptic_parts/releases/20201704/pascal_panoptic_parts_v1'
-  basepath_v2 = '/media/panos/data/datasets/pascal_panoptic_parts/releases/20210503/pascal_panoptic_parts_v2'
+  basepath_v1 = 'pascal_panoptic_parts/releases/20201704/pascal_panoptic_parts_v1'
+  basepath_v2 = 'pascal_panoptic_parts/releases/20210503/pascal_panoptic_parts_v2'
 
   filepaths_v1 = glob.glob(op.join(basepath_v1, 'training/*.tif')) + glob.glob(op.join(basepath_v1, 'validation/*.tif'))
   filepaths_v2 = [fp.replace('20201704/pascal_panoptic_parts_v1', '20210503/pascal_panoptic_parts_v2') for fp in filepaths_v1]
