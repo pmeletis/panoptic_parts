@@ -84,6 +84,7 @@ Tested with the following configuration (Linux system):
   * ruamel.yaml >= 0.15
 
 * Optional
+  * json (for saving evaluation results)
   * tensorflow >= 2.0 (for label format handling in Tensorflow)
   * torch >= 1.4 (for label format handling in PyTorch)
   * matplotlib >= 3.2 (for visualization scripts)
