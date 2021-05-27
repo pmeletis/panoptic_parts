@@ -15,6 +15,7 @@ import sys
 from recommonmark.transform import AutoStructify
 from recommonmark.parser import CommonMarkParser
 sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../../panoptic_parts'))
 import panoptic_parts
 
 
