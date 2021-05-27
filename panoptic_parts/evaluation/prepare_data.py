@@ -7,7 +7,7 @@ from tqdm import tqdm
 from PIL import Image
 
 
-def create_image_list(dataset_dir, output_dir, dataset=None):
+def create_image_list(dataset_dir, output_dir, dataset):
   """
   :param dataset_dir: path to the PPS ground-truths file for the data split
   :param output_dir: directory where the images.json file will be stored
