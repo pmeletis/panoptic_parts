@@ -1,4 +1,4 @@
-## Visualization
+## Visualization of ground truth
 
 ### Cityscapes-Panoptic-Parts
 

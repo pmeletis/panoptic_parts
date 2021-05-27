@@ -18,9 +18,9 @@ The `EvalSpec`s have the following filename format:
 ```
 
 For the datasets that we define and use in our paper, we provide the `EvalSpec` that we use:
-* [ppq_cpp_19_23_evalspec.yaml](panoptic_parts/specs/eval_specs/ppq_cpp_19_23_evalspec.yaml): Cityscapes Panoptic Parts default (parts not grouped)
-* [ppq_cpp_19_23_grouped_evalspec.yaml](panoptic_parts/specs/eval_specs/ppq_cpp_19_23_grouped_evalspec.yaml): Cityscapes Panoptic Parts default (similar parts grouped)
-* [ppq_ppp_59_57_evalspec.yaml](panoptic_parts/specs/eval_specs/ppq_ppp_59_57_evalspec.yaml): PASCAL Panoptic Parts default
+* [ppq_cpp_19_23_cvpr21_default_evalspec.yaml](../../panoptic_parts/specs/eval_specs/ppq_cpp_19_23_cvpr21_default_evalspec.yaml): Cityscapes Panoptic Parts default (parts not grouped)
+* [ppq_cpp_19_23_cvpr21_grouped_evalspec.yaml](../../panoptic_parts/specs/eval_specs/ppq_cpp_19_23_cvpr21_grouped_evalspec.yaml): Cityscapes Panoptic Parts default (similar parts grouped)
+* [ppq_ppp_59_57_cvpr21_default_evalspec.yaml](../../panoptic_parts/specs/eval_specs/ppq_ppp_59_57_cvpr21_default_evalspec.yaml): PASCAL Panoptic Parts default
 
 ## 2. Prepare the predictions
 Before we can evaluate the results, you should make sure that the predictions are in the proper format. There are two things to be considered:
@@ -63,7 +63,7 @@ For regions where there is no prediction, or regions with `unknown` predictions,
 
 
 ## 3. Run evaluation script
-To run the evaluation script, you need to have a json file containing information on the images that you wish to evaluate on. [Here](GENERATE_RESULTS.md#dataset-information), we describe how to generate this `images.json` using `prepare_data.py`.
+To run the evaluation script, you need to have a json file containing information on the images that you wish to evaluate on. [Here](generate_results.md#dataset-information), we describe how to generate this `images.json` using `evaluation/prepare_data.py`.
 
 Run the evaluation script from the top-level `panoptic_parts` directory as:
 

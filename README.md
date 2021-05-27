@@ -99,4 +99,4 @@ Please feel free to contact us for any suggestions or questions.
 
 The Panoptic Parts datasets team
 
-Correspondence: Panagiotis Meletis, Vincent Wen
+Correspondence: Panagiotis Meletis, Vincent (Xiaoxiao) Wen

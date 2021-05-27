@@ -15,28 +15,40 @@ Welcome to Panoptic Parts datasets for Scene Understanding's documentation!
    label_format.md
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Examples
-
-   visualization.md
-   ground_truth_usage_cases.md
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Useful Tools and Scripts
-
-   tools.md
-   scripts.md
-
-.. toctree::
    :caption: API Reference
 
    api.rst
 
-.. toctree::
-   :caption: Support
 
-   contact.md
+.. toctree::
+   :caption: Evaluation
+   :maxdepth: 1
+   
+   evaluate_results.md
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Examples and Tools
+
+   visualization.md
+   generate_results.md
+   ground_truth_usage_cases.md
+   tools.md
+   scripts.md
+
+.. toctree::
+   :caption: Contact
+
+=======
+Contact
+=======
+Please feel free to contact us for any suggestions or questions.
+
+  **panoptic.parts@outlook.com**
+
+  Correspondence: Panagiotis Meletis, Vincent (Xiaoxiao) Wen
+
+The Panoptic Parts datasets team
 
 
 Indices and tables

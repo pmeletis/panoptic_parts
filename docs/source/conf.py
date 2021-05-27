@@ -21,7 +21,7 @@ import panoptic_parts
 # -- Project information -----------------------------------------------------
 
 project = 'Panoptic Parts datasets for Scene Understanding'
-copyright = '2021, Panagiotis Meletis and Xiaoxiao (Vincent) Wen'
+copyright = '2021, The Panoptic Parts datasets team'
 author = 'Panagiotis Meletis and Xiaoxiao (Vincent) Wen'
 # version_file = '../../panoptic_parts/version.py'
 

@@ -1,4 +1,6 @@
-## Hierarchical panoptic format and labels encoding
+## Label serialization format and encoding
+
+The goal of the format is to include (per image) all annotations in a single, image-like label file with a consistent encoding across all abstractions and information levels. This enables easy transfer, reading, and compact handling of the annotations. The following hierarchical structure is chosen, which extends the Cityscapes serialization format.
 
 <!-- This is a workaround for the image rendering problem using Markdown with sphinx -->
 ```eval_rst
@@ -24,11 +26,11 @@ Using the above encoding:
 
 For example, in _Cityscapes-Panoptic-Parts_, a _sky_ (_stuff_) pixel will have _uid_ = 23, a _car_ (_things_) pixel that is labeled only on the semantic level will have _uid_ = 26, if it's labeled also on instance level it can have _uid_ = 26002, and a _person_ (_things_) pixel that is labeled on all three levels can have _uid_ = 2401002.
 
-> The format does not cover parts-level classes for _stuff_ semantic classes for now.
+> The format covers parts-level classes for _stuff_ semantic classes using a dummy instance id (`iid = 0`). Cityscapes Panoptic Parts and PASCAL Panoptic Parts do not currently define any _stuff_ with part-level classes. This is a feature that can be used in future extensions.
 
-### Unlabeled pixels
+### Unlabeled/Ignored pixels
 
-We handle the unlabeled / void / "do not care pixels" in the three levels as follows:
+We handle the unlabeled / void / ignored / "do not care pixels" in the three levels as follows:
 
 - Semantic level: For _Cityscapes-Panoptic-Parts_ we use the original Cityscapes void class. For _PASCAL-Panoptic-Parts_ we use the class with _uid_ = 0.
 - Instance level: For instances the void class is not required. If a pixel does not belong to an object or cannot be labeled on instance level then it has only an up to 2-digit _semantic id_.
