@@ -1,24 +1,21 @@
 API Reference
 =============
 
-We provide a public, backwards compatible API, which allows easier bug fixes and functionality updates. We suggest that the users update their local clone of this repository frequently by pulling the master branch.
-
-All functions and arguments named with the preffix 'experimental\_' or with an '_' do not
-belong to the stable API and may change.
+We provide a public, stable API consisting of tested modules. However, in members of the API you may encounter experimental features (e.g. arguments or functions). These have the preffic `experimental\_` and are excempted from stability guarantees.
 
 Label format handling
 ---------------------
 
-.. autofunction:: panoptic_parts.utils.format.decode_uids
-.. autofunction:: panoptic_parts.utils.format.encode_ids
+.. autofunction:: panoptic_parts.decode_uids
+.. autofunction:: panoptic_parts.encode_ids
 
 Visualization
 -------------
 
-.. autofunction:: panoptic_parts.utils.visualization.random_colors
-.. autofunction:: panoptic_parts.utils.visualization.uid2color
+.. autofunction:: panoptic_parts.random_colors
+.. autofunction:: panoptic_parts.uid2color
 
 Misc
 ----
 
-.. autofunction:: panoptic_parts.utils.utils.safe_write
+.. autofunction:: panoptic_parts.safe_write
