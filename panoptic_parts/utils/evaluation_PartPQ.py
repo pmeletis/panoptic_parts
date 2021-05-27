@@ -188,38 +188,6 @@ def prediction_parsing(cat_definition, sem_map, inst_map, part_map):
   return meta_dict
 
 
-def UNUSED_parse_dataset_sid_pid2eval_sid_pid(dataset_sid_pid2eval_sid_pid, experimental_noinfo_id=0):
-  """
-  Parsing priority, sid_pid is mapped to:
-    1. dataset_sid_pid2eval_sid_pid[sid_pid] if it exists, else
-    2. dataset_sid_pid2eval_sid_pid[sid] if it exists, else
-    3. dataset_sid_pid2eval_sid_pid['DEFAULT'] value
-
-  Returns:
-    sid_pid2eval_id: a dense mapping having keys for all possible sid_pid s (0 to 99_99)
-      using the provided sparse dataset_sid_pid2eval_sid_pid
-  """
-  dsp2spe = copy.copy(dataset_sid_pid2eval_sid_pid)
-  dsp2spe_keys = dsp2spe.keys()
-  dsp2spe_new = dict()
-  for k in range(10000):
-    if k in dsp2spe_keys:
-      dsp2spe_new[k] = dsp2spe[k]
-      continue
-    sid, pid = (k, None) if k < 100 else divmod(k, 100)
-    if sid in dsp2spe_keys:
-      dsp2spe_new[k] = dsp2spe[sid]
-      continue
-    if 'DEFAULT' in dsp2spe_keys:
-      dsp2spe_new[k] = dsp2spe['DEFAULT']
-      continue
-    raise ValueError(f'dataset_sid_pid2eval_sid_pid does not follow the specification rules for key {k}.')
-  assert all(v in list(range(10000)) + ['IGNORED'] for v in dsp2spe_new.values())
-  # replace ignored sid_pid s with the experimental_noinfo_id
-  dsp2spe_new = {k: experimental_noinfo_id if v == 'IGNORED' else v for k, v in dsp2spe_new.items()}
-  return dsp2spe_new
-
-
 def parse_dataset_sid_pid2eval_sid_pid(dataset_sid_pid2eval_sid_pid):
   """
   Parsing priority, sid_pid is mapped to:
@@ -385,41 +353,6 @@ def generate_ignore_info_tiff(part_panoptic_gt, eval_spec):
   ignore_img[crowd] = sid_iid[crowd]
 
   return ignore_img
-
-
-# will be deleted in the final refactoring pass
-def UNUSED_generate_ignore_info(panoptic_dict, panoptic_ann_img, image_id, void=0):
-  # Create empty ignore_img and ignore_dict
-  ignore_img = np.zeros_like(panoptic_ann_img).astype(np.uint8)
-  ignore_dict = dict()
-
-  # Get panoptic segmentation in the correct format
-  pan_ann_format = panoptic_ann_img[..., 0] + panoptic_ann_img[..., 1] * 256 + panoptic_ann_img[..., 2] * 256 * 256
-
-  # Store overall void info in ignore_img and ignore_dict
-  overall_void = pan_ann_format == void
-  ignore_img[overall_void] = 255
-  ignore_dict['255'] = 255
-
-  # Retrieve annotation corresponding to image_id
-  annotation_dict = dict()
-  for annotation in panoptic_dict['annotations']:
-    if annotation['image_id'] == image_id:
-      annotation_dict = annotation
-
-  if len(annotation_dict) == 0:
-    raise KeyError('ImageID is not present in the panoptic annotation dict.')
-
-  # Find crowd annotations and add them to ignore_img and ignore_dict
-  for inst_annotation in annotation_dict['segments_info']:
-    if inst_annotation['iscrowd'] == 1:
-      crowd_instance_id = inst_annotation['id']
-      category_id = inst_annotation['category_id']
-      crowd_mask = pan_ann_format == crowd_instance_id
-      ignore_img[crowd_mask] = category_id
-      ignore_dict[str(category_id)] = category_id
-
-  return ignore_img[:, :, 0], ignore_dict
 
 
 def ignore_img_parsing(sample, cat_definition):
