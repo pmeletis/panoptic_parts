@@ -1,7 +1,13 @@
-# Hierarchical panoptic format and labels encoding
+## Hierarchical panoptic format and labels encoding
 
-<img src="readme/hierarchical_format.jpg" height="300"/>
+<!-- This is a workaround for the image rendering problem using Markdown with sphinx -->
+```eval_rst
+    .. image:: _static/hierarchical_format.jpg
+        :target: _static/hierarchical_format.jpg
+        :alt: Hierarchical Label Format
+```
 
+We encode three levels of labels: semantic, instance, and parts in a single image-like file. Labels for both datasets follow this format.
 Each pixel in our hierarchical label format has an up to 7-digit _universal id_ (_uid_) containing:
 
 - An up to 2-digit _semantic id_ (_sid_), encoding the semantic-level _things_ or _stuff_ class.
@@ -20,7 +26,7 @@ For example, in _Cityscapes-Panoptic-Parts_, a _sky_ (_stuff_) pixel will have _
 
 > The format does not cover parts-level classes for _stuff_ semantic classes for now.
 
-## Unlabeled pixels
+### Unlabeled pixels
 
 We handle the unlabeled / void / "do not care pixels" in the three levels as follows:
 

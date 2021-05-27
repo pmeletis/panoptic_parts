@@ -12,18 +12,30 @@
 #
 import os
 import sys
+from recommonmark.transform import AutoStructify
+from recommonmark.parser import CommonMarkParser
 sys.path.insert(0, os.path.abspath('../..'))
+import panoptic_parts
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'Cityscapes-Panoptic-Parts and PASCAL-Panoptic-Parts for Scene Understanding'
+project = 'Panoptic Parts datasets for Scene Understanding'
 copyright = '2021, Panagiotis Meletis and Xiaoxiao (Vincent) Wen'
 author = 'Panagiotis Meletis and Xiaoxiao (Vincent) Wen'
+# version_file = '../../panoptic_parts/version.py'
 
-# The full version, including alpha/beta/rc tags
-release = '1.0'
 
+# def get_version():
+#     with open(version_file, 'r') as f:
+#         exec(compile(f.read(), version_file, 'exec'))
+#     return locals()['__version__']
+
+
+# # The full version, including alpha/beta/rc tags
+# release = get_version()
+
+release = panoptic_parts.__version__
 
 # -- General configuration ---------------------------------------------------
 
@@ -33,33 +45,31 @@ release = '1.0'
 # Add napoleon to the extensions list
 extensions = [
         'sphinx.ext.autodoc',
-        'sphinx.ext.autosummary',
+        'sphinx.ext.napoleon',
         'sphinx.ext.viewcode',
         'sphinx_autodoc_typehints',
-        'sphinx.ext.napoleon',
+        'recommonmark',
+        'sphinx_markdown_tables',
     ]
-
-autosummary_generate = True
-autoclass_content = "both"
-html_show_sourcelink = False
-autodoc_inherit_docstring = True
-set_type_checking_flag = True
-add_module_names = False
-napoleon_google_docstring = True
-napoleon_numpy_docstring = False
-napoleon_include_init_with_doc = True
-napoleon_include_private_with_doc = False
-napoleon_include_special_with_doc = True
-napoleon_use_admonition_for_examples = False
-napoleon_use_admonition_for_notes = False
-napoleon_use_admonition_for_references = False
-napoleon_use_ivar = False
-napoleon_use_param = True
-napoleon_use_rtype = True    
 
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+# templates_path = ['_templates']
+
+# The suffix(es) of source filenames.
+# You can specify multiple suffix as a list of string:
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
+
+
+source_parsers = {
+    '.md': CommonMarkParser,
+}
+
+# The master toctree document.
+master_doc = 'index'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -78,3 +88,11 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            'url_resolver': lambda url: github_doc_root + url,
+            'auto_toc_tree_section': 'Contents',
+            }, True)
+    app.add_transform(AutoStructify)
