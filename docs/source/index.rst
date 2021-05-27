@@ -7,7 +7,7 @@ Welcome to Panoptic Parts datasets for Scene Understanding's documentation!
 ===========================================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Get Started
 
    introduction.md
@@ -15,14 +15,14 @@ Welcome to Panoptic Parts datasets for Scene Understanding's documentation!
    label_format.md
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Examples
 
    visualization.md
    ground_truth_usage_cases.md
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Useful Tools and Scripts
 
    tools.md
