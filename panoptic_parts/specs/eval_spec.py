@@ -1,9 +1,10 @@
 """
 This module contains tools for handling evaluation specifications.
 """
-import yaml
 import warnings
 from operator import itemgetter
+
+from ruamel.yaml import YAML
 
 from panoptic_parts.utils.utils import (
     _sparse_ids_mapping_to_dense_ids_mapping as dict_to_numpy, parse__sid_pid2eid__v2)
@@ -22,7 +23,7 @@ class PartPQEvalSpec(object):
       spec_path: a YAML evaluation specification
     """
     with open(spec_path) as fd:
-      espec = yaml.load(fd, Loader=yaml.Loader)
+      espec = YAML().load(fd)
 
     self._spec_version = espec['version']
     self._dspec = DatasetSpec(espec['dataset_spec_path'])
@@ -152,7 +153,7 @@ class SegmentationPartsEvalSpec(object):
       spec_path: a YAML evaluation specification
     """
     with open(spec_path) as fd:
-      espec = yaml.load(fd, Loader=yaml.Loader)
+      espec = YAML().load(fd)
 
     self._spec_version = espec['version']
     self.sid_pid2eid__template = espec['sid_pid2eid__template']

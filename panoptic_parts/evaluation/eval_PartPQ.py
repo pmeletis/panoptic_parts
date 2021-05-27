@@ -3,7 +3,6 @@ import glob
 import json
 import os
 import os.path as op
-import yaml
 
 import numpy as np
 from PIL import Image

@@ -12,7 +12,7 @@ import argparse
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
-import yaml
+from ruamel.yaml import YAML
 
 from panoptic_parts.utils.visualization import experimental_colorize_label
 from panoptic_parts.utils.format import decode_uids, encode_ids

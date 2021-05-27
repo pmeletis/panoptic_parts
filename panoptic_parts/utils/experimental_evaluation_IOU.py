@@ -3,12 +3,13 @@ Library for IOU-based evaluation functions.
 """
 import multiprocessing
 
+from typing import Dict, Union
+
+from ruamel.yaml import YAML
 from PIL import Image
 import numpy as np
 import tensorflow as tf
 assert tf.version.VERSION[0] == '2', 'Uses TF r2.x functionality.'
-import yaml
-from typing import Dict, Union
 
 from panoptic_parts.utils.format import decode_uids
 from panoptic_parts.utils.utils import (
@@ -63,7 +64,7 @@ def parse_sid_pid2eval_id(sid_pid2eval_id: Dict[int, int], max_sid: int):
 
 def _parse_yaml(fp_yaml):
   with open(fp_yaml) as fd:
-    defs = yaml.load(fd, Loader=yaml.Loader)
+    defs = YAML().load(fd)
   max_sid = defs['max_sid']
   sid_pid2eval_id = defs['sid_pid2eval_id']
   sid_pid2eval_id = parse_sid_pid2eval_id(sid_pid2eval_id, max_sid)
@@ -277,7 +278,7 @@ class ConfusionMatrixEvaluator_v2(object):
 
 if __name__ == '__main__':
   with open('../cpp_parts_24.yaml') as fd:
-    spec = yaml.load(fd)
+    spec = YAML().load(fd)
   sp2e_new = parse__sid_pid2eid__v2(spec['sid_pid2eid__template'])
   eval_id_max_non_ignored = max(sp2e_new.values())
   # prints (sid_pid, eval_id) without the tuples containing the background (0) and the ignored eids

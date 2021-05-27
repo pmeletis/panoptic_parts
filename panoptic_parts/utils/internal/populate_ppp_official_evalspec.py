@@ -1,15 +1,15 @@
-import yaml
+from ruamel.yaml import YAML
 
 from panoptic_parts.specs.dataset_spec import DatasetSpec
 
 
 with open('ppp_20_58_iou_evalspec.yaml') as fd:
-  gspec = yaml.load(fd, Loader=yaml.Loader)
+  gspec = YAML().load(fd)
 
 dspec = DatasetSpec(gspec['dataset_spec_path'])
 
 with open('ppq_ppp_59_57_evalspec.yaml') as fd:
-  espec = yaml.load(fd, Loader=yaml.Loader)
+  espec = YAML().load(fd)
 
 
 

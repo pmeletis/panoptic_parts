@@ -8,7 +8,7 @@ version = platform.python_version()
 if float(version[:3]) <= 3.6:
   raise EnvironmentError('At least Python 3.7 is needed for ordered dict functionality.')
 
-import yaml
+from ruamel.yaml import YAML
 
 
 class DatasetSpec(object):
@@ -71,7 +71,7 @@ class DatasetSpec(object):
       spec_path: a YAML panoptic parts dataset specification
     """
     with open(spec_path) as fd:
-      spec = yaml.load(fd, Loader=yaml.Loader)
+      spec = YAML().load(fd)
 
     self._spec_version = spec['version']
     self._dataset_name = spec['name']
@@ -185,8 +185,8 @@ class DatasetSpec(object):
 
 
 if __name__ == '__main__':
-  spec = DatasetSpec('specs/dataset_specs/ppp_datasetspec.yaml')
+  spec = DatasetSpec('panoptic_parts/specs/dataset_specs/ppp_datasetspec.yaml')
   print(*sorted(filter(lambda t: t[0] != t[1],
                        spec._sid_pid_file2sid_pid.items())), sep='\n')
-  # spec = DatasetSpec('specs/dataset_specs/cpp_datasetspec.yaml')
+  # spec = DatasetSpec('panoptic_parts/specs/dataset_specs/cpp_datasetspec.yaml')
   breakpoint()

@@ -81,14 +81,14 @@ Tested with the following configuration (Linux system):
   * numpy >= 1.15
   * Pillow >= 8.0
   * scipy >= 1.4
-  * ruamel.yaml
+  * ruamel.yaml >= 0.15
 
 * Optional
-  * tensorflow >= 2.0 (for label format handling)
-  * torch >= 1.4 (for label format handling)
+  * tensorflow >= 2.0 (for label format handling in Tensorflow)
+  * torch >= 1.4 (for label format handling in PyTorch)
   * matplotlib >= 3.2 (for visualization scripts)
-  * panopticapi (for PASCAL visualization script)
-  * pycocotools
+  * panopticapi (for merging)
+  * pycocotools (for merging)
 
 ## Contact
 
