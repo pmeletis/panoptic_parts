@@ -4,7 +4,7 @@
 
 **v2.0 Release Candidate**
 
-## [[CVPR 2021 Paper]()] [[Datasets Technical Report](https://arxiv.org/abs/2004.07944 "arxiv.org")] [[Documentation](https://panoptic-parts.readthedocs.io/en/latest/?badge=latest)]
+## [[CVPR 2021 Paper]()] [[Datasets Technical Report](https://arxiv.org/abs/2004.07944 "arxiv.org")] [[Documentation](https://panoptic-parts.readthedocs.io/en/stable)]
 
 This repository contains code and tools for reading, processing, and visualizing Panoptic Parts datasets. Moreover, it contains code for reproducing CVPR 2021 paper results.
 
@@ -64,9 +64,7 @@ We provide a public, stable API consisting, and various code utilities that are 
 }
 ```
 
-
-<a href="https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab"><img src="readme/mps_logo.png" height="100" alt="MPS"></a> &emsp; <a href="https://www.tue.nl"><img src="readme/tue_logo.jpg" height="100" alt="TU/e"></a>
-
+<a href="https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab"><img src="docs/source/_static/mps_logo.png" height="100" alt="MPS"></a> &emsp; <a href="https://www.tue.nl"><img src="docs/source/_static/tue_logo.jpg" height="100" alt="TU/e"></a>
 ## Contact
 
 Please feel free to contact us for any suggestions or questions.
