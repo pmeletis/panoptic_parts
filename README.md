@@ -46,7 +46,8 @@ We provide a public, stable API consisting, and various code utilities that are 
 @article{degeus2021panopticparts,
     title = {Part-aware Panoptic Segmentation},
     author = {Daan de Geus and Panagiotis Meletis and Chenyang Lu and Xiaoxiao Wen and Gijs Dubbelman},
-    institution = {Eindhoven University of Technology}
+    booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    year = {2021}
 }
 ```
 
