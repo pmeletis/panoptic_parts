@@ -21,7 +21,7 @@ labels_paths_original = glob.glob(op.join(BASEPATH_LABELS_ORIGINAL, 'train', '*'
 labels_paths_original.extend(glob.glob(op.join(BASEPATH_LABELS_ORIGINAL, 'val', '*', '*_instanceIds.png')))
 print(len(labels_paths_original))
 labels_paths_ours = [
-    lp.replace('cityscapes', 'cityscapes_panoptic_parts').replace('_instanceIds.png', '_panopticIds.tif')
+    lp.replace('cityscapes/gtFine', 'cityscapes_panoptic_parts/gtFine_v2').replace('_instanceIds.png', 'PanopticParts.tif')
     for lp in labels_paths_original]
 print(len(labels_paths_ours))
 

@@ -332,7 +332,8 @@ def experimental_colorize_label(label,
                                 sid2color=None,
                                 return_sem=False,
                                 return_sem_inst=False,
-                                emphasize_instance_boundaries=True):
+                                emphasize_instance_boundaries=True,
+                                return_uid2color=False):
   """
   Colorizes a `label` with semantic-instance-parts-level colors based on sid2color.
   Optionally, semantic-level and semantic-instance-level colorings can be returned.
@@ -427,6 +428,8 @@ def experimental_colorize_label(label,
     returns += (uids_sem_colored,)
   if return_sem_inst:
     returns += (uids_sem_inst_colored,)
+  if return_uid2color:
+    returns += (uid2color_dict,)
   if len(returns) == 1:
     return returns[0]
   return returns
