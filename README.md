@@ -35,12 +35,12 @@ pip install -r requirements.txt
 
 ## API and code reference
 
-We provide a public, stable API consisting, and various code utilities that are documented [here](https://panoptic-parts.readthedocs.io/en/stable/api_and_code.html).
+We provide a public, stable API, and various code utilities that are documented [here](https://panoptic-parts.readthedocs.io/en/stable/api_and_code.html).
 
 
 ## Citations
 
- Please cite us if you find our work useful and you use it for your research:
+ Please cite us if you find our work useful or you use it in your research:
 
 ```bibtex
 @inproceedings{degeus2021panopticparts,
@@ -66,6 +66,7 @@ We provide a public, stable API consisting, and various code utilities that are 
 ```
 
 <a href="https://www.tue.nl/en/research/research-groups/signal-processing-systems/mobile-perception-systems-lab"><img src="docs/source/_static/mps_logo.png" height="100" alt="MPS"></a> &emsp; <a href="https://www.tue.nl"><img src="docs/source/_static/tue_logo.jpg" height="100" alt="TU/e"></a>
+
 ## Contact
 
 Please feel free to contact us for any suggestions or questions.
