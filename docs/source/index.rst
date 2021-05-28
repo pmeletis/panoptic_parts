@@ -15,9 +15,9 @@ Welcome to Panoptic Parts datasets for Scene Understanding's documentation!
    label_format.md
 
 .. toctree::
-   :caption: API Reference
+   :caption: API & Code Reference
 
-   api.rst
+   api_and_code.rst
 
 
 .. toctree::
