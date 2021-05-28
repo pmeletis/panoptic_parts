@@ -41,12 +41,14 @@ Dataset & Evaluation specifications
 .. autoclass:: panoptic_parts.specs.dataset_spec.DatasetSpec
    :members:
    :undoc-members:
-   :show-inheritance:
 
-.. autoclass:: panoptic_parts.specs.eval_spec.EvalSpec
+.. autoclass:: panoptic_parts.specs.eval_spec.PartPQEvalSpec
    :members:
    :undoc-members:
-   :show-inheritance:
+
+.. autoclass:: panoptic_parts.specs.eval_spec.SegmentationPartsEvalSpec
+   :members:
+   :undoc-members:
 
 Visualization
 -------------
