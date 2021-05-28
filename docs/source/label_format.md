@@ -1,4 +1,6 @@
-## Label serialization format and encoding
+# Serialization format: hierarchical information encoding
+
+The goal of the format is to include (per image) all annotations in a single, image-like file with consistent representations across all abstractions and information levels. This enables easy transfer, reading, and compactly handling annotations. The following hierarchical structure is chosen, which extends the Cityscapes serialization format.
 
 The goal of the format is to include (per image) all annotations in a single, image-like label file with a consistent encoding across all abstractions and information levels. This enables easy transfer, reading, and compact handling of the annotations. The following hierarchical structure is chosen, which extends the Cityscapes serialization format.
 
@@ -28,7 +30,7 @@ For example, in _Cityscapes-Panoptic-Parts_, a _sky_ (_stuff_) pixel will have _
 
 > The format covers parts-level classes for _stuff_ semantic classes using a dummy instance id (`iid = 0`). Cityscapes Panoptic Parts and PASCAL Panoptic Parts do not currently define any _stuff_ with part-level classes. This is a feature that can be used in future extensions.
 
-### Unlabeled/Ignored pixels
+## Unlabeled/Ignored pixels
 
 We handle the unlabeled / void / ignored / "do not care pixels" in the three levels as follows:
 
