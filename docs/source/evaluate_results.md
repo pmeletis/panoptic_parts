@@ -18,9 +18,9 @@ The `EvalSpec`s have the following filename format:
 ```
 
 For the datasets that we define and use in our paper, we provide the `EvalSpec` that we use:
-* [ppq_cpp_19_23_cvpr21_default_evalspec.yaml](../../panoptic_parts/specs/eval_specs/ppq_cpp_19_23_cvpr21_default_evalspec.yaml): Cityscapes Panoptic Parts default (parts not grouped)
-* [ppq_cpp_19_23_cvpr21_grouped_evalspec.yaml](../../panoptic_parts/specs/eval_specs/ppq_cpp_19_23_cvpr21_grouped_evalspec.yaml): Cityscapes Panoptic Parts default (similar parts grouped)
-* [ppq_ppp_59_57_cvpr21_default_evalspec.yaml](../../panoptic_parts/specs/eval_specs/ppq_ppp_59_57_cvpr21_default_evalspec.yaml): PASCAL Panoptic Parts default
+* [ppq_cpp_19_23_cvpr21_default_evalspec.yaml](https://github.com/pmeletis/panoptic_parts/blob/v2.0/panoptic_parts/specs/eval_specs/ppq_cpp_19_23_cvpr21_default_evalspec.yaml): Cityscapes Panoptic Parts default (parts not grouped)
+* [ppq_cpp_19_23_cvpr21_grouped_evalspec.yaml](https://github.com/pmeletis/panoptic_parts/blob/v2.0/panoptic_parts/specs/eval_specs/ppq_cpp_19_23_cvpr21_grouped_evalspec.yaml): Cityscapes Panoptic Parts default (similar parts grouped)
+* [ppq_ppp_59_57_cvpr21_default_evalspec.yaml](https://github.com/pmeletis/panoptic_parts/blob/v2.0/panoptic_parts/specs/eval_specs/ppq_ppp_59_57_cvpr21_default_evalspec.yaml): PASCAL Panoptic Parts default
 
 ## 2. Prepare the predictions
 Before we can evaluate the results, you should make sure that the predictions are in the proper format. There are two things to be considered:
