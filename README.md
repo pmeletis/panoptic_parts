@@ -43,7 +43,7 @@ We provide a public, stable API consisting, and various code utilities that are 
  Please cite us if you find our work useful and you use it for your research:
 
 ```bibtex
-@article{degeus2021panopticparts,
+@inproceedings{degeus2021panopticparts,
     title = {Part-aware Panoptic Segmentation},
     author = {Daan de Geus and Panagiotis Meletis and Chenyang Lu and Xiaoxiao Wen and Gijs Dubbelman},
     booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
