@@ -133,3 +133,4 @@ dmypy.json
 
 # this repository
 tests/tests_files/
+docs/source/_build
