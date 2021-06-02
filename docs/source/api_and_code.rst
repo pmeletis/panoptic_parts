@@ -1,7 +1,7 @@
 API Reference
 =============
 
-We provide a public, stable API consisting of tested modules. However, in members of the API you may encounter experimental features (e.g. arguments or functions). These have the preffic `experimental\_` and are excempted from stability guarantees.
+We provide a public, stable API consisting of tested modules. However, in members of the API you may encounter experimental features (e.g. arguments or functions). These have the prefix `experimental\_` and are exempted from stability guarantees.
 
 The functions of the API are exported (apart from their original modules) also in the panoptic_parts namespace, so they can be imported and used as:
 
@@ -33,7 +33,7 @@ Misc
 Code Reference
 ==============
 
-Documented/Undocumented functionality of the rest of the code his repo lies here. This functionality will be added to the API in the future. Till then, the following functions may be moved or be unstable.
+Documented/Undocumented functionality of the rest of the code his repo lies here. This functionality will be added to the API in the future. Until then, the following functions may be moved or be unstable.
 
 Dataset & Evaluation specifications
 -----------------------------------

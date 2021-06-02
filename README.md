@@ -1,6 +1,6 @@
 # Panoptic Parts datasets for Holistic Scene Understanding
 
-[![Documentation Status](https://readthedocs.org/projects/panoptic-parts/badge/?version=latest)](https://panoptic-parts.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/panoptic-parts/badge/?version=stable)](https://panoptic-parts.readthedocs.io/en/stable/?badge=stable)
 
 **v2.0 Release Candidate**
 
