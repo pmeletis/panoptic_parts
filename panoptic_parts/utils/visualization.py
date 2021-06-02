@@ -328,12 +328,14 @@ def uid2color(uids,
   return uid_2_color
 
 
-def experimental_colorize_label(label,
+def experimental_colorize_label(label, *,
                                 sid2color=None,
                                 return_sem=False,
                                 return_sem_inst=False,
                                 emphasize_instance_boundaries=True,
-                                return_uid2color=False):
+                                return_uid2color=False,
+                                experimental_deltas=(60, 60, 60),
+                                experimental_alpha=0.5):
   """
   Colorizes a `label` with semantic-instance-parts-level colors based on sid2color.
   Optionally, semantic-level and semantic-instance-level colorings can be returned.
@@ -372,7 +374,8 @@ def experimental_colorize_label(label,
   # sids, iids, sids_iids shapes: (height, width)
   sids, iids, _, sids_iids = decode_uids(label, return_sids_iids=True)
   ids_all_levels_unique = np.unique(np.stack([sids, sids_iids, label]))
-  uid2color_dict = uid2color(ids_all_levels_unique, sid2color=sid2color)
+  uid2color_dict = uid2color(ids_all_levels_unique, sid2color=sid2color,
+                             experimental_deltas=experimental_deltas, experimental_alpha=experimental_alpha)
 
   # We colorize ids using numpy advanced indexing (gathering). This needs an array palette, thus we
   # convert the dictionary uid2color_dict to an array palette with shape (Ncolors, 3) and
