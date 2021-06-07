@@ -289,8 +289,8 @@ def compare_pixelwise(l1, l2):
     - compare_pixelwise([1,2,4,3], [1,2,3,5]) → [[3, 4], [5, 3]]
 
   Returns:
-    - np.ndarray: unique_diffs: 2D, with columns having the differences for the same position
-      sorted in ascending order using the l1 elements
+    np.ndarray: unique_diffs: 2D, with columns having the differences for the same position
+    sorted in ascending order using the l1 elements
   """
   # assert all([isinstance(l1, np.ndarray), isinstance(l2, np.ndarray),
   #             l1.dtype == np.dtype(int), l2.dtype == np.dtype(int),
