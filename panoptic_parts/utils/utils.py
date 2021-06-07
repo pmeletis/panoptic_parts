@@ -279,12 +279,24 @@ def compare_pixelwise(l1, l2):
   """
   Compare numpy arrays l1, l2 with same shape and dtype in a pixel-wise manner and
   return the unique tuples of differences corresponding to the same spatial position.
+
+  Args:
+    l1 (np.ndarray):
+    l2 (np.ndarray):
+
+  Examples (supposing the following lists are np.ndarrays):
+    - compare_pixelwise([1,2,3], [1,2,4]) → [[3], [4]]
+    - compare_pixelwise([1,2,4,3], [1,2,3,4]) → [[4, 3], [3, 4]]
+
+  Returns:
+    unique_diffs (np.ndarray): 2D, with columns having the differences for the same position
   """
   # assert all([isinstance(l1, np.ndarray), isinstance(l2, np.ndarray),
   #             l1.dtype == np.dtype(int), l2.dtype == np.dtype(int),
   #             l1.shape == l2.shape, l1.dtype == l2.dtype]), (
   #                 f'{type(l1)}, {type(l2)}, {l1.dtype}, {l2.dtype}, {l1.shape}, {l2.shape}, {l1}, {l2}')
   cond = l1 != l2
+  uids_tuples = np.array([], dtype=l1.dtype)
   if np.any(cond):
     uids_tuples = np.unique(np.stack([l1[cond], l2[cond]]), axis=1)
   return uids_tuples

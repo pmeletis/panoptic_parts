@@ -37,7 +37,8 @@ def visualize_from_paths(datasetspec_path, label_path):
   uids = encode_ids(*decode_uids(uids, experimental_dataset_spec=spec, experimental_correct_range=True))
 
   uids_sem_inst_parts_colored, uid2color_dct = experimental_colorize_label(
-      uids, sid2color=spec.sid2scene_color, emphasize_instance_boundaries=True, return_uid2color=True)
+      uids, sid2color=spec.sid2scene_color, emphasize_instance_boundaries=True, return_uid2color=True,
+      experimental_deltas=(60, 60, 60), experimental_alpha=0.5)
 
   # plot
   _, ax1 = plt.subplots()
@@ -55,7 +56,7 @@ def visualize_from_paths(datasetspec_path, label_path):
 
   ax1.imshow(uids_sem_inst_parts_colored)
   ax1.set_title('labels colored on semantic, instance, and part levels', fontsize='small')
-  ax1.legend(handles, handles_text, ncol=2, fontsize='small', handlelength=1.0,
+  ax1.legend(handles, handles_text, ncol=3, fontsize='small', handlelength=1.0,
              loc='center left', bbox_to_anchor=(1.01, 0.5))
   plt.tight_layout()
   plt.show()
