@@ -1,4 +1,4 @@
-# Panoptic Parts datasets for Holistic Scene Understanding
+# Part-aware Panoptic Segmentation
 
 [![Documentation Status](https://readthedocs.org/projects/panoptic-parts/badge/?version=stable)](https://panoptic-parts.readthedocs.io/en/stable/?badge=stable)
 
@@ -6,7 +6,7 @@
 
 ## [[CVPR 2021 Paper]()] [[Datasets Technical Report](https://arxiv.org/abs/2004.07944 "arxiv.org")] [[Documentation](https://panoptic-parts.readthedocs.io/en/stable)]
 
-This repository contains code and tools for reading, processing, and visualizing Panoptic Parts datasets. Moreover, it contains code for reproducing CVPR 2021 paper results.
+This repository contains code and tools for reading, processing, evaluating on, and visualizing Panoptic Parts datasets. Moreover, it contains code for reproducing our CVPR 2021 paper results.
 
 ## Datasets
 

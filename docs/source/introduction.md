@@ -1,6 +1,6 @@
 # Introduction
 
-This repository contains code and tools for reading, processing, and visualizing Panoptic Parts datasets. Moreover, it contains code for reproducing CVPR 2021 paper results.
+This repository contains code and tools for reading, processing, evaluating on, and visualizing Panoptic Parts datasets. Moreover, it contains code for reproducing our CVPR 2021 paper results.
 
 ## Datasets
 
