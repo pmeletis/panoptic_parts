@@ -1,9 +1,9 @@
-.. Panoptic Parts datasets for Scene Understanding documentation master file, created by
+.. Part-aware Panoptic Segmentation documentation master file, created by
    sphinx-quickstart on Thu Jan 28 11:43:38 2021.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Panoptic Parts datasets for Scene Understanding's documentation!
+Welcome to Part-aware Panoptic Segmentation documentation!
 ===========================================================================
 
 .. toctree::

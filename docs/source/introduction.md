@@ -1,6 +1,6 @@
 # Introduction
 
-This repository contains code and tools for reading, processing, and visualizing Panoptic Parts datasets. Moreover, it contains code for reproducing CVPR 2021 paper results.
+This repository contains code and tools for reading, processing, evaluating on, and visualizing Panoptic Parts datasets. Moreover, it contains code for reproducing our CVPR 2021 paper results.
 
 ## Datasets
 
@@ -12,6 +12,17 @@ This repository contains code and tools for reading, processing, and visualizing
 ## API and code reference
 
 We provide a public, stable API, and various code utilities that are documented [here](https://panoptic-parts.readthedocs.io/en/stable/api_and_code.html).
+
+## Reproducing CVPR 2021 paper
+
+The part-aware panoptic segmentation results from the paper can be reproduced using [this](https://panoptic-parts.readthedocs.io/en/stable/generate_results.html) guide.
+
+## Evaluation metrics
+
+We provide two metrics for evaluating performance on Panoptic Parts datasets.
+
+- Part-aware Panoptic Quality (PartPQ): [here](https://panoptic-parts.readthedocs.io/en/stable/evaluate_results.html).
+- Intersection over Union (IoU): _TBA_
 
 ## Citations
 
