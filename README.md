@@ -4,7 +4,7 @@
 
 **v2.0 Release Candidate**
 
-## [[CVPR 2021 Paper]()] [[Datasets Technical Report](https://arxiv.org/abs/2004.07944 "arxiv.org")] [[Documentation](https://panoptic-parts.readthedocs.io/en/stable)]
+## [[CVPR 2021 Paper](https://openaccess.thecvf.com/content/CVPR2021/html/de_Geus_Part-Aware_Panoptic_Segmentation_CVPR_2021_paper.html)] [[Datasets Technical Report](https://arxiv.org/abs/2004.07944 "arxiv.org")] [[Documentation](https://panoptic-parts.readthedocs.io/en/stable)]
 
 This repository contains code and tools for reading, processing, evaluating on, and visualizing Panoptic Parts datasets. Moreover, it contains code for reproducing our CVPR 2021 paper results.
 

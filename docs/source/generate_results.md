@@ -120,7 +120,7 @@ For part segmentation, we expect predictions in the same format as semantic segm
 * Name of the files: should include the unique `image_id` as defined in `images.json`.
 
 
-**Example Cityscapes Panoptic Parts**: for a baseline in our paper, we have trained a [BSANet](http://cvteam.net/projects/2019/multiclass-part.html) model with ResNet-101 backbone on our part annotations for the Cityscapes dataset. [These can be downloaded here](INSERT LINK!). **TODO: INSERT LINK**
+**Example Cityscapes Panoptic Parts**: for a baseline in our paper, we have trained a [BSANet](http://cvteam.net/projects/2019/multiclass-part.html) model with ResNet-101 backbone on our part annotations for the Cityscapes dataset. These can be downloaded [here](https://1drv.ms/u/s!AojlpuGgPtL1bqHeflaWtk24UY0?e=Sr2BOX).
 
 
 ## Merge instance and semantic segmentation to panoptic segmentation
