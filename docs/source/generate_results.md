@@ -1,6 +1,8 @@
 # Generate part-aware panoptic segmentation results
 
-Here, we provide a guide for generating Part-aware Panoptic Segmentation (PPS) results as in in our CVPR paper. 
+Here, we provide a guide for generating Part-aware Panoptic Segmentation (PPS) results as in in our CVPR paper.
+
+After publication we fixed a regression in the PartPQ metric (integrated in v2.x release of `panoptic_parts` package), which results in a slight increase of the PartPQ results. The correct results are provided in the [CVPR 2021 Errata](errata_cvpr2021.md).
 
 ## Prepare EvalSpec and dataset information
 Before generating the Part-aware Panoptic Segmentation (PPS) results, you have to specify the dataset you wish to do this for. This consists of two parts:
