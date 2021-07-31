@@ -183,7 +183,7 @@ where
 - `$OUTPUT_DIR`: directory where you wish to store the part-aware panoptic segmentation predictions
 
 ## Evaluate results
-We provide a step-by-step guide for evaluating PPS results. [Click here](EVALUATE_RESULTS.md).
+We provide a step-by-step guide for evaluating PPS results [here](https://panoptic-parts.readthedocs.io/en/stable/evaluate_results.html).
 
 
 ## References and useful links
