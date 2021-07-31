@@ -7,7 +7,7 @@ This repository contains code and tools for reading, processing, evaluating on, 
 *Cityscapes-Panoptic-Parts* and *PASCAL-Panoptic-Parts* are created by extending two established datasets for image scene understanding, namely [Cityscapes](https://github.com/mcordts/cityscapesScripts "Cityscapes") and [PASCAL](http://host.robots.ox.ac.uk/pascal/VOC/voc2010/ "PASCAL") datasets. Detailed description of the datasets and various statistics are presented in our technical report in [arxiv](https://arxiv.org/abs/2004.07944 "arxiv.org"). The datasets can be downloaded from:
 
 - [Cityscapes Panoptic Parts](https://www.cityscapes-dataset.com/login/)
-- [PASCAL Panoptic Parts](https://1drv.ms/u/s!AojlpuGgPtL1bHXfIdeL14IeVhI?e=5tNfET)
+- [PASCAL Panoptic Parts (OneDrive)](https://1drv.ms/u/s!AojlpuGgPtL1bHXfIdeL14IeVhI?e=5tNfET), [PASCAL Panoptic Parts (Baidu) Retrival Code: i7ap](https://pan.baidu.com/s/1k96Wdg_IyD91kvq87Wy7nw)
 
 ## API and code reference
 
