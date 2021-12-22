@@ -42,7 +42,6 @@ release = panoptic_parts.__version__
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-# Add napoleon to the extensions list
 extensions = [
         'sphinx.ext.autodoc',
         'sphinx.ext.napoleon',
@@ -52,6 +51,12 @@ extensions = [
         'sphinx_markdown_tables',
     ]
 
+# Disable module names in auto documentation
+# add_module_names = False
+
+# Type hints
+# set_type_checking_flag = False  # defaults to False
+typehints_fully_qualified = True  # defaults to False
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']

@@ -129,6 +129,7 @@ def decode_uids(uids : Union[tf.Tensor, np.ndarray, torch.Tensor, int, np.int32]
 
   Examples:
     Each output has the same type and shape as `uids` (not shown for clarity).
+
     - decode_uids(23, return_sid_pid=True) → (23, -1, -1, 23)
     - decode_uids(23003, return_sid_pid=True) → (23, 3, -1, 23)
     - decode_uids(2300304, return_sid_pid=True) → (23, 3, 4, 2304)
