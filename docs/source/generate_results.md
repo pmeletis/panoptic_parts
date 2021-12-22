@@ -50,7 +50,7 @@ NOTE: the `image_id` defined here, should be unique, and should be used in the n
 To generate the `images.json` file for Cityscapes, run the following script from the main `panoptic_parts` directory:
 
 ```shell
-python -m panoptic_parts.prepare_data \
+python -m panoptic_parts.evaluation.prepare_data \
     $DATASET_DIR \
     $OUTPUT_DIR \
     $DATASET
