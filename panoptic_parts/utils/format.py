@@ -1,10 +1,12 @@
-"""
-Utility functions for reading and writing to our hierarchical panoptic format (see README).
-Tensorflow and Pytorch are optional frameworks.
+"""Utilities handling ground truth serialization format.
+
+Utility functions for reading and writing to our compact panoptic-parts format (see README).
+Tensorflow and Pytorch are optional and don't need to be installed to use this modules functions.
 """
 
 from enum import Enum
 import functools
+from typing import Union
 
 import numpy as np
 
@@ -29,7 +31,7 @@ from panoptic_parts.utils.utils import (
 
 
 # Functions that start with underscore (_) should be considered as internal.
-# All other functions belong to the public API.
+# Functions included in PUBLIC_API belong to the public API.
 # Arguments and functions defined with the preffix experimental_ may be changed
 # and are not backward-compatible.
 
@@ -107,22 +109,26 @@ def _decode_uids_functors_and_checking(uids, experimental_noinfo_id):
 
   raise TypeError(f'{type(uids)} is an unsupported type of uids.')
 
-def decode_uids(uids, *, return_sids_iids:bool=False, return_sids_pids:bool=False,
-                experimental_noinfo_id:int=-1, experimental_dataset_spec:DatasetSpec=None,
-                experimental_correct_range:bool=False):
-  """
-  Given the universal ids `uids` according to the hierarchical format described
-  in README, this function returns element-wise
+def decode_uids(uids : Union[tf.Tensor, np.ndarray, torch.Tensor, int, np.int32],
+                *,
+                return_sids_iids : bool = False,
+                return_sids_pids : bool = False,
+                experimental_noinfo_id : int = -1,
+                experimental_dataset_spec : DatasetSpec = None,
+                experimental_correct_range : bool = False):
+  """Decode the compact panoptic-parts `uids` into consituent ids.
+
+  Given the universal ids `uids` encoded according to the panoptic-parts format described
+  in https://panoptic-parts.readthedocs.io/en/stable/label_format.html,
+  this function returns element-wise
   the semantic ids (sids), instance ids (iids), and part ids (pids).
   Optionally it returns the sids_iids and sids_pids as well.
+    - sids_iids represent the semantic-instance-level (two-level) labeling,
+      e.g., sids_iids from Cityscapes-Panoptic-Parts ≡ ids from Cityscapes-Original.
+    - sids_pids represent the semantic-part-level (semantics) labeling.
 
-  sids_iids represent the semantic-instance-level (two-level) labeling,
-  e.g., sids_iids(Cityscapes-Panoptic-Parts) = Cityscapes-Original.
-
-  sids_pids represent the semantic-part-level (semantics) labeling,
-  e.g., sids_pids(23_003_04) = 23_04.
-
-  Examples (output is same type as input - not shown for clarity):
+  Examples:
+    Each output has the same type and shape as `uids` (not shown for clarity).
     - decode_uids(23, return_sid_pid=True) → (23, -1, -1, 23)
     - decode_uids(23003, return_sid_pid=True) → (23, 3, -1, 23)
     - decode_uids(2300304, return_sid_pid=True) → (23, 3, 4, 2304)
@@ -136,24 +142,43 @@ def decode_uids(uids, *, return_sids_iids:bool=False, return_sids_pids:bool=Fals
        [[-1, -1], [-1, -1]])
 
   Args:
-    uids: tf.Tensor of dtype tf.int32 and arbitrary shape,
-          or np.ndarray of dtype np.int32 and arbitrary shape,
-          or torch.tensor of dtype torch.int32 and arbitrary shape,
-          or Python int,
-          or np.int32 integer,
-          with elements according to hierarchical format (see README).
+    uids: The panoptic-parts uids. Can be
+      a tf.Tensor of dtype tf.int32 and arbitrary shape,
+      or a np.ndarray of dtype np.int32 and arbitrary shape,
+      or a torch.tensor of dtype torch.int32 and arbitrary shape,
+      or a Python int,
+      or a np.int32 integer,
+      with elements encoded according to the panoptic-parts format.
+    return_sids_iids: Optionally return sids_iids.
+    return_sids_pids: Optionally return sids_pids.
+    experimental_noinfo_id: The integer representing the "no info"/void value.
+    experimental_dataset_spec: Providing a DatasetSpec is useful for
+      ids validity checking and ids mappings according to that DatasetSpec.
+    experimental_correct_range: If a DatasetSpec is provided, the invalid ids
+      according to that DatasetSpec, will be replaced with the experimental_noinfo_id value.
 
   Returns:
-    sids, iids, pids: same type and shape as uids, with -1 for not relevant pixels.
-  
-    sids will have no -1.
-    iids will have -1 for pixels labeled with sids only.
-    pids will have -1 for pixels labeled with sids or sids_iids only.
-  
-    if return_sids_iids:
-      sids_iids: same type and shape as uids, will have no -1.
-    if return_sids_pids:
-      sids_pids: same type and shape as uids, will have no -1.
+    There are 4 return signatures according to the given return_* keyword arguments.
+    All return values have the same type and shape as `uids`, where non-relevant/void pixels
+    have value -1.
+
+    if return_sids_iids and return_sids_pids are False (default behavior):
+      sids, iids, pids = decode_uids(uids)
+
+    if return_sids_iids is True:
+      sids, iids, pids, sids_iids = decode_uids(uids, return_sids_iids=True)
+
+    if return_sids_pids is True:
+      sids, iids, pids, sids_pids = decode_uids(uids, return_sids_pids=True)
+
+    if return_sids_iids and return_sids_pids are both True:
+      sids, iids, pids, sids_iids, sids_pids = decode_uids(uids, return_sids_iids=True, return_sids_pids=True)
+
+    sids have no -1.
+    iids have -1 for pixels labeled with semantic-level labels only.
+    pids have -1 for pixels labeled with semantic-level or semantic-instance-level labels only.
+    sids_iids: have no -1.
+    sids_pids: have no -1.
   """
   where, ones_like, divmod_, maximum, dtype, logical_and = _decode_uids_functors_and_checking(
       uids, experimental_noinfo_id)
