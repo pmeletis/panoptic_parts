@@ -123,13 +123,11 @@ def decode_uids(uids : Union[tf.Tensor, np.ndarray, torch.Tensor, int, np.int32]
   this function returns element-wise
   the semantic ids (sids), instance ids (iids), and part ids (pids).
   Optionally it returns the sids_iids and sids_pids as well.
-    - sids_iids represent the semantic-instance-level (two-level) labeling,
-      e.g., sids_iids from Cityscapes-Panoptic-Parts ≡ ids from Cityscapes-Original.
-    - sids_pids represent the semantic-part-level (semantics) labeling.
+  sids_iids represent the semantic-instance-level (two-level) labeling,
+  e.g., sids_iids from Cityscapes-Panoptic-Parts ≡ ids from Cityscapes-Original.
+  sids_pids represent the semantic-part-level (semantics) labeling.
 
   Examples:
-    Each output has the same type and shape as `uids` (not shown for clarity).
-
     - decode_uids(23, return_sid_pid=True) → (23, -1, -1, 23)
     - decode_uids(23003, return_sid_pid=True) → (23, 3, -1, 23)
     - decode_uids(2300304, return_sid_pid=True) → (23, 3, 4, 2304)
@@ -142,6 +140,8 @@ def decode_uids(uids : Union[tf.Tensor, np.ndarray, torch.Tensor, int, np.int32]
        [[ -1,  -1], [234, 345]],
        [[-1, -1], [-1, -1]])
 
+    Each output has the same type and shape as `uids` (not shown for clarity).
+
   Args:
     uids: The panoptic-parts uids. Can be
       a tf.Tensor of dtype tf.int32 and arbitrary shape,
@@ -153,8 +153,11 @@ def decode_uids(uids : Union[tf.Tensor, np.ndarray, torch.Tensor, int, np.int32]
     return_sids_iids: Optionally return sids_iids.
     return_sids_pids: Optionally return sids_pids.
     experimental_noinfo_id: The integer representing the "no info"/void value.
-    experimental_dataset_spec: Providing a DatasetSpec is useful for
-      ids validity checking and ids mappings according to that DatasetSpec.
+    experimental_dataset_spec: a DatasetSpec is used a) for removing the part-level
+      instance information layer from the pids, this layer is not useful for Part-aware Panoptic
+      Segmentation but is present in the encoded uids of some datasets (e.g. PPP), b) for ids
+      range validity checking and correction according to that DatasetSpec (provide
+      experimental_correct_range=True) for this functionality.
     experimental_correct_range: If a DatasetSpec is provided, the invalid ids
       according to that DatasetSpec, will be replaced with the experimental_noinfo_id value.
 
