@@ -109,7 +109,7 @@ def _decode_uids_functors_and_checking(uids, experimental_noinfo_id):
 
   raise TypeError(f'{type(uids)} is an unsupported type of uids.')
 
-def decode_uids(uids : Union[tf.Tensor, np.ndarray, torch.Tensor, int, np.int32],
+def decode_uids(uids, # : Union[tf.Tensor, np.ndarray, torch.Tensor, int, np.int32],
                 *,
                 return_sids_iids : bool = False,
                 return_sids_pids : bool = False,
