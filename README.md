@@ -23,15 +23,36 @@ This repository contains code and tools for reading, processing, evaluating on, 
 
 More examples [here](https://panoptic-parts.readthedocs.io/en/stable/visualization.html).
 
-## Installation
+## Installation and usage
 
-The code can be used by installing the requirements and cloning the repository (at least Python 3.7 is needed). A pip package will be available soon.
+The code can be installed from the PyPI and requires at least Python 3.7. It is recommended to install it in a Python virtual environment.
 
 ```shell
-git clone https://github.com/pmeletis/panoptic_parts.git
-cd panoptic_parts
-pip install -r requirements.txt
+pip install panoptic_parts
 ```
+
+Some functionality requires extra packages to be installed, e.g. evaluation scripts (tqdm) or Pytorch/Tensorflow (torch/tensorflow). These can be installed separately or by downloading the `optional.txt` file from this repo and running the following command in the virtual environment:
+
+```shell
+pip install -r optional.txt
+```
+
+After installation you can use the package as:
+
+```python
+import panoptic_parts as pp
+
+print(pp.VERSION)
+```
+
+There are three scripts defined as entry points by the package:
+
+```shell
+pp_merge_to_panoptic <args>
+pp_merge_to_pps <args>
+pp_visualize_label_with_legend <args>
+```
+
 
 ## API and code reference
 
