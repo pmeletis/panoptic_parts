@@ -1,0 +1,2 @@
+include panoptic_parts/specs/dataset_specs/*.yaml
+include panoptic_parts/specs/eval_specs/*.yaml
