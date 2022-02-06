@@ -62,9 +62,15 @@ def visualize_from_paths(datasetspec_path, label_path):
   plt.show()
 
 
-if __name__ == "__main__":
+def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('datasetspec_path')
   parser.add_argument('label_path')
   args = parser.parse_args()
   visualize_from_paths(args.datasetspec_path, args.label_path)
+
+  return
+
+
+if __name__ == "__main__":
+  main()
