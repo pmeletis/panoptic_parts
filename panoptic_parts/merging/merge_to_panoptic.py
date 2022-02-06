@@ -197,7 +197,7 @@ def merge(eval_spec_path,
   print("Merging finished.")
 
 
-if __name__ == '__main__':
+def main():
   parser = argparse.ArgumentParser(
     description="Merges semantic and instance segmentation predictions to panoptic segmentation results."
   )
@@ -223,3 +223,8 @@ if __name__ == '__main__':
         args.images_json,
         instseg_format=args.instseg_format)
 
+  return
+
+
+if __name__ == '__main__':
+  main()
