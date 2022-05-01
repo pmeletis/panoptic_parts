@@ -68,10 +68,12 @@ def _sparse_ids_mapping_to_dense_ids_mapping(ids_dict, void, length=None, dtype=
   return dense_mapping
 
 
-def safe_write(path, image):
+def safe_write(path, image, **params):
   """
-  Check if `path` exist and if it doesn't creates all needed intermediate-level directories
-  and saves `image` to `path`.
+  Saves `image` to `path` by creating all intermediate directories. If the `path`
+  already exists it does not override it and returns False. Extra params passed to
+  the PIL.Image.save writer can provided by keyword arguments (e.g. optimize=True
+  or compress_level=9).
 
   Args:
     path: a path passed to os.path.exists, os.makedirs and PIL.Image.save()
@@ -85,7 +87,7 @@ def safe_write(path, image):
     return False
 
   os.makedirs(op.dirname(path), exist_ok=True)
-  Image.fromarray(image).save(path)
+  Image.fromarray(image).save(path, **params)
   return True
 
 
